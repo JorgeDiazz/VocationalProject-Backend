@@ -1,4 +1,4 @@
-# Recruiters Project
+# Recruiters Project - Backend
 ## Software Design Patterns
 ### Members:
 * Jorge Andrés Díaz
