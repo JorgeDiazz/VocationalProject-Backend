@@ -8,20 +8,16 @@ package com.recruiters.recruiterssupportbackEnd.model.entities;
 import com.recruiters.recruiterssupportbackEnd.model.entities.skills.SoftSkill;
 import java.util.List;
 import org.springframework.data.annotation.Id;
+import org.springframework.util.StringUtils;
 
-
-/**
- *
- * @author seam33
- */
 public class Company {
-    
+
     @Id
     private String id;
     private String nit;
     private String name;
     private String email;
-    private String number; 
+    private String number;
     private Byte[] image;
     private String password;
     private String address;
@@ -117,8 +113,9 @@ public class Company {
     public void setJobsPositions(List<JobPosition> JobsPositions) {
         this.JobsPositions = JobsPositions;
     }
-    
-   
-    
-    
+
+    public static boolean isCorrectForCreate(Company company) {
+        return company != null && !StringUtils.isEmpty(company.getNit()) && !StringUtils.isEmpty(company.getName()) && !StringUtils.isEmpty(company.getEmail()) && !StringUtils.isEmpty(company.getNumber()) && !StringUtils.isEmpty(company.getAddress());
+    }
+
 }
