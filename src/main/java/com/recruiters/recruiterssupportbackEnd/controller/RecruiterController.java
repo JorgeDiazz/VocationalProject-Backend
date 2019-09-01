@@ -12,6 +12,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,9 +35,16 @@ public class RecruiterController {
         this.mongoTemplate = mongoTemplate;
     }
 
-    @GetMapping("/")
-    public List<Recruiter> getAllRecruiters() {
-        return null;
+    @GetMapping("/{nit}")
+    public ResponseEntity<List<Recruiter>> getAllRecruitersByCompany(@PathVariable String nit) throws Throwable{
+        Query query = new Query(Criteria.where("nit").is(nit));
+        Company company = mongoTemplate.findOne(query, Company.class);
+
+        if (company == null) {
+            return HttpResponseEntity.getNotFoundStatus();
+        }
+        
+       return HttpResponseEntity.getOKStatus(company.getRecruiters());
     }
 
     @PostMapping("/")
