@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.recruiters.recruiterssupportbackEnd.model.entities;
 
 import java.util.List;
@@ -13,17 +8,17 @@ import org.springframework.data.annotation.Id;
  * @author Jhanuar Sanchez
  */
 public class Vacant {
-    
-     @Id
-    private String id;
-    private String nit;
-    private String nitcompany;
-    private String numberplaces;
-    private String startdate;
-    private String enddate;
-    private JobPosition jobposition;
-    private List<Postulant> postulants;;
 
+    @Id
+    private String id;
+    private String nitCompany;
+    private String placesNumber;
+    private String startDate;
+    private String endDate;
+    private JobPosition jobPosition;
+    private List<Postulant> postulants;
+
+   
     public String getId() {
         return id;
     }
@@ -32,52 +27,44 @@ public class Vacant {
         this.id = id;
     }
 
-    public String getNit() {
-        return nit;
+    public String getNitCompany() {
+        return nitCompany;
     }
 
-    public void setNit(String nit) {
-        this.nit = nit;
+    public void setNitCompany(String nitCompany) {
+        this.nitCompany = nitCompany;
     }
 
-    public String getNitcompany() {
-        return nitcompany;
+    public String getPlacesNumber() {
+        return placesNumber;
     }
 
-    public void setNitcompany(String nitcompany) {
-        this.nitcompany = nitcompany;
+    public void setPlacesNumber(String placesNumber) {
+        this.placesNumber = placesNumber;
     }
 
-    public String getNumberplaces() {
-        return numberplaces;
+    public String getStartDate() {
+        return startDate;
     }
 
-    public void setNumberplaces(String numberplaces) {
-        this.numberplaces = numberplaces;
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
     }
 
-    public String getStartdate() {
-        return startdate;
+    public String getEndDate() {
+        return endDate;
     }
 
-    public void setStartdate(String startdate) {
-        this.startdate = startdate;
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
     }
 
-    public String getEnddate() {
-        return enddate;
+    public JobPosition getJobPosition() {
+        return jobPosition;
     }
 
-    public void setEnddate(String enddate) {
-        this.enddate = enddate;
-    }
-
-    public JobPosition getJobposition() {
-        return jobposition;
-    }
-
-    public void setJobposition(JobPosition jobposition) {
-        this.jobposition = jobposition;
+    public void setJobPosition(JobPosition jobPosition) {
+        this.jobPosition = jobPosition;
     }
 
     public List<Postulant> getPostulants() {
@@ -87,8 +74,5 @@ public class Vacant {
     public void setPostulants(List<Postulant> postulants) {
         this.postulants = postulants;
     }
-    
-    
-    
-    
+
 }

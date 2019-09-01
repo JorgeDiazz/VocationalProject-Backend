@@ -16,10 +16,9 @@ public class JobPosition {
     private String id;
     private String nit;
     private String salary;
-    private String Salario;
     private String description;
     private List<Career> careers;
-    private List<HardSkill> hardskills;
+    private List<HardSkill> hardSkills;
     private List<SoftSkill> softSkills;
     private String vacants;//este es un  numerito (quedan 2 vacantes para ese puesto)
 
@@ -47,14 +46,6 @@ public class JobPosition {
         this.salary = salary;
     }
 
-    public String getSalario() {
-        return Salario;
-    }
-
-    public void setSalario(String Salario) {
-        this.Salario = Salario;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -71,12 +62,12 @@ public class JobPosition {
         this.careers = careers;
     }
 
-    public List<HardSkill> getHardskills() {
-        return hardskills;
+    public List<HardSkill> getHardSkills() {
+        return hardSkills;
     }
 
-    public void setHardskills(List<HardSkill> hardskills) {
-        this.hardskills = hardskills;
+    public void setHardSkills(List<HardSkill> hardSkills) {
+        this.hardSkills = hardSkills;
     }
 
     public List<SoftSkill> getSoftSkills() {

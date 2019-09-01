@@ -31,7 +31,7 @@ public class CompanyController {
     }
 
     @GetMapping("/")
-    public List<Company> getAllComapanies() {
+    public List<Company> getAllCompanies() {
         return companyRepository.findAll();
     }
 

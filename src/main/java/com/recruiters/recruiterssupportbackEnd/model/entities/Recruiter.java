@@ -4,11 +4,6 @@ import java.util.List;
 import org.springframework.data.annotation.Id;
 import org.springframework.util.StringUtils;
 
-/**
- *
- * @author seam33
- */
-
 public class Recruiter {
 
     @Id
@@ -58,8 +53,8 @@ public class Recruiter {
 
     public void setVacant(List<Vacant> vacant) {
         this.vacant = vacant;
-    } 
-    
+    }
+
     public String getNitCompany() {
         return nitCompany;
     }
@@ -67,16 +62,8 @@ public class Recruiter {
     public void setNitCompany(String nitCompany) {
         this.nitCompany = nitCompany;
     }
-    
-    public static boolean isCorrectForCreate(Recruiter recruiter){
-        return recruiter!=null && !StringUtils.isEmpty(recruiter.getEmail()) && !StringUtils.isEmpty(recruiter.getNitCompany());
-    }
 
-    @Override
-    public String toString() {
-        return "Recruiter{" + "id=" + id + ", nitCompany=" + nitCompany + ", name=" + name + ", email=" + email + ", password=" + password + ", image=" + image + ", vacant=" + vacant + '}';
+    public static boolean isCorrectForCreate(Recruiter recruiter) {
+        return recruiter != null && !StringUtils.isEmpty(recruiter.getEmail()) && !StringUtils.isEmpty(recruiter.getNitCompany());
     }
-    
-    
-    
 }
