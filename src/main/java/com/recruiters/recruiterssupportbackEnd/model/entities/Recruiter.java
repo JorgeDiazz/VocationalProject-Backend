@@ -2,6 +2,7 @@ package com.recruiters.recruiterssupportbackEnd.model.entities;
 
 import java.util.List;
 import org.springframework.data.annotation.Id;
+import org.springframework.util.StringUtils;
 
 /**
  *
@@ -12,19 +13,12 @@ public class Recruiter {
 
     @Id
     private String id;
+    private String nitCompany;
     private String name;
     private String email;
     private String password;
     private Byte[] image;
     private List<Vacant> vacant;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -65,5 +59,24 @@ public class Recruiter {
     public void setVacant(List<Vacant> vacant) {
         this.vacant = vacant;
     } 
+    
+    public String getNitCompany() {
+        return nitCompany;
+    }
+
+    public void setNitCompany(String nitCompany) {
+        this.nitCompany = nitCompany;
+    }
+    
+    public static boolean isCorrectForCreate(Recruiter recruiter){
+        return recruiter!=null && !StringUtils.isEmpty(recruiter.getEmail()) && !StringUtils.isEmpty(recruiter.getNitCompany());
+    }
+
+    @Override
+    public String toString() {
+        return "Recruiter{" + "id=" + id + ", nitCompany=" + nitCompany + ", name=" + name + ", email=" + email + ", password=" + password + ", image=" + image + ", vacant=" + vacant + '}';
+    }
+    
+    
     
 }

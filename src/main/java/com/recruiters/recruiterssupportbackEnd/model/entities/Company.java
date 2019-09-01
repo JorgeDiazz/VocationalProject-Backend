@@ -6,6 +6,7 @@
 package com.recruiters.recruiterssupportbackEnd.model.entities;
 
 import com.recruiters.recruiterssupportbackEnd.model.entities.skills.SoftSkill;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.data.annotation.Id;
 import org.springframework.util.StringUtils;
@@ -98,6 +99,10 @@ public class Company {
         this.recruiters = recruiters;
     }
 
+    public void addRecruiters(Recruiter recruiter) {
+        this.recruiters.add(recruiter);
+    }
+
     public List<SoftSkill> getSoftSkills() {
         return softSkills;
     }
@@ -114,8 +119,19 @@ public class Company {
         this.JobsPositions = JobsPositions;
     }
 
+    public void initRecruiters(){
+        this.recruiters = new ArrayList<>();
+    }
+    
     public static boolean isCorrectForCreate(Company company) {
         return company != null && !StringUtils.isEmpty(company.getNit()) && !StringUtils.isEmpty(company.getName()) && !StringUtils.isEmpty(company.getEmail()) && !StringUtils.isEmpty(company.getNumber()) && !StringUtils.isEmpty(company.getAddress());
     }
 
+    @Override
+    public String toString() {
+        return "Company{" + "id=" + id + ", nit=" + nit + ", name=" + name + ", email=" + email + ", number=" + number + ", image=" + image + ", password=" + password + ", address=" + address + ", active=" + active + ", recruiters=" + recruiters + ", softSkills=" + softSkills + ", JobsPositions=" + JobsPositions + '}';
+    }
+    
+   
+    
 }

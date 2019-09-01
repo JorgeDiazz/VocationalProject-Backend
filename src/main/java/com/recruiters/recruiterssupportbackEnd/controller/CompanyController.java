@@ -51,6 +51,7 @@ public class CompanyController {
     public ResponseEntity<Company> createCompany(@Valid @RequestBody Company company) {
 
         if (Company.isCorrectForCreate(company)) {
+            company.initRecruiters();
             companyRepository.save(company);
             return HttpResponseEntity.getOKStatus(company);
         }
