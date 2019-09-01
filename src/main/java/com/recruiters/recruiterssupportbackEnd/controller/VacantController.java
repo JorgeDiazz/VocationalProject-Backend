@@ -1,6 +1,7 @@
 package com.recruiters.recruiterssupportbackEnd.controller;
 
 import com.recruiters.recruiterssupportbackEnd.controller.http.HttpResponseEntity;
+import com.recruiters.recruiterssupportbackEnd.model.entities.JobPosition;
 import java.util.List;
 import com.recruiters.recruiterssupportbackEnd.model.entities.Vacant;
 import com.recruiters.recruiterssupportbackEnd.repository.VacantRepository;
@@ -34,20 +35,19 @@ public class VacantController {
     }
 
     @GetMapping("/")
-    public List<Vacant> getAllCompanies() {
+    public List<Vacant> getAllVacant() {
         return VacantRepository.findAll();
     }
 
-    @GetMapping("/{nit}")
-    public ResponseEntity<Vacant> getVacant(@PathVariable String nit) throws Throwable {
-        Query query = new Query(Criteria.where("nit").is(nit));
+    @GetMapping("/{nitcompany}")
+    public ResponseEntity<Vacant> getVacant(@PathVariable String nitcompany,@PathVariable String jobpsotion) throws Throwable {
+        Query query = new Query(Criteria.where("nitcompany").is(nitcompany));
         Vacant vacant = mongoTemplate.findOne(query, Vacant.class);
-
-        if (vacant == null) {
-            return HttpResponseEntity.getNotFoundStatus();
+        
+        if (vacant != null && vacant.getJobPosition().getNit()== jobpsotion) {
+            return HttpResponseEntity.getOKStatus(vacant);
         }
-
-        return HttpResponseEntity.getOKStatus(vacant);
+        return HttpResponseEntity.getNotFoundStatus();
     }
 
     @PostMapping("/")
