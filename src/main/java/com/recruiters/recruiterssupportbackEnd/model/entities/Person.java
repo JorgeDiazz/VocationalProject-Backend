@@ -1,7 +1,9 @@
 
 package com.recruiters.recruiterssupportbackEnd.model.entities;
 
+import java.util.Arrays;
 import org.springframework.data.annotation.Id;
+import org.springframework.util.StringUtils;
 
 /**
  *
@@ -11,6 +13,7 @@ public class Person {
     
     @Id
     private String id;
+    private String nit;
     private String name;
     private String email;
     private String number; 
@@ -73,7 +76,22 @@ public class Person {
     public void setAddress(String address) {
         this.address = address;
     }
+
+    public String getNit() {
+        return nit;
+    }
+
+    public void setNit(String nit) {
+        this.nit = nit;
+    }
     
-  
+    public static boolean isCorrectForCreate(Person person) {
+        return person != null && !StringUtils.isEmpty(person.getNit()) && !StringUtils.isEmpty(person.getName()) && !StringUtils.isEmpty(person.getEmail()) && !StringUtils.isEmpty(person.getNumber()) && !StringUtils.isEmpty(person.getAddress());
+    }
+
+    @Override
+    public String toString() {
+        return "Person{" + "id=" + id + ", nit=" + nit + ", name=" + name + ", email=" + email + ", number=" + number + ", image=" + Arrays.toString(image) + ", password=" + password + ", address=" + address + '}';
+    }
     
 }

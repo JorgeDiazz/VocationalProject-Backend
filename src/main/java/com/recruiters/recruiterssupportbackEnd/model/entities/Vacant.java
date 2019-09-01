@@ -1,7 +1,10 @@
 package com.recruiters.recruiterssupportbackEnd.model.entities;
 
+
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.data.annotation.Id;
+import org.springframework.util.StringUtils;
 
 /**
  *
@@ -71,8 +74,28 @@ public class Vacant {
         return postulants;
     }
 
+    
     public void setPostulants(List<Postulant> postulants) {
         this.postulants = postulants;
     }
+    
+    
+    public void addPostulants(Postulant postulant) {
+        this.postulants.add(postulant);
+    }
+    
+    public void initPostulants(){
+        this.postulants = new ArrayList<>();
+    }
+    
+    
+    public static boolean isCorrectForCreate(Vacant vacant) {
+        return vacant != null && !StringUtils.isEmpty(vacant.getNitCompany()) && !StringUtils.isEmpty(vacant.getPlacesNumber()) && !StringUtils.isEmpty(vacant.getStartDate()) && !StringUtils.isEmpty(vacant.getEndDate());
+    }
 
+    @Override
+    public String toString() {
+        return "Vacant{" + "id=" + id + ", nitCompany=" + nitCompany + ", placesNumber=" + placesNumber + ", startDate=" + startDate + ", endDate=" + endDate + ", jobPosition=" + jobPosition + ", postulants=" + postulants + '}';
+    }
+  
 }

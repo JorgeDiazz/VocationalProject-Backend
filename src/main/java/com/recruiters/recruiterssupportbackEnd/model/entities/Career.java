@@ -7,7 +7,7 @@ package com.recruiters.recruiterssupportbackEnd.model.entities;
 
 /**
  *
- * @author seam33
+ * @author Jhanuar Sanchez
  */
 public class Career {
     
