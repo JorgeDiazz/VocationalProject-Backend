@@ -1,14 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.recruiters.recruiterssupportbackEnd.model.entities.skills;
 
-/**
- *
- * @author seam33
- */
-public class HardSkill {
-    
+import org.springframework.util.StringUtils;
+
+public class HardSkill extends Skill {
+
+    public static boolean isCorrectForCreate(HardSkill hardSkill) {
+        return !StringUtils.isEmpty(hardSkill.getName());
+    }
 }
