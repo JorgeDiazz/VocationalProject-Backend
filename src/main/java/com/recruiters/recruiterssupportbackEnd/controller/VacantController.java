@@ -1,10 +1,11 @@
 package com.recruiters.recruiterssupportbackEnd.controller;
 
 import com.recruiters.recruiterssupportbackEnd.controller.http.HttpResponseEntity;
+import com.recruiters.recruiterssupportbackEnd.model.entities.Company;
 import com.recruiters.recruiterssupportbackEnd.model.entities.JobPosition;
 import java.util.List;
 import com.recruiters.recruiterssupportbackEnd.model.entities.Vacant;
-import com.recruiters.recruiterssupportbackEnd.repository.VacantRepository;
+import com.recruiters.recruiterssupportbackEnd.repository.JobPositionRepository;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -25,40 +26,44 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/vacants")
 public class VacantController {
 
+    private final JobPositionRepository jobPositionRepository;
     private final MongoTemplate mongoTemplate;
-    private final VacantRepository VacantRepository;
 
     @Autowired
-    public VacantController(MongoTemplate mongoTemplate, VacantRepository vacantRepository) {
+    public VacantController(JobPositionRepository jobPositionRepository, MongoTemplate mongoTemplate) {
+        this.jobPositionRepository = jobPositionRepository;
         this.mongoTemplate = mongoTemplate;
-        this.VacantRepository = vacantRepository;
     }
 
-    @GetMapping("/")
-    public List<Vacant> getAllVacant() {
-        return VacantRepository.findAll();
-    }
+    @GetMapping("/{nit}")
+    public ResponseEntity<List<Vacant>> getAllVacantsByJobPosition(@PathVariable String nit) throws Throwable{
+        Query query = new Query(Criteria.where("nit").is(nit));
+        JobPosition jobPosition = mongoTemplate.findOne(query, JobPosition.class);
 
-    @GetMapping("/{nitcompany}")
-    public ResponseEntity<Vacant> getVacant(@PathVariable String nitcompany,@PathVariable String jobpsotion) throws Throwable {
-        Query query = new Query(Criteria.where("nitcompany").is(nitcompany));
-        Vacant vacant = mongoTemplate.findOne(query, Vacant.class);
-        
-        if (vacant != null && vacant.getJobPosition().getNit()== jobpsotion) {
-            return HttpResponseEntity.getOKStatus(vacant);
+        if (jobPosition == null) {
+            return HttpResponseEntity.getNotFoundStatus();
         }
-        return HttpResponseEntity.getNotFoundStatus();
+        
+       return HttpResponseEntity.getOKStatus(jobPosition.getVacants());
     }
 
     @PostMapping("/")
     public ResponseEntity<Vacant> createVacant(@Valid @RequestBody Vacant vacant) {
 
         if (Vacant.isCorrectForCreate(vacant)) {
-            vacant.initPostulants();
-            VacantRepository.save(vacant);
+            Query query = new Query(Criteria.where("nit").is(vacant.getNitJobPosition()));
+            JobPosition jobPositions = mongoTemplate.findOne(query, JobPosition.class);
+            
+            if (jobPositions == null) {
+                return HttpResponseEntity.getNotFoundStatus();
+            }
+            
+            jobPositions.getVacants().add(vacant);
+            jobPositionRepository.save(jobPositions);
+
             return HttpResponseEntity.getOKStatus(vacant);
         }
-
+        
         return HttpResponseEntity.getMissingFieldsStatus();
     }
 }

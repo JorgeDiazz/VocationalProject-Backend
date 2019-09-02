@@ -14,11 +14,10 @@ public class Vacant {
 
     @Id
     private String id;
-    private String nitCompany;
+    private String nitJobPosition;
     private String placesNumber;
     private String startDate;
     private String endDate;
-    private JobPosition jobPosition;
     private List<Postulant> postulants;
 
    
@@ -30,12 +29,12 @@ public class Vacant {
         this.id = id;
     }
 
-    public String getNitCompany() {
-        return nitCompany;
+    public String getNitJobPosition() {
+        return nitJobPosition;
     }
 
-    public void setNitCompany(String nitCompany) {
-        this.nitCompany = nitCompany;
+    public void setNitJobPosition(String nitJobPosition) {
+        this.nitJobPosition = nitJobPosition;
     }
 
     public String getPlacesNumber() {
@@ -62,23 +61,13 @@ public class Vacant {
         this.endDate = endDate;
     }
 
-    public JobPosition getJobPosition() {
-        return jobPosition;
-    }
-
-    public void setJobPosition(JobPosition jobPosition) {
-        this.jobPosition = jobPosition;
-    }
-
     public List<Postulant> getPostulants() {
         return postulants;
     }
-
-    
+ 
     public void setPostulants(List<Postulant> postulants) {
         this.postulants = postulants;
     }
-    
     
     public void addPostulants(Postulant postulant) {
         this.postulants.add(postulant);
@@ -90,12 +79,12 @@ public class Vacant {
     
     
     public static boolean isCorrectForCreate(Vacant vacant) {
-        return vacant != null && !StringUtils.isEmpty(vacant.getNitCompany()) && !StringUtils.isEmpty(vacant.getPlacesNumber()) && !StringUtils.isEmpty(vacant.getStartDate()) && !StringUtils.isEmpty(vacant.getEndDate());
+        return vacant != null && !StringUtils.isEmpty(vacant.getNitJobPosition()) && !StringUtils.isEmpty(vacant.getPlacesNumber()) && !StringUtils.isEmpty(vacant.getStartDate()) && !StringUtils.isEmpty(vacant.getEndDate());
     }
 
     @Override
     public String toString() {
-        return "Vacant{" + "id=" + id + ", nitCompany=" + nitCompany + ", placesNumber=" + placesNumber + ", startDate=" + startDate + ", endDate=" + endDate + ", jobPosition=" + jobPosition + ", postulants=" + postulants + '}';
+        return "Vacant{" + "id=" + id + ", nitJobPosition=" + nitJobPosition + ", placesNumber=" + placesNumber + ", startDate=" + startDate + ", endDate=" + endDate + ", postulants=" + postulants + '}';
     }
-  
+
 }

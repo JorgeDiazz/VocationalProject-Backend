@@ -1,8 +1,9 @@
 package com.recruiters.recruiterssupportbackEnd.controller;
 
 import com.recruiters.recruiterssupportbackEnd.controller.http.HttpResponseEntity;
+import com.recruiters.recruiterssupportbackEnd.model.entities.Company;
 import com.recruiters.recruiterssupportbackEnd.model.entities.JobPosition;
-import com.recruiters.recruiterssupportbackEnd.repository.JobPositionRepository;
+import com.recruiters.recruiterssupportbackEnd.repository.CompanyRepository;
 import java.util.List;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,43 +26,44 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/JobPosition")
 public class JobPositionController {
 
+    private final CompanyRepository companyRepository;
     private final MongoTemplate mongoTemplate;
-    private final JobPositionRepository jobPositionRepository;
 
     @Autowired
-    public JobPositionController(MongoTemplate mongoTemplate, JobPositionRepository jobPositionRepository) {
+    public JobPositionController(CompanyRepository companyRepository, MongoTemplate mongoTemplate) {
+        this.companyRepository = companyRepository;
         this.mongoTemplate = mongoTemplate;
-        this.jobPositionRepository = jobPositionRepository;
-    }
-
-    @GetMapping("/")
-    public List<JobPosition> getAllJobPositions() {
-        return jobPositionRepository.findAll();
     }
 
     @GetMapping("/{nit}")
-    public ResponseEntity<JobPosition> getJobPosition(@PathVariable String nit) throws Throwable {
+    public ResponseEntity<List<JobPosition>> getAllJobpositionByCompany(@PathVariable String nit) throws Throwable{
         Query query = new Query(Criteria.where("nit").is(nit));
-        JobPosition jobPosition = mongoTemplate.findOne(query, JobPosition.class);
+        Company company = mongoTemplate.findOne(query, Company.class);
 
-        if (jobPosition == null) {
+        if (company == null) {
             return HttpResponseEntity.getNotFoundStatus();
         }
-
-        return HttpResponseEntity.getOKStatus(jobPosition);
+        
+       return HttpResponseEntity.getOKStatus(company.getJobsPositions());
     }
 
     @PostMapping("/")
-    public ResponseEntity<JobPosition> createJobPosition(@Valid @RequestBody JobPosition jobPosition) {
+    public ResponseEntity<JobPosition> createJobPosition(@Valid @RequestBody JobPosition jobposition) {
 
-        if (JobPosition.isCorrectForCreate(jobPosition)) {
-            jobPosition.initCareers();
-            jobPosition.initHardSkills();
-            jobPosition.initSoftSkills();
-            jobPositionRepository.save(jobPosition);
-            return HttpResponseEntity.getOKStatus(jobPosition);
+        if (JobPosition.isCorrectForCreate(jobposition)) {
+            Query query = new Query(Criteria.where("nit").is(jobposition.getNitcompany()));
+            Company company = mongoTemplate.findOne(query, Company.class);
+            
+            if (company == null) {
+                return HttpResponseEntity.getNotFoundStatus();
+            }
+            
+            company.getJobsPositions().add(jobposition);
+            companyRepository.save(company);
+
+            return HttpResponseEntity.getOKStatus(jobposition);
         }
-
+        
         return HttpResponseEntity.getMissingFieldsStatus();
     }
 }

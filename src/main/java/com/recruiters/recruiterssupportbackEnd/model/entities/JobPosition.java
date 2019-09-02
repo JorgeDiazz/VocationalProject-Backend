@@ -16,22 +16,32 @@ public class JobPosition {
     
     @Id
     private String id;
-    private String nit;
+    private String nitcompany;
     private String name;
     private String description;
     private String salary;
     private List<Career> careers;
     private List<HardSkill> hardSkills;
     private List<SoftSkill> softSkills;
-    private String vacants;//este es un  numerito (quedan 2 vacantes para ese puesto)
+    private List<Vacant> vacants;
+    private String numvacants;//este es un  numerito (quedan 2 vacantes para ese puesto)
 
-    public String getNit() {
-        return nit;
+    public String getId() {
+        return id;
     }
 
-    public void setNit(String nit) {
-        this.nit = nit;
+    public void setId(String id) {
+        this.id = id;
     }
+
+    public String getNitcompany() {
+        return nitcompany;
+    }
+
+    public void setNitcompany(String nitcompany) {
+        this.nitcompany = nitcompany;
+    }
+
 
     public String getSalary() {
         return salary;
@@ -73,14 +83,22 @@ public class JobPosition {
         this.softSkills = softSkills;
     }
 
-    public String getVacants() {
+    public List<Vacant> getVacants() {
         return vacants;
     }
 
-    public void setVacants(String vacants) {
+    public void setVacants(List<Vacant> vacants) {
         this.vacants = vacants;
     }
 
+    public String getNumvacants() {
+        return numvacants;
+    }
+
+    public void setNumvacants(String numvacants) {
+        this.numvacants = numvacants;
+    }
+    
     public String getName() {
         return name;
     }
@@ -93,14 +111,17 @@ public class JobPosition {
         this.careers.add(carrer);
     }
     
-    public void addHardSkills(HardSkill recruiter) {
-        this.hardSkills.add(recruiter);
+    public void addHardSkills(HardSkill hardskill) {
+        this.hardSkills.add(hardskill);
     }
     
-    public void addSoftSkills(SoftSkill recruiter) {
-        this.softSkills.add(recruiter);
+    public void addSoftSkills(SoftSkill softskill) {
+        this.softSkills.add(softskill);
     }
     
+    public void addSoftSkills(Vacant vacant) {
+        this.vacants.add(vacant);
+    }
     public void initCareers(){
         this.careers = new ArrayList<>();
     }
@@ -112,15 +133,20 @@ public class JobPosition {
     public void initSoftSkills(){
         this.softSkills = new ArrayList<>();
     }
-  
+    
+    public void initVacants(){
+        this.vacants = new ArrayList<>();
+    }
     public static boolean isCorrectForCreate(JobPosition jobposition) {
-        return jobposition != null && !StringUtils.isEmpty(jobposition.getNit()) && !StringUtils.isEmpty(jobposition.getName()) && !StringUtils.isEmpty(jobposition.getSalary()) && !StringUtils.isEmpty(jobposition.getDescription()) && !StringUtils.isEmpty(jobposition.getVacants());
+        return jobposition != null && !StringUtils.isEmpty(jobposition.getNitcompany()) && !StringUtils.isEmpty(jobposition.getName()) && !StringUtils.isEmpty(jobposition.getSalary()) && !StringUtils.isEmpty(jobposition.getDescription()) && !StringUtils.isEmpty(jobposition.getVacants());
     }
 
     @Override
     public String toString() {
-        return "JobPosition{" + "id=" + id + ", nit=" + nit + ", name=" + name + ", description=" + description + ", salary=" + salary + ", careers=" + careers + ", hardSkills=" + hardSkills + ", softSkills=" + softSkills + ", vacants=" + vacants + '}';
+        return "JobPosition{" + "id=" + id + ", nitcompany=" + nitcompany + ", name=" + name + ", description=" + description + ", salary=" + salary + ", careers=" + careers + ", hardSkills=" + hardSkills + ", softSkills=" + softSkills + ", vacants=" + vacants + ", numvacants=" + numvacants + '}';
     }
+
+    
     
     
 }

@@ -122,6 +122,9 @@ public class Company {
     public void initRecruiters(){
         this.recruiters = new ArrayList<>();
     }
+    public void initJobPosition(){
+        this.JobsPositions = new ArrayList<>();
+    }
     
     public static boolean isCorrectForCreate(Company company) {
         return company != null && !StringUtils.isEmpty(company.getNit()) && !StringUtils.isEmpty(company.getName()) && !StringUtils.isEmpty(company.getEmail()) && !StringUtils.isEmpty(company.getNumber()) && !StringUtils.isEmpty(company.getAddress());
