@@ -1,32 +1,23 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.recruiters.recruiterssupportbackEnd.model.entities;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.util.StringUtils;
 
 /**
  *
- * @author Jhanuar Sanchez
+ * @author seam33
  */
+
 public class Career {
     
     @Id
     private String id;
     private String name;
-    private String university;
-    private String average;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
+    private String universityName;
+    private String startDate;
+    private String endDate;
+    private String semester;
+    private double universityAverageScore; 
 
     public String getName() {
         return name;
@@ -36,23 +27,53 @@ public class Career {
         this.name = name;
     }
 
-    public String getUniversity() {
-        return university;
+    public String getUniversityName() {
+        return universityName;
     }
 
-    public void setUniversity(String university) {
-        this.university = university;
+    public void setUniversityName(String universityName) {
+        this.universityName = universityName;
     }
 
-    public String getAverage() {
-        return average;
+    public String getStartDate() {
+        return startDate;
     }
 
-    public void setAverage(String average) {
-        this.average = average;
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
     }
 
-    public static boolean isCorrectForCreate(Career career) {
-        return !StringUtils.isEmpty(career.getName());
+    public String getEndDate() {
+        return endDate;
     }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
+
+    public String getSemester() {
+        return semester;
+    }
+
+    public void setSemester(String semester) {
+        this.semester = semester;
+    }
+
+    public double getUniversityAverageScore() {
+        return universityAverageScore;
+    }
+
+    public void setUniversityAverageScore(double universityAverageScore) {
+        this.universityAverageScore = universityAverageScore;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+    
+    
 }
