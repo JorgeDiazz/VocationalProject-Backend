@@ -1,12 +1,10 @@
 package com.recruiters.recruiterssupportbackEnd.model.entities;
 
 import java.util.List;
-import org.springframework.data.annotation.Id;
 import org.springframework.util.StringUtils;
 
 public class Recruiter extends Person{
 
-    @Id
     private String nitCompany;
     private List<Vacant> vacant;
 
