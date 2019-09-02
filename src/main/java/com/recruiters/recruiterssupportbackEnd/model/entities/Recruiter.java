@@ -1,19 +1,45 @@
 package com.recruiters.recruiterssupportbackEnd.model.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.util.StringUtils;
 
-public class Recruiter extends Person{
+public class Recruiter extends Person {
 
     private String nitCompany;
-    private List<Vacant> vacant;
+    private List<Vacant> pendingVacant;
+    private List<Vacant> acceptedVacant;
 
-    public List<Vacant> getVacant() {
-        return vacant;
+    public List<Vacant> getPendingVacant() {
+        return pendingVacant;
     }
 
-    public void setVacant(List<Vacant> vacant) {
-        this.vacant = vacant;
+    public void setPendingVacant(List<Vacant> pendingVacant) {
+        this.pendingVacant = pendingVacant;
+    }
+
+    public void addPendingVacant(Vacant pendingVacant) {
+        this.pendingVacant.add(pendingVacant);
+    }
+
+    public void initPendingVacant() {
+        this.pendingVacant = new ArrayList<>();
+    }
+
+    public List<Vacant> getAcceptedVacant() {
+        return acceptedVacant;
+    }
+
+    public void setAcceptedVacant(List<Vacant> acceptedVacant) {
+        this.acceptedVacant = acceptedVacant;
+    }
+
+    public void addacceptedVacant(Vacant acceptedVacant) {
+        this.acceptedVacant.add(acceptedVacant);
+    }
+
+    public void initacceptedVacant() {
+        this.acceptedVacant = new ArrayList<>();
     }
 
     public String getNitCompany() {

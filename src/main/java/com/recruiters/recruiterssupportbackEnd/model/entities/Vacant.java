@@ -14,8 +14,9 @@ public class Vacant {
 
     @Id
     private String id;
-    private String nitJobPosition;
-    private String placesNumber;
+    private String nitCompany;
+    private String nameJobPosition;
+    private int placesNumber;
     private String startDate;
     private String endDate;
     private List<Postulant> postulants;
@@ -29,19 +30,27 @@ public class Vacant {
         this.id = id;
     }
 
-    public String getNitJobPosition() {
-        return nitJobPosition;
+    public String getNameJobPosition() {
+        return nameJobPosition;
     }
 
-    public void setNitJobPosition(String nitJobPosition) {
-        this.nitJobPosition = nitJobPosition;
+    public void setNameJobPosition(String nameJobPosition) {
+        this.nameJobPosition = nameJobPosition;
     }
 
-    public String getPlacesNumber() {
+    public String getNitCompany() {
+        return nitCompany;
+    }
+
+    public void setNitCompany(String nitCompany) {
+        this.nitCompany = nitCompany;
+    }
+
+    public int getPlacesNumber() {
         return placesNumber;
     }
 
-    public void setPlacesNumber(String placesNumber) {
+    public void setPlacesNumber(int placesNumber) {
         this.placesNumber = placesNumber;
     }
 
@@ -77,14 +86,7 @@ public class Vacant {
         this.postulants = new ArrayList<>();
     }
     
-    
     public static boolean isCorrectForCreate(Vacant vacant) {
-        return vacant != null && !StringUtils.isEmpty(vacant.getNitJobPosition()) && !StringUtils.isEmpty(vacant.getPlacesNumber()) && !StringUtils.isEmpty(vacant.getStartDate()) && !StringUtils.isEmpty(vacant.getEndDate());
+        return vacant != null && !StringUtils.isEmpty(vacant.getNitCompany()) && !StringUtils.isEmpty(vacant.getNameJobPosition()) && !StringUtils.isEmpty(vacant.getPlacesNumber()) && !StringUtils.isEmpty(vacant.getStartDate()) && !StringUtils.isEmpty(vacant.getEndDate());
     }
-
-    @Override
-    public String toString() {
-        return "Vacant{" + "id=" + id + ", nitJobPosition=" + nitJobPosition + ", placesNumber=" + placesNumber + ", startDate=" + startDate + ", endDate=" + endDate + ", postulants=" + postulants + '}';
-    }
-
 }

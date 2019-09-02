@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.recruiters.recruiterssupportbackEnd.model.entities;
 
 import com.recruiters.recruiterssupportbackEnd.model.entities.skills.SoftSkill;
@@ -118,6 +113,10 @@ public class Company {
     public void setJobsPositions(List<JobPosition> JobsPositions) {
         this.JobsPositions = JobsPositions;
     }
+    
+    public void addJobsPositions(JobPosition jobPosition){
+        this.JobsPositions.add(jobPosition);
+    }
 
     public void initRecruiters(){
         this.recruiters = new ArrayList<>();
@@ -130,11 +129,4 @@ public class Company {
         return company != null && !StringUtils.isEmpty(company.getNit()) && !StringUtils.isEmpty(company.getName()) && !StringUtils.isEmpty(company.getEmail()) && !StringUtils.isEmpty(company.getNumber()) && !StringUtils.isEmpty(company.getAddress());
     }
 
-    @Override
-    public String toString() {
-        return "Company{" + "id=" + id + ", nit=" + nit + ", name=" + name + ", email=" + email + ", number=" + number + ", image=" + image + ", password=" + password + ", address=" + address + ", active=" + active + ", recruiters=" + recruiters + ", softSkills=" + softSkills + ", JobsPositions=" + JobsPositions + '}';
-    }
-    
-   
-    
 }

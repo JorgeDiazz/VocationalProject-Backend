@@ -58,7 +58,11 @@ public class JobPositionController {
                 return HttpResponseEntity.getNotFoundStatus();
             }
             
-            company.getJobsPositions().add(jobposition);
+            jobposition.initCareers();
+            jobposition.initHardSkills();
+            jobposition.initSoftSkills();
+            jobposition.initVacants();
+            company.addJobsPositions(jobposition);
             companyRepository.save(company);
 
             return HttpResponseEntity.getOKStatus(jobposition);

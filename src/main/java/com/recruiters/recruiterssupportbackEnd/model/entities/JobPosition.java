@@ -24,7 +24,6 @@ public class JobPosition {
     private List<HardSkill> hardSkills;
     private List<SoftSkill> softSkills;
     private List<Vacant> vacants;
-    private String numvacants;//este es un  numerito (quedan 2 vacantes para ese puesto)
 
     public String getId() {
         return id;
@@ -41,7 +40,6 @@ public class JobPosition {
     public void setNitcompany(String nitcompany) {
         this.nitcompany = nitcompany;
     }
-
 
     public String getSalary() {
         return salary;
@@ -90,14 +88,6 @@ public class JobPosition {
     public void setVacants(List<Vacant> vacants) {
         this.vacants = vacants;
     }
-
-    public String getNumvacants() {
-        return numvacants;
-    }
-
-    public void setNumvacants(String numvacants) {
-        this.numvacants = numvacants;
-    }
     
     public String getName() {
         return name;
@@ -119,7 +109,7 @@ public class JobPosition {
         this.softSkills.add(softskill);
     }
     
-    public void addSoftSkills(Vacant vacant) {
+    public void addVacants(Vacant vacant) {
         this.vacants.add(vacant);
     }
     public void initCareers(){
@@ -138,15 +128,7 @@ public class JobPosition {
         this.vacants = new ArrayList<>();
     }
     public static boolean isCorrectForCreate(JobPosition jobposition) {
-        return jobposition != null && !StringUtils.isEmpty(jobposition.getNitcompany()) && !StringUtils.isEmpty(jobposition.getName()) && !StringUtils.isEmpty(jobposition.getSalary()) && !StringUtils.isEmpty(jobposition.getDescription()) && !StringUtils.isEmpty(jobposition.getVacants());
+        return jobposition != null && !StringUtils.isEmpty(jobposition.getNitcompany()) && !StringUtils.isEmpty(jobposition.getName()) && !StringUtils.isEmpty(jobposition.getSalary()) && !StringUtils.isEmpty(jobposition.getDescription());
     }
-
-    @Override
-    public String toString() {
-        return "JobPosition{" + "id=" + id + ", nitcompany=" + nitcompany + ", name=" + name + ", description=" + description + ", salary=" + salary + ", careers=" + careers + ", hardSkills=" + hardSkills + ", softSkills=" + softSkills + ", vacants=" + vacants + ", numvacants=" + numvacants + '}';
-    }
-
-    
-    
-    
+ 
 }

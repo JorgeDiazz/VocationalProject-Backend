@@ -52,6 +52,7 @@ public class CompanyController {
 
         if (Company.isCorrectForCreate(company)) {
             company.initRecruiters();
+            company.initJobPosition();
             companyRepository.save(company);
             return HttpResponseEntity.getOKStatus(company);
         }

@@ -2,22 +2,19 @@ package com.recruiters.recruiterssupportbackEnd.controller;
 
 import com.recruiters.recruiterssupportbackEnd.controller.http.HttpResponseEntity;
 import com.recruiters.recruiterssupportbackEnd.model.entities.Company;
-import com.recruiters.recruiterssupportbackEnd.model.entities.JobPosition;
-import java.util.List;
 import com.recruiters.recruiterssupportbackEnd.model.entities.Vacant;
-import com.recruiters.recruiterssupportbackEnd.repository.JobPositionRepository;
+import com.recruiters.recruiterssupportbackEnd.repository.CompanyRepository;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 /**
  *
  * @author jhanuar Sanchez
@@ -26,44 +23,47 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/vacants")
 public class VacantController {
 
-    private final JobPositionRepository jobPositionRepository;
+    private final CompanyRepository companyRepository;
     private final MongoTemplate mongoTemplate;
 
     @Autowired
-    public VacantController(JobPositionRepository jobPositionRepository, MongoTemplate mongoTemplate) {
-        this.jobPositionRepository = jobPositionRepository;
+    public VacantController(CompanyRepository companyRepository, MongoTemplate mongoTemplate) {
+        this.companyRepository = companyRepository;
         this.mongoTemplate = mongoTemplate;
-    }
-
-    @GetMapping("/{nit}")
-    public ResponseEntity<List<Vacant>> getAllVacantsByJobPosition(@PathVariable String nit) throws Throwable{
-        Query query = new Query(Criteria.where("nit").is(nit));
-        JobPosition jobPosition = mongoTemplate.findOne(query, JobPosition.class);
-
-        if (jobPosition == null) {
-            return HttpResponseEntity.getNotFoundStatus();
-        }
-        
-       return HttpResponseEntity.getOKStatus(jobPosition.getVacants());
     }
 
     @PostMapping("/")
     public ResponseEntity<Vacant> createVacant(@Valid @RequestBody Vacant vacant) {
 
         if (Vacant.isCorrectForCreate(vacant)) {
-            Query query = new Query(Criteria.where("nit").is(vacant.getNitJobPosition()));
-            JobPosition jobPositions = mongoTemplate.findOne(query, JobPosition.class);
-            
-            if (jobPositions == null) {
+            Query query = new Query(Criteria.where("nit").is(vacant.getNitCompany()));
+            Company company = mongoTemplate.findOne(query, Company.class);
+
+            if (company == null) {
                 return HttpResponseEntity.getNotFoundStatus();
             }
             
-            jobPositions.getVacants().add(vacant);
-            jobPositionRepository.save(jobPositions);
+            
+            for (int i = 0; i < company.getJobsPositions().size(); i++) {
+                
+                if(company.getJobsPositions().get(i).getName().equalsIgnoreCase(vacant.getNameJobPosition())){
+                    
+                    company.getJobsPositions().get(i).addVacants(vacant);
+                    
+                    for (int j = 0; j < company.getRecruiters().size(); j++) {
+                        company.getRecruiters().get(j).addPendingVacant(vacant);
+                    }
+                    
+                    companyRepository.save(company);
+                    break;
+                }
+                
+            }
+            
 
             return HttpResponseEntity.getOKStatus(vacant);
         }
-        
+
         return HttpResponseEntity.getMissingFieldsStatus();
     }
 }

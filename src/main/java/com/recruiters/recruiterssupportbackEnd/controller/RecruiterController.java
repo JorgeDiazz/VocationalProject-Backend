@@ -3,7 +3,9 @@ package com.recruiters.recruiterssupportbackEnd.controller;
 import com.recruiters.recruiterssupportbackEnd.controller.http.HttpResponseEntity;
 import com.recruiters.recruiterssupportbackEnd.model.entities.Company;
 import com.recruiters.recruiterssupportbackEnd.model.entities.Recruiter;
+import com.recruiters.recruiterssupportbackEnd.model.entities.Vacant;
 import com.recruiters.recruiterssupportbackEnd.repository.CompanyRepository;
+import java.util.ArrayList;
 import java.util.List;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +59,18 @@ public class RecruiterController {
             
             if (company == null) {
                 return HttpResponseEntity.getNotFoundStatus();
+            }
+            
+            recruiter.initPendingVacant();
+            recruiter.initacceptedVacant();
+            
+            for (int i = 0; i < company.getJobsPositions().size(); i++) {
+                
+                List<Vacant> a = new ArrayList<>(company.getJobsPositions().get(i).getVacants());
+                
+                for (int j = 0; j < a.size(); j++) {
+                    recruiter.addPendingVacant(a.get(j));
+                }
             }
             
             company.addRecruiters(recruiter);
