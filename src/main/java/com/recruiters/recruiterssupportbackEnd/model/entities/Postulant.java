@@ -1,7 +1,8 @@
 package com.recruiters.recruiterssupportbackEnd.model.entities;
 
+import java.util.ArrayList;
 import java.util.List;
-import org.springframework.data.annotation.Id;
+import org.apache.logging.log4j.util.Strings;
 
 /**
  *
@@ -11,18 +12,17 @@ import org.springframework.data.annotation.Id;
 
 public class Postulant extends Person{
     
-    @Id
-    private String career;
+    private Career career;
     private String curriculumVitae;
     private List<Vacant> onHoldVacantList;
     private List<Vacant> inProcessVacantList;
     private List<Vacant> deniedVacantList;
-
-    public String getCareer() {
+    
+    public Career getCareer() {
         return career;
     }
 
-    public void setCareer(String career) {
+    public void setCareer(Career career) {
         this.career = career;
     }
 
@@ -41,6 +41,14 @@ public class Postulant extends Person{
     public void setOnHoldVacantList(List<Vacant> onHoldVacantList) {
         this.onHoldVacantList = onHoldVacantList;
     }
+    
+    public void addOnHoldVacantList(Vacant onHoldVacantList){
+        this.onHoldVacantList.add(onHoldVacantList);
+    }
+    
+    public void initOnHoldVacantList(){
+        this.onHoldVacantList=new ArrayList<>();
+    }
 
     public List<Vacant> getInProcessVacantList() {
         return inProcessVacantList;
@@ -50,6 +58,14 @@ public class Postulant extends Person{
         this.inProcessVacantList = inProcessVacantList;
     }
 
+    public void addInProcessVacantList(Vacant inProcessVacantList){
+        this.inProcessVacantList.add(inProcessVacantList);
+    }
+    
+     public void initInProcessVacantList(){
+        this.inProcessVacantList=new ArrayList<>();
+    }
+    
     public List<Vacant> getDeniedVacantList() {
         return deniedVacantList;
     }
@@ -57,5 +73,13 @@ public class Postulant extends Person{
     public void setDeniedVacantList(List<Vacant> deniedVacantList) {
         this.deniedVacantList = deniedVacantList;
     }
+
+    public void initCareer(){
+        this.career=new Career();
+    }
     
+    public static boolean isCorrectForCreate(Postulant postulant){
+        return postulant!=null && !Strings.isEmpty(postulant.getName()) && !Strings.isEmpty(postulant.getEmail()) && !Strings.isEmpty(postulant.getCareer().getName()); 
+    }
+
 }
