@@ -2,7 +2,6 @@
 package com.recruiters.recruiterssupportbackEnd.controller;
 
 import com.recruiters.recruiterssupportbackEnd.controller.http.HttpResponseEntity;
-import com.recruiters.recruiterssupportbackEnd.model.entities.Career;
 import com.recruiters.recruiterssupportbackEnd.model.entities.Postulant;
 import com.recruiters.recruiterssupportbackEnd.repository.PostulantRepository;
 import java.util.List;
