@@ -1,4 +1,4 @@
-package com.recruiters.recruiterssupportbackEnd.controller;
+ package com.recruiters.recruiterssupportbackEnd.controller;
 
 import com.recruiters.recruiterssupportbackEnd.controller.http.HttpResponseEntity;
 import com.recruiters.recruiterssupportbackEnd.model.entities.Company;
