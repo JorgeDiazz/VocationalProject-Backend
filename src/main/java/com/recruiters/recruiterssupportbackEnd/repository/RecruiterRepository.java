@@ -6,12 +6,12 @@
 package com.recruiters.recruiterssupportbackEnd.repository;
 
 import com.recruiters.recruiterssupportbackEnd.model.entities.Recruiter;
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
  *
  * @author seam33
  */
-public interface RecruiterRepository extends MongoRepository<Recruiter,String>{
+public interface RecruiterRepository extends JpaRepository<Recruiter,String>{
     
 }
