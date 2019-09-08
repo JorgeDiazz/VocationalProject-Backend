@@ -1,7 +1,9 @@
 package com.recruiters.recruiterssupportbackEnd.controller;
 
 import com.recruiters.recruiterssupportbackEnd.controller.exceptions.UnauthorizedException;
+import static com.recruiters.recruiterssupportbackEnd.controller.http.Constants.INCORRECT_CREDENTIALS;
 import com.recruiters.recruiterssupportbackEnd.controller.http.HttpResponseEntity;
+import com.recruiters.recruiterssupportbackEnd.controller.http.ResponseUtils;
 import com.recruiters.recruiterssupportbackEnd.model.entities.Company;
 import com.recruiters.recruiterssupportbackEnd.model.entities.Person;
 import com.recruiters.recruiterssupportbackEnd.model.entities.UserEntity;
@@ -38,13 +40,9 @@ public class LoginController {
         if (optPerson.isPresent()) {
             Person person = optPerson.get();
             if (person.getPassword().equals(password)) {
-
-                HttpHeaders headers = new HttpHeaders();
-                headers.add("token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9");
-
-                return HttpResponseEntity.getOKStatus(person, headers);
+                return HttpResponseEntity.getOKStatus(person, ResponseUtils.generateTokenHeader(person));
             } else {
-                throw new UnauthorizedException("incorrect credentials.");
+                throw new UnauthorizedException(INCORRECT_CREDENTIALS);
             }
         }
 
@@ -53,14 +51,10 @@ public class LoginController {
             Company company = optCompany.get();
             if (company.getPassword().equals(password)) {
                 company.setType(TYPE.COMPANY);
-
-                HttpHeaders headers = new HttpHeaders();
-                headers.add("token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9");
-
-                return HttpResponseEntity.getOKStatus(company, headers);
+                return HttpResponseEntity.getOKStatus(company, ResponseUtils.generateTokenHeader(company));
             }
         }
 
-        throw new UnauthorizedException("incorrect credentials.");
+        throw new UnauthorizedException(INCORRECT_CREDENTIALS);
     }
 }
