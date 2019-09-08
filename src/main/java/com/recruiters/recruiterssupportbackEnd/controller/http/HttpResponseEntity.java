@@ -1,5 +1,6 @@
 package com.recruiters.recruiterssupportbackEnd.controller.http;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -13,8 +14,8 @@ public class HttpResponseEntity {
         return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
-    public static <T> ResponseEntity<T> getOKStatus(T object) {
-        return new ResponseEntity<>((T) object, HttpStatus.OK);
+    public static <T> ResponseEntity<T> getOKStatus(T object, HttpHeaders httpHeaders) {
+        return new ResponseEntity<>((T) object, httpHeaders, HttpStatus.OK);
     }
 
     public static ResponseEntity getMissingFieldsStatus() {

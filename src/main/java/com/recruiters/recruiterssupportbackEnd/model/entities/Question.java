@@ -7,9 +7,9 @@ package com.recruiters.recruiterssupportbackEnd.model.entities;
 
 /**
  *
- * @author seam33
+ * @author blue
  */
-public class Career {
+public class Question {
 
     private int id;
     private String name;
@@ -32,7 +32,7 @@ public class Career {
 
     @Override
     public String toString() {
-        return "Career{" + "id=" + id + ", name=" + name + '}';
+        return "Question{" + "id=" + id + ", name=" + name + '}';
     }
 
 }

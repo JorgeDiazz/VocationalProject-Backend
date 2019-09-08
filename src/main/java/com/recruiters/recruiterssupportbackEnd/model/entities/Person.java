@@ -1,24 +1,36 @@
-
 package com.recruiters.recruiterssupportbackEnd.model.entities;
 
-import java.util.Arrays;
-import org.springframework.data.annotation.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-/**
- *
- * @author Jhanuar Sanchez
- */
-public class Person {
-    
+@Entity
+@Table(name = "person")
+public class Person implements UserEntity {
+
     @Id
     private String id;
-    private String nit;
+    @Column(name = "nameP")
     private String name;
     private String email;
-    private String number; 
     private Byte[] image;
+    @JsonIgnore
+    @Column(name = "_password")
     private String password;
-    private String address;
+    @Column(name = "class")
+    private String type;
+    @Column(name = "nit_company")
+    private String nitCompany;
+
+    public String getNitCompany() {
+        return nitCompany;
+    }
+
+    public void setNitCompany(String nitCompany) {
+        this.nitCompany = nitCompany;
+    }
 
     public String getId() {
         return id;
@@ -44,14 +56,6 @@ public class Person {
         this.email = email;
     }
 
-    public String getNumber() {
-        return number;
-    }
-
-    public void setNumber(String number) {
-        this.number = number;
-    }
-
     public Byte[] getImage() {
         return image;
     }
@@ -68,20 +72,17 @@ public class Person {
         this.password = password;
     }
 
-    public String getAddress() {
-        return address;
+    public String getType() {
+        return type;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public String getNit() {
-        return nit;
-    }
-
-    public void setNit(String nit) {
-        this.nit = nit;
+    @Override
+    public String toString() {
+        return "Person{" + "id=" + id + ", name=" + name + ", email=" + email + ", image=" + image + ", password=" + password + ", type=" + type + ", nitCompany=" + nitCompany + '}';
     }
 
 }

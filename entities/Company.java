@@ -1,36 +1,48 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.recruiters.recruiterssupportbackEnd.model.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import com.recruiters.recruiterssupportbackEnd.model.entities.skills.Skill;
 import java.util.List;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
 
-@Entity
-@Table(name = "company")
-public class Company implements UserEntity {
 
-    @Id
+
+/**
+ *
+ * @author seam33
+ */
+public class Company {
+    
+    
+
     private String nit;
-    @Column(name = "nameC")
     private String name;
     private String address;
     private String phone;
     private String email;
     private Byte[] image;
-    @JsonIgnore
-    @Column(name = "_password")
     private String password;
-    @Transient
     private List<Person> persons;
-    @Transient
     private List<Skill> globalSkills;
-    @Transient
     private List<JobPosition> JobsPositions;
-    private TYPE type;
+
+    public Company(String nit, String name, String address, String phone, String email, Byte[] image, String password, List<Person> persons, List<Skill> globalSkills, List<JobPosition> JobsPositions) {
+        this.nit = nit;
+        this.name = name;
+        this.address = address;
+        this.phone = phone;
+        this.email = email;
+        this.image = image;
+        this.password = password;
+        this.persons = persons;
+        this.globalSkills = globalSkills;
+        this.JobsPositions = JobsPositions;
+    }
+ 
 
     public String getNit() {
         return nit;
@@ -96,17 +108,9 @@ public class Company implements UserEntity {
         this.JobsPositions = JobsPositions;
     }
 
-    public TYPE getType() {
-        return type;
-    }
-
-    public void setType(TYPE type) {
-        this.type = type;
-    }
-
     @Override
     public String toString() {
         return "Company{" + "nit=" + nit + ", name=" + name + ", address=" + address + ", phone=" + phone + ", email=" + email + ", image=" + image + ", password=" + password + ", persons=" + persons + ", globalSkills=" + globalSkills + ", JobsPositions=" + JobsPositions + '}';
     }
-
+   
 }

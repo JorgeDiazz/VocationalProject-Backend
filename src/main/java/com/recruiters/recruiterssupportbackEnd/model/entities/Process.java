@@ -5,14 +5,18 @@
  */
 package com.recruiters.recruiterssupportbackEnd.model.entities;
 
+import java.util.List;
+
 /**
  *
- * @author seam33
+ * @author blue
  */
-public class Career {
+public class Process {
 
     private int id;
     private String name;
+    private String description;
+    private List<Result> results;
 
     public int getId() {
         return id;
@@ -30,9 +34,25 @@ public class Career {
         this.name = name;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public List<Result> getResults() {
+        return results;
+    }
+
+    public void setResults(List<Result> results) {
+        this.results = results;
+    }
+
     @Override
     public String toString() {
-        return "Career{" + "id=" + id + ", name=" + name + '}';
+        return "Process{" + "id=" + id + ", name=" + name + ", description=" + description + ", results=" + results + '}';
     }
 
 }

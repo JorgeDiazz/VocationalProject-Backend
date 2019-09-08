@@ -10,9 +10,14 @@ package com.recruiters.recruiterssupportbackEnd.model.entities;
  * @author seam33
  */
 public class Career {
-
+    
     private int id;
     private String name;
+
+    public Career(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 
     public int getId() {
         return id;
@@ -34,5 +39,6 @@ public class Career {
     public String toString() {
         return "Career{" + "id=" + id + ", name=" + name + '}';
     }
-
+    
+    
 }

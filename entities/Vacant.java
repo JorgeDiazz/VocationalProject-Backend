@@ -5,6 +5,7 @@
  */
 package com.recruiters.recruiterssupportbackEnd.model.entities;
 
+import static java.util.Collections.list;
 import java.util.Date;
 import java.util.List;
 
@@ -13,13 +14,22 @@ import java.util.List;
  * @author seam33
  */
 public class Vacant {
-
     private int id;
     private int placeNumber;
     private Date startDate;
     private Date endDate;
     private List<Postulant> postulans;
 
+    public Vacant(int id, int placeNumber, Date startDate, Date endDate, List<Postulant> postulans) {
+        this.id = id;
+        this.placeNumber = placeNumber;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.postulans = postulans;
+    }
+
+    
+    
     public int getId() {
         return id;
     }
@@ -52,5 +62,7 @@ public class Vacant {
     public String toString() {
         return "Vacant{" + "id=" + id + ", placeNumber=" + placeNumber + ", startDate=" + startDate + ", endDate=" + endDate + ", postulans=" + postulans + '}';
     }
+
+   
 
 }
