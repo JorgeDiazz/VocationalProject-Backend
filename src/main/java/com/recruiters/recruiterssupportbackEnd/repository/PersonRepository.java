@@ -9,5 +9,5 @@ public interface PersonRepository extends JpaRepository<Person, String> {
 
     @Query("from Person where email = ?1")
     Optional<Person> findByEmail(String email);
-
+    
 }

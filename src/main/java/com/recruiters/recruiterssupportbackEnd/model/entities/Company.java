@@ -30,6 +30,7 @@ public class Company implements UserEntity {
     private List<Skill> globalSkills;
     @Transient
     private List<JobPosition> JobsPositions;
+    @Transient
     private TYPE type;
 
     public String getNit() {
