@@ -4,6 +4,7 @@ import com.recruiters.recruiterssupportbackEnd.controller.exceptions.Unauthorize
 import static com.recruiters.recruiterssupportbackEnd.controller.http.Constants.INCORRECT_CREDENTIALS;
 import com.recruiters.recruiterssupportbackEnd.controller.http.HttpResponseEntity;
 import com.recruiters.recruiterssupportbackEnd.controller.http.ResponseUtils;
+import com.recruiters.recruiterssupportbackEnd.controller.request_entities.LoginRequest;
 import com.recruiters.recruiterssupportbackEnd.model.entities.Company;
 import com.recruiters.recruiterssupportbackEnd.model.entities.Person;
 import com.recruiters.recruiterssupportbackEnd.model.entities.UserEntity;
@@ -12,10 +13,13 @@ import com.recruiters.recruiterssupportbackEnd.repository.CompanyRepository;
 import com.recruiters.recruiterssupportbackEnd.repository.PersonRepository;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -31,10 +35,16 @@ public class LoginController {
         this.companyRepository = companyRepository;
     }
 
-    @PostMapping("/")
-    public ResponseEntity<UserEntity> login(@RequestParam("user") String email, @RequestParam("password") String password) throws Throwable {
+    
+    @CrossOrigin(origins = "*", methods = {RequestMethod.POST, RequestMethod.GET}, allowedHeaders = {"Content-Type","Authorization"})
+    
+    @PostMapping(name = "/")    
+    public ResponseEntity<UserEntity> login(@RequestBody LoginRequest loginRequest) throws Throwable {
 
-        Optional<Person> optPerson = personRepository.findByEmail(email);
+        String user = loginRequest.getUser();
+        String password = loginRequest.getPassword();
+
+        Optional<Person> optPerson = personRepository.findByEmail(user);
         if (optPerson.isPresent()) {
             Person person = optPerson.get();
             if (person.getPassword().equals(password)) {
@@ -44,7 +54,7 @@ public class LoginController {
             }
         }
 
-        Optional<Company> optCompany = companyRepository.findByEmail(email);
+        Optional<Company> optCompany = companyRepository.findByEmail(user);
         if (optCompany.isPresent()) {
             Company company = optCompany.get();
             if (company.getPassword().equals(password)) {

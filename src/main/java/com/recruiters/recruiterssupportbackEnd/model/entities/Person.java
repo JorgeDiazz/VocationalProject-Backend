@@ -10,7 +10,6 @@ import javax.persistence.Table;
 @Table(name = "person")
 public class Person implements UserEntity {
 
-    
     @Id
     private String id;
     @Column(name = "nameP")
