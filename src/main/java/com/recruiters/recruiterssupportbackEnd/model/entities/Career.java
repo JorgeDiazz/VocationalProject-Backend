@@ -5,13 +5,25 @@
  */
 package com.recruiters.recruiterssupportbackEnd.model.entities;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 /**
  *
  * @author seam33
  */
+
+@Entity
+@Table(name = "career")
 public class Career {
 
+    @Id @GeneratedValue(strategy=GenerationType.AUTO)
     private int id;
+    @Column(name = "nameC")
     private String name;
 
     public int getId() {
