@@ -1,26 +1,35 @@
 package com.recruiters.recruiterssupportbackEnd.model.entities.skills;
 
 import com.recruiters.recruiterssupportbackEnd.model.entities.Result;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  *
- * @author seam33
+ * @author Jhanuar Sanchez
  */
-
+@Entity
+@Table(name = "skill")
 public class Skill {
     
+    @Id
     private int id;
+    @Column(name = "nameSK")
     private String name;
+    @Column(name = "class")
     private String type;
-    private Result results;
+    @Column(name = "id_job_psotion")
+    private String nitJobPosition;
 
-    public Skill(int id, String name, String type, Result results) {
+    public Skill(int id, String name, String type, String nitJobPosition) {
         this.id = id;
         this.name = name;
         this.type = type;
-        this.results = results;
+        this.nitJobPosition = nitJobPosition;
     }
-    
+
     public int getId() {
         return id;
     }
@@ -45,19 +54,18 @@ public class Skill {
         this.type = type;
     }
 
-    public Result getResults() {
-        return results;
+    public String getNitJobPosition() {
+        return nitJobPosition;
     }
 
-    public void setResults(Result results) {
-        this.results = results;
+    public void setNitJobPosition(String nitJobPosition) {
+        this.nitJobPosition = nitJobPosition;
     }
 
-    
-@Override
+    @Override
     public String toString() {
-        return "Skill{" + "id=" + id + ", name=" + name + ", type=" + type + ", results=" + results + '}';
+        return "Skill{" + "id=" + id + ", name=" + name + ", type=" + type + ", nitJobPosition=" + nitJobPosition + '}';
     }
+
    
-    
 }
