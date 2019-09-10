@@ -5,12 +5,14 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
+/**
+ * 
+ * @author Jorge diaz
+ */
 @Entity
 @Table(name = "person")
 public class Person implements UserEntity {
 
-    
     @Id
     private String id;
     @Column(name = "nameP")
