@@ -8,6 +8,7 @@ package com.recruiters.recruiterssupportbackEnd.controller;
 import com.recruiters.recruiterssupportbackEnd.controller.exceptions.UnauthorizedException;
 import com.recruiters.recruiterssupportbackEnd.controller.http.HttpResponseEntity;
 import com.recruiters.recruiterssupportbackEnd.controller.http.ResponseUtils;
+import com.recruiters.recruiterssupportbackEnd.controller.request_entities.CreateRequestRecruiter;
 import com.recruiters.recruiterssupportbackEnd.model.entities.Person;
 import com.recruiters.recruiterssupportbackEnd.model.entities.UserEntity;
 import com.recruiters.recruiterssupportbackEnd.model.entities.UserEntity.TYPE;
@@ -15,8 +16,11 @@ import com.recruiters.recruiterssupportbackEnd.repository.PersonRepository;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,9 +39,15 @@ public class PersonController {
         this.personRepository = personRepository;
     }
 
-    @PostMapping("/registerR")
-    public ResponseEntity<UserEntity> createRecruiter(@RequestParam("nit") String nit, @RequestParam("id") String id, @RequestParam("email") String email) throws Throwable {
+    @CrossOrigin(origins = "*", methods = {RequestMethod.POST, RequestMethod.GET}, allowedHeaders = {"Content-Type","Authorization"})
+   
+    @PostMapping("/registerR")//nit,id,email
+    public ResponseEntity<UserEntity> createRecruiter(@RequestBody CreateRequestRecruiter createRequestRecruiter) throws Throwable {
 
+        String id=createRequestRecruiter.getId();
+        String email=createRequestRecruiter.getEmail();
+        String nit=createRequestRecruiter.getNit();
+        
         Optional<Person> optPerson = personRepository.findById(id); //Busqueda por ID
 
         if (optPerson.isPresent()) { // Si existe envia mensaje de Error
@@ -58,7 +68,6 @@ public class PersonController {
                 recruiter.setType(TYPE.RECRUITER.name());
                 personRepository.save(recruiter);
                 return HttpResponseEntity.getOKStatus(recruiter, ResponseUtils.generateTokenHeader(recruiter));
-
             }
         }
     }
