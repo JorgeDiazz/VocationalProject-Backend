@@ -79,14 +79,15 @@ public class ResponseUtils {
             
             DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
             Date actualdate = new Date();
-            System.out.println(dateFormat.format(actualdate)); // 2016 / 11 / 16 12:08:43
+            dateFormat.format(actualdate); // fecha actual
+            dateFormat.parse(tokendate);//fecha creacion token
             Date dateplus1 = new Date();
             Calendar cal = Calendar.getInstance();
-            cal.setTime(actualdate);
-            cal.add(Calendar.DATE, 1);
+            cal.setTime(dateFormat.parse(tokendate));
+            cal.add(Calendar.DATE, 1);//sumar 1 dia a la fecha de creacion de token
             dateplus1 = cal.getTime();
-            if (dateFormat.parse(tokendate).before(dateplus1)) {//poner la fecha del token donde esta el actual
-                validtype.add("1");//SE VENCIO 
+            if (actualdate.before(dateplus1)) {//pregunto si la fecha actual esta antes de la fecha token
+                validtype.add("1");//Se VENCIO 
             } else {
                 validtype.add("0");//NO SE VENCIO
             }
