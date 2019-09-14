@@ -19,6 +19,6 @@ public interface ProcessRepository extends JpaRepository<Process, Integer> {
     @Query("from Process where id_job_position = ?1")
     List<Process> findByIdJob(int idJobPosition);
     
-    @Query("from Process where id_job_position = ?1 and name")
-    Optional <Process> findByIdJobAndName(int idJobPosition,String name);
+    @Query("from Process where id_job_position = ?1 and name = ?2")
+    Optional<Process> findByIdJobAndName(int idJobPosition,String name);
 }

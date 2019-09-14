@@ -19,9 +19,9 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "career")
-public class Career {
+public class Career implements UserEntity {
 
-    @Id @GeneratedValue(strategy=GenerationType.AUTO)
+    @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;
     @Column(name = "nameC")
     private String name;
