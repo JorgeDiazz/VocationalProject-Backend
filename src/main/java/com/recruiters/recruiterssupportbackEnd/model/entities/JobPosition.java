@@ -2,22 +2,35 @@ package com.recruiters.recruiterssupportbackEnd.model.entities;
 
 
 import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  *
  * @author seam33
  */
-public class JobPosition {
+@Entity
+@Table(name = "job_position")
+public class JobPosition implements UserEntity{
     
+     @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;
+    @Column(name = "nameJ")
     private String name;
+    @Column(name = "salary_min")
     private Double salaryMin;
+    @Column(name = "salary_max")
     private Double salaryMax;
+    @Column(name = "description")
     private String description;
-    private List<Vacant> vacants;
-    private List<Career> carrers;
-    private List<Skill> skill;
-    private Process process;
+     @Column(name = "nit-companye")
+    private String nit;
+      @Column(name = "id_area")
+    private String idArea;
     
 
     public int getId() {
@@ -60,9 +73,27 @@ public class JobPosition {
         this.description = description;
     }
 
+    public String getNit() {
+        return nit;
+    }
+
+    public void setNit(String nit) {
+        this.nit = nit;
+    }
+
+    public String getIdArea() {
+        return idArea;
+    }
+
+    public void setIdArea(String idArea) {
+        this.idArea = idArea;
+    }
+
+    
+    
     @Override
     public String toString() {
-        return "JobPosition{" + "id=" + id + ", name=" + name + ", salaryMin=" + salaryMin + ", salaryMax=" + salaryMax + ", description=" + description + ", vacants=" + vacants + ", carrers=" + carrers + ", skill=" + skill + ", process=" + process + '}';
+        return "JobPosition{" + "id=" + id + ", name=" + name + ", salaryMin=" + salaryMin + ", salaryMax=" + salaryMax + ", description=" + description +'}';
     }
 
     
