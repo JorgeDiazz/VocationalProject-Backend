@@ -1,7 +1,6 @@
 package com.recruiters.recruiterssupportbackEnd.model.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.recruiters.recruiterssupportbackEnd.model.entities.skills.Skill;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;

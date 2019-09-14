@@ -1,7 +1,6 @@
 package com.recruiters.recruiterssupportbackEnd.model.entities;
 
 
-import com.recruiters.recruiterssupportbackEnd.model.entities.skills.Skill;
 import java.util.List;
 
 /**

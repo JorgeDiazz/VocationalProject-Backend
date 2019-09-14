@@ -4,8 +4,8 @@
  * and open the template in the editor.
  */
 package com.recruiters.recruiterssupportbackEnd.controller;
-
 import com.recruiters.recruiterssupportbackEnd.model.entities.Career;
+import com.recruiters.recruiterssupportbackEnd.model.entities.UserEntity;
 import com.recruiters.recruiterssupportbackEnd.repository.CareerRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +33,6 @@ public class CareerController {
     public List<Career> getAllCareer(){
        return careerRepository.findAll();   
     }
-   
+
     
 }

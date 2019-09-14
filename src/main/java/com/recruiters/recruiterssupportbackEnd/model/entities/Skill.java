@@ -1,10 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.recruiters.recruiterssupportbackEnd.model.entities;
 
+import com.recruiters.recruiterssupportbackEnd.model.entities.Result;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,19 +10,19 @@ import javax.persistence.Table;
 
 /**
  *
- * @author blue
+ * @author seam33
  */
 @Entity
-@Table(name = "development")
-public class Process implements UserEntity{
-
-    @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
+@Table(name = "skill")
+public class Skill {
+    
+    @Id @GeneratedValue(strategy=GenerationType.AUTO)
     private int id;
-    @Column(name = "nameD")
+    @Column(name = "nameSK")
     private String name;
-     @Column(name = "description")
-    private String description;
-      @Column(name = "id_job_position")
+    @Column(name = "class")
+    private String type;
+    @Column(name = "id_job_position")
     private int id_job_position;
 
     public int getId() {
@@ -45,12 +41,12 @@ public class Process implements UserEntity{
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
+    public String getType() {
+        return type;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public int getId_job_position() {
@@ -63,10 +59,9 @@ public class Process implements UserEntity{
 
     @Override
     public String toString() {
-        return "Process{" + "id=" + id + ", name=" + name + ", description=" + description + ", id_job_position=" + id_job_position + '}';
+        return "Skill{" + "id=" + id + ", name=" + name + ", type=" + type + ", id_job_position=" + id_job_position + '}';
     }
 
-     
- 
-
+   
+    
 }
