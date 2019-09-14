@@ -1,6 +1,5 @@
 package com.recruiters.recruiterssupportbackEnd.model.entities;
 
-import com.recruiters.recruiterssupportbackEnd.model.entities.Result;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

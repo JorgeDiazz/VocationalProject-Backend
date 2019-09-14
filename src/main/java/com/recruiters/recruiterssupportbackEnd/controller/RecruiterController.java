@@ -1,4 +1,3 @@
-
 package com.recruiters.recruiterssupportbackEnd.controller;
 
 import com.recruiters.recruiterssupportbackEnd.controller.exceptions.UnauthorizedException;
@@ -8,6 +7,7 @@ import com.recruiters.recruiterssupportbackEnd.controller.request_entities.Creat
 import com.recruiters.recruiterssupportbackEnd.controller.request_entities.UpdateRequestRecruiter;
 import com.recruiters.recruiterssupportbackEnd.model.entities.Person;
 import com.recruiters.recruiterssupportbackEnd.model.entities.UserEntity;
+import com.recruiters.recruiterssupportbackEnd.model.entities.UserEntity.TYPE;
 import com.recruiters.recruiterssupportbackEnd.repository.PersonRepository;
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -41,11 +42,10 @@ public class RecruiterController {
     @CrossOrigin(origins = "*", methods = {RequestMethod.POST, RequestMethod.GET}, allowedHeaders = {"Content-Type", "Authorization"})
 
     @GetMapping("/{nit}")
-    public ResponseEntity<List<Person>> getAllRecruiterByNit(@PathVariable String nit){
+    public ResponseEntity<List<Person>> getAllRecruiterByNit(@PathVariable String nit) {
         return HttpResponseEntity.getOKStatus(personRepository.findByNit(nit));
     }
-    
-    
+
     @PutMapping("/")
     public ResponseEntity<Person> updateRecruiter(@RequestBody UpdateRequestRecruiter updateRequestRecruiter) throws UnauthorizedException {
 
@@ -85,33 +85,35 @@ public class RecruiterController {
 
         throw new UnauthorizedException("could not update");
     }
-    
-    @PostMapping("/")
-    public ResponseEntity<UserEntity> createRecruiter(@RequestBody CreateRequestRecruiter createRequestRecruiter) throws Throwable {
 
-        String id=createRequestRecruiter.getId();
-        String email=createRequestRecruiter.getEmail();
-        String nit=createRequestRecruiter.getNit();
-        
-        if (personRepository.existsById(id)) { 
-            throw new UnauthorizedException("user already exist");
-        } else { 
+    @PostMapping("/")//nit,id,email
+    public ResponseEntity<UserEntity> createRecruiter(@RequestBody CreateRequestRecruiter createRequestRecruiter, @RequestHeader(value = "token") String token) throws Throwable {
 
-            if (personRepository.findByEmail(email).isPresent()) {
-                throw new UnauthorizedException("email in use");
+        String id = createRequestRecruiter.getId();
+        String email = createRequestRecruiter.getEmail();
+        String nit = createRequestRecruiter.getNit();
+
+        if (Integer.parseInt(ResponseUtils.Validation(token).get(0)) != 1 /*&& ResponseUtils.Validation(token).get(1)== "COMPANY"*/) {//1 para no se vencio   
+            throw new UnauthorizedException("Validation Problem");
+        } else {
+            if (personRepository.existsById(id)) { // Si existe envia mensaje de Error
+                throw new UnauthorizedException("user already exist");
             } else {
-                Person recruiter = new Person();
-                recruiter.setNitCompany(nit);
-                recruiter.setId(id);
-                recruiter.setName("USER " + id);
-                recruiter.setEmail(email);
-                recruiter.setPassword("12345");
-                recruiter.setType(UserEntity.TYPE.RECRUITER.name());
-                personRepository.save(recruiter);
-                return HttpResponseEntity.getOKStatus(recruiter, ResponseUtils.generateTokenHeader(recruiter));
+
+                if (personRepository.findByEmail(email).isPresent()) {
+                    throw new UnauthorizedException("email in use");
+                } else {
+                    Person recruiter = new Person();
+                    recruiter.setNitCompany(nit);
+                    recruiter.setId(id);
+                    recruiter.setName("USER " + id);
+                    recruiter.setEmail(email);
+                    recruiter.setPassword("12345");
+                    recruiter.setType(TYPE.RECRUITER.name());
+                    personRepository.save(recruiter);
+                    return HttpResponseEntity.getOKStatus(recruiter);
+                }
             }
         }
     }
-    
-
 }

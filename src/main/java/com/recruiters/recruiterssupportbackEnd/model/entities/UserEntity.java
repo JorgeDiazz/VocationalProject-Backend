@@ -6,5 +6,5 @@ public interface UserEntity {
         POSTULANT,
         RECRUITER,
         COMPANY
-    }
+    } 
 }
