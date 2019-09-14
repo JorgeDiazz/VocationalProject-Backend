@@ -46,7 +46,7 @@ public class ProcessController {
     public List<Process> getProcessesByJob(@PathVariable int nit){
         return processRepository.findByIdJob(nit);
     }
-    
+     @CrossOrigin(origins = "*", methods = {RequestMethod.POST, RequestMethod.GET}, allowedHeaders = {"Content-Type","Authorization"})
     @PostMapping("/register")
     public ResponseEntity<UserEntity> createRecruiter(@RequestBody CreateRequestProcess createRequestProcess) throws Throwable {
 
