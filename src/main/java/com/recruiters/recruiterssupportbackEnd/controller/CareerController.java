@@ -48,7 +48,7 @@ public class CareerController {
        return careerRepository.findAll();   
     }
     
-    
+     @CrossOrigin(origins = "*", methods = {RequestMethod.POST, RequestMethod.GET}, allowedHeaders = {"Content-Type","Authorization"})
     @PostMapping("/register")
     public ResponseEntity<UserEntity> createRecruiter(@RequestBody CreateRequestCareer createRequestCareer) throws Throwable {
 

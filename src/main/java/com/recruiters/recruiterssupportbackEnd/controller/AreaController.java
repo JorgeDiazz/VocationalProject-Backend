@@ -48,7 +48,7 @@ public class AreaController {
     public List<Area> getAllAreaByNit(@PathVariable String nit){
         return areaRepository.findByNit(nit);
     }
-    
+     @CrossOrigin(origins = "*", methods = {RequestMethod.POST, RequestMethod.GET}, allowedHeaders = {"Content-Type","Authorization"})
     @PostMapping("/register")
     public ResponseEntity<UserEntity> createRecruiter(@RequestBody CreateRequestArea createRequestArea) throws Throwable {
 

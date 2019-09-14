@@ -62,23 +62,23 @@ public class SkillController {
     public List<Skill> getSoftSkills() {
         return skillRepository.findAllSoft();
     }
-
+ @CrossOrigin(origins = "*", methods = {RequestMethod.POST, RequestMethod.GET}, allowedHeaders = {"Content-Type","Authorization"})
     @GetMapping("/Hard")
     public List<Skill> getHardSkills() {
         return skillRepository.findAllHard();
     }
-
+ @CrossOrigin(origins = "*", methods = {RequestMethod.POST, RequestMethod.GET}, allowedHeaders = {"Content-Type","Authorization"})
     @GetMapping("/GlobalByCompany/{nit}")
     public List<Skill> getGlobalSkillsCompany(@PathVariable String nit) {
         return globalSkillRepository.findGlobalCompany(nit);
     }
-    
+     @CrossOrigin(origins = "*", methods = {RequestMethod.POST, RequestMethod.GET}, allowedHeaders = {"Content-Type","Authorization"})
     @GetMapping("/LocalByJobPosition/{id}")
     public List<Skill>  getJobSkillsCompany(@PathVariable int id) {
         return jobSkillRepository.findLocalJob(id);
     }
     
-    
+     @CrossOrigin(origins = "*", methods = {RequestMethod.POST, RequestMethod.GET}, allowedHeaders = {"Content-Type","Authorization"})
     @PostMapping("/register")
     public ResponseEntity<UserEntity> createSkill(@RequestBody Skill createRequestSkill) throws Throwable {
 
@@ -94,7 +94,7 @@ public class SkillController {
 
         }
     }
-
+ @CrossOrigin(origins = "*", methods = {RequestMethod.POST, RequestMethod.GET}, allowedHeaders = {"Content-Type","Authorization"})
     @PostMapping("/CreateGlobal")
     public ResponseEntity<UserEntity> createGlobalSkill(@RequestBody GlobalSkill createRequestSkill) throws Throwable {
 
@@ -123,7 +123,7 @@ public class SkillController {
 
         }
     }
-    
+     @CrossOrigin(origins = "*", methods = {RequestMethod.POST, RequestMethod.GET}, allowedHeaders = {"Content-Type","Authorization"})
     @PostMapping("/CreateLocal")
     public ResponseEntity<UserEntity> createLocalSkill(@RequestBody SkillJob createRequestSkill) throws Throwable {
 
