@@ -53,7 +53,7 @@ public class PersonController {
         System.out.println(ResponseUtils.Validation(token).toString());
 
         Optional<Person> optPerson = personRepository.findById(id); //Busqueda por ID
-        if (Integer.parseInt(ResponseUtils.Validation(token).get(0)) != 1 /*&& ResponseUtils.Validation(token).get(0)== "COMPANY"*/) {//1 para no se vencio   
+        if (Integer.parseInt(ResponseUtils.Validation(token).get(0)) != 1 /*&& ResponseUtils.Validation(token).get(1)== "COMPANY"*/) {//1 para no se vencio   
         throw new UnauthorizedException("Validation Problem");
         } else {
             if (optPerson.isPresent()) { // Si existe envia mensaje de Error
@@ -73,7 +73,7 @@ public class PersonController {
                     recruiter.setPassword("12345");
                     recruiter.setType(TYPE.RECRUITER.name());
                     personRepository.save(recruiter);
-                    return HttpResponseEntity.getOKStatus(recruiter, ResponseUtils.generateTokenHeader(recruiter));
+                    return HttpResponseEntity.getOKStatus(recruiter);
                 }
             }
         }

@@ -42,9 +42,9 @@ public class ResponseUtils {
                     .setExpiration(ZonedDateTime.now(ZoneOffset.UTC).plusMinutes(60));
             String encodedJWT = JWT.getEncoder().encode(jwt, signer);
             headers.add("token", encodedJWT);
-            System.out.println(token);
+            
         } catch (Exception e) {
-            System.out.println("no era person");
+            
         }
 
         //si es una company
@@ -61,7 +61,7 @@ public class ResponseUtils {
             headers.add("token", encodedJWT);
             System.out.println(token);
         } catch (Exception e) {
-            System.out.println("no era company");
+            
         }
         headers.add("Access-Control-Allow-Methods", "POST,GET");
         headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization");
@@ -86,13 +86,14 @@ public class ResponseUtils {
             cal.setTime(dateFormat.parse(tokendate));
             cal.add(Calendar.DATE, 1);//sumar 1 dia a la fecha de creacion de token
             dateplus1 = cal.getTime();
-            if (actualdate.after(dateplus1)) {//pregunto si la fecha actual esta antes de la fecha token
-                validtype.set(0,"1"); //no se vencio
+            if (actualdate.before(dateplus1)) {//pregunto si la fecha actual esta antes de la fecha token
+                validtype.add("1"); //no se vencio
             } else {
-                validtype.set(0,"0");//Se VENCIO
+                validtype.add("0");//Se VENCIO
             }
-          validtype.set(1,parts[1]);// meter el type que se supondria que vendria en el body pero dudo */
+          validtype.add(parts[1]);// meter el type que se supondria que vendria en el body pero dudo */
         } catch (Exception e) {
+            System.out.println("no srvio esta wea");
         }
         
         return validtype;
