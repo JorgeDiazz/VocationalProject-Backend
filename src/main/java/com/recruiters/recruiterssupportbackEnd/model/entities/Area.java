@@ -16,12 +16,14 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "area")
-public class Area {
+public class Area implements UserEntity{
     
-    @Id @GeneratedValue(strategy=GenerationType.AUTO)
+    @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;
     @Column(name = "name")
     private String name;
+    @Column(name = "nit_company")
+    private String nit_company;
 
     public int getId() {
         return id;
@@ -38,4 +40,13 @@ public class Area {
     public void setName(String name) {
         this.name = name;
     }
+
+    public String getNit_company() {
+        return nit_company;
+    }
+
+    public void setNit_company(String nit_company) {
+        this.nit_company = nit_company;
+    }
+    
 }

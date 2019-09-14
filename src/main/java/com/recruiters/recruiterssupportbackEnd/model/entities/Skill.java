@@ -1,34 +1,26 @@
-package com.recruiters.recruiterssupportbackEnd.model.entities.skills;
-
+package com.recruiters.recruiterssupportbackEnd.model.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
  *
- * @author Jhanuar Sanchez
+ * @author seam33
  */
 @Entity
 @Table(name = "skill")
-public class Skill {
+public class Skill implements UserEntity{
     
-    @Id
+    @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;
     @Column(name = "nameSK")
     private String name;
     @Column(name = "class")
     private String type;
-    @Column(name = "id_job_psotion")
-    private String nitJobPosition;
-
-    public Skill(int id, String name, String type, String nitJobPosition) {
-        this.id = id;
-        this.name = name;
-        this.type = type;
-        this.nitJobPosition = nitJobPosition;
-    }
 
     public int getId() {
         return id;
@@ -54,18 +46,11 @@ public class Skill {
         this.type = type;
     }
 
-    public String getNitJobPosition() {
-        return nitJobPosition;
-    }
-
-    public void setNitJobPosition(String nitJobPosition) {
-        this.nitJobPosition = nitJobPosition;
-    }
-
     @Override
     public String toString() {
-        return "Skill{" + "id=" + id + ", name=" + name + ", type=" + type + ", nitJobPosition=" + nitJobPosition + '}';
+        return "Skill{" + "id=" + id + ", name=" + name + ", type=" + type + '}';
     }
 
    
+    
 }

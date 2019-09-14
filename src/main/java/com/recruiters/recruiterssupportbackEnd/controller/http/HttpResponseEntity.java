@@ -22,4 +22,9 @@ public class HttpResponseEntity {
         return new ResponseEntity<>(null, HttpStatus.EXPECTATION_FAILED);
     }
 
+    public static<T> ResponseEntity<T> getOKStatus(T object) {
+        return new ResponseEntity<>((T) object,HttpStatus.OK);
+    }
+
+
 }
