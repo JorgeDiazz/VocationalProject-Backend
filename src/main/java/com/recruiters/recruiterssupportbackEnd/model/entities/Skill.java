@@ -14,16 +14,14 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "skill")
-public class Skill {
+public class Skill implements UserEntity{
     
-    @Id @GeneratedValue(strategy=GenerationType.AUTO)
+    @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;
     @Column(name = "nameSK")
     private String name;
     @Column(name = "class")
     private String type;
-    @Column(name = "id_job_position")
-    private int id_job_position;
 
     public int getId() {
         return id;
@@ -49,17 +47,9 @@ public class Skill {
         this.type = type;
     }
 
-    public int getId_job_position() {
-        return id_job_position;
-    }
-
-    public void setId_job_position(int id_job_position) {
-        this.id_job_position = id_job_position;
-    }
-
     @Override
     public String toString() {
-        return "Skill{" + "id=" + id + ", name=" + name + ", type=" + type + ", id_job_position=" + id_job_position + '}';
+        return "Skill{" + "id=" + id + ", name=" + name + ", type=" + type + '}';
     }
 
    
