@@ -16,7 +16,6 @@ import javax.persistence.Table;
  *
  * @author seam33
  */
-
 @Entity
 @Table(name = "career")
 public class Career implements UserEntity {

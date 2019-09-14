@@ -13,12 +13,14 @@ import com.recruiters.recruiterssupportbackEnd.model.entities.Person;
 import com.recruiters.recruiterssupportbackEnd.model.entities.UserEntity;
 import com.recruiters.recruiterssupportbackEnd.model.entities.UserEntity.TYPE;
 import com.recruiters.recruiterssupportbackEnd.repository.PersonRepository;
+import java.util.ArrayList;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,36 +40,42 @@ public class PersonController {
         this.personRepository = personRepository;
     }
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.POST, RequestMethod.GET}, allowedHeaders = {"Content-Type","Authorization"})
-   
+    @CrossOrigin(origins = "*", methods = {RequestMethod.POST, RequestMethod.GET}, allowedHeaders = {"Content-Type", "Authorization"})
+
     @PostMapping("/registerR")//nit,id,email
-    public ResponseEntity<UserEntity> createRecruiter(@RequestBody CreateRequestRecruiter createRequestRecruiter) throws Throwable {
+    public ResponseEntity<UserEntity> createRecruiter(@RequestBody CreateRequestRecruiter createRequestRecruiter, @RequestHeader(value = "token") String token) throws Throwable {
 
-        String id=createRequestRecruiter.getId();
-        String email=createRequestRecruiter.getEmail();
-        String nit=createRequestRecruiter.getNit();
-        
+        String id = createRequestRecruiter.getId();
+        String email = createRequestRecruiter.getEmail();
+        String nit = createRequestRecruiter.getNit();
+
+        System.out.println(ResponseUtils.Validation(token).toString());
+
         Optional<Person> optPerson = personRepository.findById(id); //Busqueda por ID
-
-        if (optPerson.isPresent()) { // Si existe envia mensaje de Error
-            throw new UnauthorizedException("user already exist");
-        } else {  
-
-            Optional<Person> optPerson2 = personRepository.findByEmail(email); //Busqueda por correo - No pueden existir 2 personas con el mismo correo
-
-            if (optPerson2.isPresent()) { // Si existe envia mensaje de Error
-                throw new UnauthorizedException("email in use");
+        if (Integer.parseInt(ResponseUtils.Validation(token).get(0)) != 1 /*&& ResponseUtils.Validation(token).get(1)== "COMPANY"*/) {//1 para no se vencio   
+        throw new UnauthorizedException("Validation Problem");
+        } else {
+            if (optPerson.isPresent()) { // Si existe envia mensaje de Error
+                throw new UnauthorizedException("user already exist");
             } else {
-                Person recruiter = new Person();
-                recruiter.setNitCompany(nit);
-                recruiter.setId(id);
-                recruiter.setName("USER " + id);
-                recruiter.setEmail(email);
-                recruiter.setPassword("12345");
-                recruiter.setType(TYPE.RECRUITER.name());
-                personRepository.save(recruiter);
-                return HttpResponseEntity.getOKStatus(recruiter, ResponseUtils.generateTokenHeader(recruiter));
+
+                Optional<Person> optPerson2 = personRepository.findByEmail(email); //Busqueda por correo - No pueden existir 2 personas con el mismo correo
+
+                if (optPerson2.isPresent()) { // Si existe envia mensaje de Error
+                    throw new UnauthorizedException("email in use");
+                } else {
+                    Person recruiter = new Person();
+                    recruiter.setNitCompany(nit);
+                    recruiter.setId(id);
+                    recruiter.setName("USER " + id);
+                    recruiter.setEmail(email);
+                    recruiter.setPassword("12345");
+                    recruiter.setType(TYPE.RECRUITER.name());
+                    personRepository.save(recruiter);
+                    return HttpResponseEntity.getOKStatus(recruiter);
+                }
             }
         }
     }
 }
+
