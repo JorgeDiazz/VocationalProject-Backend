@@ -41,7 +41,7 @@ public class CareerController {
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.POST}, allowedHeaders = {"Content-Type", "Authorization"})
     @PostMapping("/register")
-    public ResponseEntity<UserEntity> createCareer(@RequestBody CreateRequestCareer createRequestCareer) throws Throwable {
+    public ResponseEntity<Career> createCareer(@RequestBody CreateRequestCareer createRequestCareer) throws Throwable {
 
         String name = createRequestCareer.getName();
 
