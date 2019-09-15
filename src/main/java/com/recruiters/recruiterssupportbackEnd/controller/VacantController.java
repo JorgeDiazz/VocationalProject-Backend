@@ -59,9 +59,11 @@ public class VacantController {
                 recruiterVacantRepository.save(recruiterVacant);
             }
         } catch (Exception e) {
-            throw new ExpectationFailedException("Recruiter doesn't exist or recruiter-vacant already on database");
+            throw new ExpectationFailedException("Any recruiter doesn't exist");
         }
 
         return HttpResponseEntity.getOKStatus(vacant);
     }
+    
+    
 }
