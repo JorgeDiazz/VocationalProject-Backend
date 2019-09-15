@@ -4,11 +4,13 @@ import com.recruiters.recruiterssupportbackEnd.controller.exceptions.Unauthorize
 import com.recruiters.recruiterssupportbackEnd.controller.http.HttpResponseEntity;
 import com.recruiters.recruiterssupportbackEnd.controller.http.ResponseUtils;
 import com.recruiters.recruiterssupportbackEnd.controller.request_entities.CreateRequestRecruiter;
+import com.recruiters.recruiterssupportbackEnd.controller.request_entities.CreateRespponseRecluitersByCompany;
 import com.recruiters.recruiterssupportbackEnd.controller.request_entities.UpdateRequestRecruiter;
 import com.recruiters.recruiterssupportbackEnd.model.entities.Person;
 import com.recruiters.recruiterssupportbackEnd.model.entities.UserEntity;
 import com.recruiters.recruiterssupportbackEnd.model.entities.UserEntity.TYPE;
 import com.recruiters.recruiterssupportbackEnd.repository.PersonRepository;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,5 +118,13 @@ public class RecruiterController {
                 }
             }
         }
+    }
+    
+   @CrossOrigin(origins = "*", methods = {RequestMethod.GET}, allowedHeaders = {"Content-Type", "Authorization"})
+    @GetMapping("/manager/{nit}")
+    public ResponseEntity<List<CreateRespponseRecluitersByCompany>> getAllRecruiterByComany(@PathVariable String nit) {
+        List<CreateRespponseRecluitersByCompany> response = new ArrayList<CreateRespponseRecluitersByCompany>();
+        
+        return HttpResponseEntity.getOKStatus(response);
     }
 }
