@@ -87,7 +87,7 @@ public class RecruiterController {
     }
 
     @PostMapping("/")//nit,id,email
-    public ResponseEntity<UserEntity> createRecruiter(@RequestBody CreateRequestRecruiter createRequestRecruiter, @RequestHeader(value = "token") String token) throws Throwable {
+    public ResponseEntity<UserEntity> createRecruiter(@RequestBody CreateRequestRecruiter createRequestRecruiter, @RequestHeader(value = "Authorization") String token) throws Throwable {
 
         String id = createRequestRecruiter.getId();
         String email = createRequestRecruiter.getEmail();
