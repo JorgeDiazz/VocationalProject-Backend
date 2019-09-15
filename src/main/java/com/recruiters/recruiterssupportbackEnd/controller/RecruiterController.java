@@ -39,13 +39,13 @@ public class RecruiterController {
         this.personRepository = personRepository;
     }
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.POST, RequestMethod.GET}, allowedHeaders = {"Content-Type", "Authorization"})
-
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET}, allowedHeaders = {"Content-Type", "Authorization"})
     @GetMapping("/{nit}")
     public ResponseEntity<List<Person>> getAllRecruiterByNit(@PathVariable String nit) {
         return HttpResponseEntity.getOKStatus(personRepository.findByNit(nit));
     }
 
+    @CrossOrigin(origins = "*", methods = {RequestMethod.PUT}, allowedHeaders = {"Content-Type", "Authorization"})
     @PutMapping("/")
     public ResponseEntity<Person> updateRecruiter(@RequestBody UpdateRequestRecruiter updateRequestRecruiter) throws UnauthorizedException {
 
@@ -86,6 +86,7 @@ public class RecruiterController {
         throw new UnauthorizedException("could not update");
     }
 
+    @CrossOrigin(origins = "*", methods = {RequestMethod.POST}, allowedHeaders = {"Content-Type", "Authorization"})
     @PostMapping("/")//nit,id,email
     public ResponseEntity<UserEntity> createRecruiter(@RequestBody CreateRequestRecruiter createRequestRecruiter, @RequestHeader(value = "token") String token) throws Throwable {
 

@@ -40,13 +40,13 @@ public class AreaController {
         this.areaRepository = areaRepository;
     }
     
-    @CrossOrigin(origins = "*", methods = {RequestMethod.POST, RequestMethod.GET}, allowedHeaders = {"Content-Type","Authorization"})
-    
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET}, allowedHeaders = {"Content-Type","Authorization"})
     @GetMapping("/{nit}")
     public ResponseEntity<List<Area>> getAllAreaByNit(@PathVariable String nit){
         return HttpResponseEntity.getOKStatus(areaRepository.findByNit(nit));
     }
     
+    @CrossOrigin(origins = "*", methods = {RequestMethod.POST}, allowedHeaders = {"Content-Type", "Authorization"})
     @PostMapping("/register")
     public ResponseEntity<UserEntity> createArea(@RequestBody CreateRequestArea createRequestArea) throws Throwable {
 

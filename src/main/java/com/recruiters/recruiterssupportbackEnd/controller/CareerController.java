@@ -1,14 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.recruiters.recruiterssupportbackEnd.controller;
+
 import com.recruiters.recruiterssupportbackEnd.controller.exceptions.UnauthorizedException;
 import com.recruiters.recruiterssupportbackEnd.controller.http.HttpResponseEntity;
-import com.recruiters.recruiterssupportbackEnd.controller.http.ResponseUtils;
 import com.recruiters.recruiterssupportbackEnd.controller.request_entities.CreateRequestCareer;
-import com.recruiters.recruiterssupportbackEnd.controller.request_entities.CreateRequestCareerJob;
 import com.recruiters.recruiterssupportbackEnd.model.entities.Career;
 import com.recruiters.recruiterssupportbackEnd.model.entities.UserEntity;
 import com.recruiters.recruiterssupportbackEnd.repository.CareerRepository;
@@ -28,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author seam33
  */
-
 @RestController
 @RequestMapping("/career")
 public class CareerController {
@@ -39,35 +32,33 @@ public class CareerController {
     public CareerController(CareerRepository careerRepository) {
         this.careerRepository = careerRepository;
     }
-    
-    @CrossOrigin(origins = "*", methods = {RequestMethod.POST, RequestMethod.GET}, allowedHeaders = {"Content-Type","Authorization"})
-    
-    
+
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET}, allowedHeaders = {"Content-Type", "Authorization"})
     @GetMapping("/")
-    public ResponseEntity<List<Career>> getAllCareer(){
-       return HttpResponseEntity.getOKStatus(careerRepository.findAll());   
+    public ResponseEntity<List<Career>> getAllCareer() {
+        return HttpResponseEntity.getOKStatus(careerRepository.findAll());
     }
-    
-    
+
+    @CrossOrigin(origins = "*", methods = {RequestMethod.POST}, allowedHeaders = {"Content-Type", "Authorization"})
     @PostMapping("/register")
     public ResponseEntity<UserEntity> createCareer(@RequestBody CreateRequestCareer createRequestCareer) throws Throwable {
 
-        String name=createRequestCareer.getName();
-        
+        String name = createRequestCareer.getName();
+
         Optional<Career> optCareer = careerRepository.findByName(name); //Busqueda por ID
 
         if (optCareer.isPresent()) { // Si existe envia mensaje de Error
             throw new UnauthorizedException("area already exist");
         } else {
 
-                Career career = new Career();
-                career.setName(name);
-                careerRepository.save(career);
-                return HttpResponseEntity.getOKStatus(career);
+            Career career = new Career();
+            career.setName(name);
+            careerRepository.save(career);
+            return HttpResponseEntity.getOKStatus(career);
 
         }
     }
-    
+
     /*
     @PostMapping("/RegisterJob")
     public ResponseEntity<UserEntity> createRecruiter(@RequestBody CreateRequestCareerJob createRequestCareerJob) throws Throwable {
@@ -89,6 +80,5 @@ public class CareerController {
     }
     
     @PostMapping("/RegisterPerson")
-*/
-    
+     */
 }
