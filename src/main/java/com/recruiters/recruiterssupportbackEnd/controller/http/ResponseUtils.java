@@ -78,7 +78,7 @@ public class ResponseUtils {
         }
         headers.add("Access-Control-Allow-Methods", "POST,GET");
         headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization");
-        headers.add("Access-Control-Expose-Headers", "token");
+        headers.add("Access-Control-Expose-Headers", "Authorization");
         return headers;
     }
 
