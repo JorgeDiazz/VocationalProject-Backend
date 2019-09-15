@@ -1,6 +1,5 @@
 package com.recruiters.recruiterssupportbackEnd.controller;
 
-import com.recruiters.recruiterssupportbackEnd.controller.exceptions.ExpectationFailedException;
 import com.recruiters.recruiterssupportbackEnd.controller.exceptions.UnauthorizedException;
 import com.recruiters.recruiterssupportbackEnd.controller.http.HttpResponseEntity;
 import com.recruiters.recruiterssupportbackEnd.controller.request_entities.CreateRequestJobPosition;
@@ -9,6 +8,7 @@ import com.recruiters.recruiterssupportbackEnd.model.entities.CareerJob;
 import com.recruiters.recruiterssupportbackEnd.model.entities.JobPosition;
 import com.recruiters.recruiterssupportbackEnd.model.entities.Person;
 import com.recruiters.recruiterssupportbackEnd.model.entities.Processs;
+import com.recruiters.recruiterssupportbackEnd.model.entities.RecruiterVacant;
 import com.recruiters.recruiterssupportbackEnd.model.entities.Skill;
 import com.recruiters.recruiterssupportbackEnd.model.entities.SkillJob;
 import com.recruiters.recruiterssupportbackEnd.model.entities.Vacant;
@@ -18,6 +18,7 @@ import com.recruiters.recruiterssupportbackEnd.repository.JobCareerRepository;
 import com.recruiters.recruiterssupportbackEnd.repository.JobPositionRepository;
 import com.recruiters.recruiterssupportbackEnd.repository.JobSkillRepository;
 import com.recruiters.recruiterssupportbackEnd.repository.ProcessRepository;
+import com.recruiters.recruiterssupportbackEnd.repository.RecruiterVacantRepository;
 import com.recruiters.recruiterssupportbackEnd.repository.SkillRepository;
 import com.recruiters.recruiterssupportbackEnd.repository.VacantRepository;
 import java.util.Date;
@@ -38,11 +39,12 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author seam33
  */
+
 @RestController
 @RequestMapping("/jobPosition")
 
 public class JobPositionController {
-
+    
     private final CompanyRepository companyRepository;
     private final JobPositionRepository jobPositionRepository;
     private final CareerRepository careerRepository;
@@ -51,9 +53,10 @@ public class JobPositionController {
     private final JobCareerRepository jobCareerRepository;
     private final ProcessRepository processRepository;
     private final VacantRepository vacantRepository;
-
+    private final RecruiterVacantRepository recruiterVacantRepository;
+    
     @Autowired
-    public JobPositionController(CompanyRepository companyRepository, JobPositionRepository jobPositionRepository, CareerRepository careerRepository, SkillRepository skillRepository, JobSkillRepository jobSkillRepository, ProcessRepository processRepository, JobCareerRepository jobCareerRepository,VacantRepository vacantRepository) {
+    public JobPositionController(CompanyRepository companyRepository, JobPositionRepository jobPositionRepository, CareerRepository careerRepository, SkillRepository skillRepository, JobSkillRepository jobSkillRepository, ProcessRepository processRepository, JobCareerRepository jobCareerRepository, VacantRepository vacantRepository, RecruiterVacantRepository recruiterVacantRepository) {
         this.companyRepository = companyRepository;
         this.jobPositionRepository = jobPositionRepository;
         this.careerRepository = careerRepository;
@@ -62,24 +65,25 @@ public class JobPositionController {
         this.processRepository = processRepository;
         this.jobCareerRepository = jobCareerRepository;
         this.vacantRepository = vacantRepository;
+        this.recruiterVacantRepository = recruiterVacantRepository;
     }
-
+    
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET}, allowedHeaders = {"Content-Type", "Authorization"})
     @GetMapping("/{nit}")
     public ResponseEntity<List<JobPosition>> getAllJobPosition(@PathVariable String nit) {
         return HttpResponseEntity.getOKStatus(jobPositionRepository.findAll());
     }
-
+    
     @CrossOrigin(origins = "*", methods = {RequestMethod.POST}, allowedHeaders = {"Content-Type", "Authorization"})
     @PostMapping("/")
     public ResponseEntity<JobPosition> createJobPosition(@RequestBody CreateRequestJobPosition createRequestJobPosition) throws UnauthorizedException {
-
+        
         String nitCompany = createRequestJobPosition.getNitCompany();
-
+        
         if (!companyRepository.existsById(nitCompany)) {
             throw new UnauthorizedException("company doesn't exist");
         } else {
-
+            
             String name = createRequestJobPosition.getName();
             double salaryMin = createRequestJobPosition.getSalaryMin();
             double salaryMax = createRequestJobPosition.getSalaryMax();
@@ -94,11 +98,11 @@ public class JobPositionController {
             newJobPosition.setIdArea(String.valueOf(idArea));
             newJobPosition.setDescription(description);
             jobPositionRepository.save(newJobPosition);
-
+            
             Optional<JobPosition> newJB = jobPositionRepository.findByName(name);
-
+            
             if (newJB.isPresent()) {
-
+                
                 int idJob = newJB.get().getId();
                 List<Career> career = createRequestJobPosition.getCareer();
                 List<Career> newCareer = createRequestJobPosition.getNewCareer();
@@ -106,11 +110,11 @@ public class JobPositionController {
                 List<Skill> newHardSkill = createRequestJobPosition.getNewHardSkill();
                 List<Processs> processs = createRequestJobPosition.getProcess();
                 List<Person> recruiter = createRequestJobPosition.getRecruiter();
-
+                
                 int placesNumber = createRequestJobPosition.getPlaceNumber();
-
+                
                 if (!career.isEmpty()) {
-
+                    
                     career.stream().map((career1) -> {
                         CareerJob careerJob = new CareerJob();
                         careerJob.setId(String.valueOf(idJob), String.valueOf(career1.getId()));
@@ -120,11 +124,11 @@ public class JobPositionController {
                     }).forEachOrdered((careerJob) -> {
                         jobCareerRepository.save(careerJob);
                     });
-
+                    
                 }
-
+                
                 if (!newCareer.isEmpty()) {
-
+                    
                     newCareer.stream().map((newCareer1) -> {
                         Career newC = new Career();
                         newC.setName(newCareer1.getName());
@@ -141,9 +145,9 @@ public class JobPositionController {
                     }).forEachOrdered((careerJob) -> {
                         jobCareerRepository.save(careerJob);
                     });
-
+                    
                 }
-
+                
                 if (!hardSkill.isEmpty()) {  //ASOCIATE HARDSKILL AND JOBPOSITION
 
                     hardSkill.stream().map((hardSkill1) -> {
@@ -155,11 +159,11 @@ public class JobPositionController {
                     }).forEachOrdered((newSkillJob) -> {
                         jobSkillRepository.save(newSkillJob);
                     });
-
+                    
                 }
-
+                
                 if (!newHardSkill.isEmpty()) {
-
+                    
                     hardSkill.stream().map((hardSkill1) -> {
                         Skill newHS = new Skill();
                         newHS.setName(hardSkill1.getName());
@@ -179,11 +183,11 @@ public class JobPositionController {
                     }).forEachOrdered((newSkillJob) -> {
                         jobSkillRepository.save(newSkillJob);
                     });
-
+                    
                 }
-
+                
                 if (!processs.isEmpty()) {
-
+                    
                     processs.stream().map((proces) -> {
                         Processs newProcess = new Processs();
                         newProcess.setName(proces.getName());
@@ -194,34 +198,33 @@ public class JobPositionController {
                     }).forEachOrdered((newProcess) -> {
                         processRepository.save(newProcess);
                     });
-
+                    
                 }
-
+                
                 if (!recruiter.isEmpty()) {
-
-                    for (int i = 0; i < recruiter.size(); i++) {
-
+                    
+                    recruiter.forEach((recruiter1) -> {
                         Date date = new Date(System.currentTimeMillis());
                         Vacant newVacant = new Vacant();
-
+                        
                         newVacant.setPlacesNumber(placesNumber);
                         newVacant.setStartDate(date);
                         newVacant.setNitJobPosition(idJob);
                         
                         vacantRepository.save(newVacant);
                         
-                        int idVacant=vacantRepository.findByDateJobNum(placesNumber,date,idJob).get().getId();
+                        int idVacant = vacantRepository.findByDateJobNum(placesNumber, date, idJob).get().getId();
                         
-                        
-                        
-                    }
-
+                        RecruiterVacant rv = new RecruiterVacant();
+                        rv.setIdPerson(recruiter1.getId());
+                        rv.setIdVacant(idVacant);
+                        recruiterVacantRepository.save(rv);
+                    });
+                    
                 }
             }
-
+            
+            return HttpResponseEntity.getOKStatus(newJobPosition);
         }
-
-        return null;
     }
-
 }

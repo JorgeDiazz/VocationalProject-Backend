@@ -47,7 +47,7 @@ public class AreaController {
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.POST}, allowedHeaders = {"Content-Type", "Authorization"})
     @PostMapping("/register")
-    public ResponseEntity<UserEntity> createArea(@RequestBody CreateRequestArea createRequestArea) throws Throwable {
+    public ResponseEntity<Area> createArea(@RequestBody CreateRequestArea createRequestArea) throws Throwable {
 
         String nitCompany = createRequestArea.getNitCompany();
         String name = createRequestArea.getName();

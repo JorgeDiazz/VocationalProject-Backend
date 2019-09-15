@@ -1,5 +1,6 @@
 package com.recruiters.recruiterssupportbackEnd.controller.request_entities;
 
+import java.util.List;
 import javax.persistence.Column;
 
 /**
@@ -13,6 +14,16 @@ public class CreateVacantRequest {
 
     @Column(name = "id_job_position")
     private int idJobPosition;
+
+    private List<String> postulantsId;
+
+    public List<String> getPostulantsId() {
+        return postulantsId;
+    }
+
+    public void setPostulantsId(List<String> postulantsId) {
+        this.postulantsId = postulantsId;
+    }
 
     public int getPlacesNumber() {
         return placesNumber;

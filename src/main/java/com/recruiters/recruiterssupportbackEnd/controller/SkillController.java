@@ -29,7 +29,6 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author katemorales
  */
-
 @RestController
 @RequestMapping("/skill")
 public class SkillController {
@@ -54,31 +53,27 @@ public class SkillController {
 
     @GetMapping("/Soft")
     public ResponseEntity<List<Skill>> getSoftSkills() {
-        return HttpResponseEntity.getOKStatus(skillRepository.findAllSoft()); 
+        return HttpResponseEntity.getOKStatus(skillRepository.findAllSoft());
     }
 
-    
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET}, allowedHeaders = {"Content-Type", "Authorization"})
     @GetMapping("/Hard")
     public ResponseEntity<List<Skill>> getHardSkills() {
-        return HttpResponseEntity.getOKStatus(skillRepository.findAllHard()); 
+        return HttpResponseEntity.getOKStatus(skillRepository.findAllHard());
     }
 
-    
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET}, allowedHeaders = {"Content-Type", "Authorization"})
     @GetMapping("/GlobalByCompany/{nit}")
     public ResponseEntity<List<Skill>> getGlobalSkillsCompany(@PathVariable String nit) {
-        return HttpResponseEntity.getOKStatus(globalSkillRepository.findGlobalCompany(nit)); 
+        return HttpResponseEntity.getOKStatus(globalSkillRepository.findGlobalCompany(nit));
     }
 
-    
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET}, allowedHeaders = {"Content-Type", "Authorization"})
     @GetMapping("/LocalByJobPosition/{id}")
     public ResponseEntity<List<Skill>> getJobSkillsCompany(@PathVariable int id) {
-        return HttpResponseEntity.getOKStatus(jobSkillRepository.findLocalJob(id)); 
+        return HttpResponseEntity.getOKStatus(jobSkillRepository.findLocalJob(id));
     }
 
-    
     @CrossOrigin(origins = "*", methods = {RequestMethod.POST}, allowedHeaders = {"Content-Type", "Authorization"})
     @PostMapping("/register")
     public ResponseEntity<Skill> createSkill(@RequestBody Skill createRequestSkill) throws Throwable {
@@ -113,6 +108,7 @@ public class SkillController {
             } else {
 
                 Optional<GlobalSkill> optGlobalSkill = globalSkillRepository.findById(createRequestSkill.getId()); //Busqueda por ID
+
                 if (optGlobalSkill.isPresent()) { // Si existe envia mensaje de Error
                     throw new UnauthorizedException("skill already exist");
                 } else {
@@ -130,7 +126,7 @@ public class SkillController {
     public ResponseEntity<SkillJob> createLocalSkill(@RequestBody SkillJob createRequestSkill) throws Throwable {
 
         createRequestSkill.setId(String.valueOf(createRequestSkill.getIdJob()), String.valueOf(createRequestSkill.getIdSkill()));
-        
+
         Optional<Skill> optSkill = skillRepository.findById(createRequestSkill.getIdSkill()); //Busqueda por ID
 
         if (optSkill.isPresent()) { // Si existe envia mensaje de Error
@@ -143,6 +139,7 @@ public class SkillController {
             } else {
 
                 Optional<SkillJob> optLocalSkill = jobSkillRepository.findById(createRequestSkill.getId()); //Busqueda por ID
+
                 if (optLocalSkill.isPresent()) { // Si existe envia mensaje de Error
                     throw new UnauthorizedException("skill already exist");
                 } else {
@@ -151,6 +148,7 @@ public class SkillController {
                 }
 
             }
+
         }
     }
 }
