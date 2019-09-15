@@ -48,7 +48,7 @@ public class ProcessController {
     }
      @CrossOrigin(origins = "*", methods = {RequestMethod.POST, RequestMethod.GET}, allowedHeaders = {"Content-Type","Authorization"})
     @PostMapping("/register")
-    public ResponseEntity<UserEntity> createRecruiter(@RequestBody CreateRequestProcess createRequestProcess) throws Throwable {
+    public ResponseEntity<Process> createRecruiter(@RequestBody CreateRequestProcess createRequestProcess) throws Throwable {
 
         int idJob= createRequestProcess.getId_job_position();
         String name=createRequestProcess.getName();
@@ -63,7 +63,7 @@ public class ProcessController {
                 process.setName(name);
                 process.setId_job_position(idJob);
                 processRepository.save(process);
-                return HttpResponseEntity.getOKStatus(process,ResponseUtils.generateTokenHeader((UserEntity) process));
+                return HttpResponseEntity.getOKStatus(process);
 
         }
 }

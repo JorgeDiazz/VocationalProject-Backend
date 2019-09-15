@@ -80,7 +80,7 @@ public class SkillController {
     
      @CrossOrigin(origins = "*", methods = {RequestMethod.POST, RequestMethod.GET}, allowedHeaders = {"Content-Type","Authorization"})
     @PostMapping("/register")
-    public ResponseEntity<UserEntity> createSkill(@RequestBody Skill createRequestSkill) throws Throwable {
+    public ResponseEntity<Skill> createSkill(@RequestBody Skill createRequestSkill) throws Throwable {
 
         String name = createRequestSkill.getName();
 
@@ -90,13 +90,13 @@ public class SkillController {
             throw new UnauthorizedException("skill already exist");
         } else {
             skillRepository.save(createRequestSkill);
-            return HttpResponseEntity.getOKStatus(createRequestSkill, ResponseUtils.generateTokenHeader((UserEntity) createRequestSkill));
+            return HttpResponseEntity.getOKStatus(createRequestSkill);
 
         }
     }
  @CrossOrigin(origins = "*", methods = {RequestMethod.POST, RequestMethod.GET}, allowedHeaders = {"Content-Type","Authorization"})
     @PostMapping("/CreateGlobal")
-    public ResponseEntity<UserEntity> createGlobalSkill(@RequestBody GlobalSkill createRequestSkill) throws Throwable {
+    public ResponseEntity<GlobalSkill> createGlobalSkill(@RequestBody GlobalSkill createRequestSkill) throws Throwable {
 
         createRequestSkill.setId(createRequestSkill.getNit(), String.valueOf(createRequestSkill.getIdSkill()));
 
@@ -116,7 +116,7 @@ public class SkillController {
                 throw new UnauthorizedException("skill already exist");
             } else {
                  globalSkillRepository.save(createRequestSkill);
-                return HttpResponseEntity.getOKStatus(createRequestSkill, ResponseUtils.generateTokenHeader((UserEntity) createRequestSkill));
+                return HttpResponseEntity.getOKStatus(createRequestSkill);
             }
                
             }
@@ -125,7 +125,7 @@ public class SkillController {
     }
      @CrossOrigin(origins = "*", methods = {RequestMethod.POST, RequestMethod.GET}, allowedHeaders = {"Content-Type","Authorization"})
     @PostMapping("/CreateLocal")
-    public ResponseEntity<UserEntity> createLocalSkill(@RequestBody SkillJob createRequestSkill) throws Throwable {
+    public ResponseEntity<SkillJob> createLocalSkill(@RequestBody SkillJob createRequestSkill) throws Throwable {
 
         createRequestSkill.setId(String.valueOf(createRequestSkill.getIdJob()), String.valueOf(createRequestSkill.getIdSkill()));
 
@@ -145,7 +145,7 @@ public class SkillController {
                 throw new UnauthorizedException("skill already exist");
             } else {
                  jobSkillRepository.save(createRequestSkill);
-                return HttpResponseEntity.getOKStatus(createRequestSkill, ResponseUtils.generateTokenHeader((UserEntity) createRequestSkill));
+                return HttpResponseEntity.getOKStatus(createRequestSkill);
             }
                
             }
