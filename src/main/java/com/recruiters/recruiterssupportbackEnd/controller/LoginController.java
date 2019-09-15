@@ -13,7 +13,6 @@ import com.recruiters.recruiterssupportbackEnd.repository.CompanyRepository;
 import com.recruiters.recruiterssupportbackEnd.repository.PersonRepository;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,8 +35,7 @@ public class LoginController {
     }
 
     
-    @CrossOrigin(origins = "*", methods = {RequestMethod.POST, RequestMethod.GET}, allowedHeaders = {"Content-Type","Authorization"})
-    
+    @CrossOrigin(origins = "*", methods = {RequestMethod.POST}, allowedHeaders = {"Content-Type","Authorization"})
     @PostMapping(name = "/")    
     public ResponseEntity<UserEntity> login(@RequestBody LoginRequest loginRequest) throws Throwable {
 
