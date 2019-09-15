@@ -1,5 +1,6 @@
 package com.recruiters.recruiterssupportbackEnd.controller;
 
+import com.recruiters.recruiterssupportbackEnd.controller.exceptions.ExpectationFailedException;
 import com.recruiters.recruiterssupportbackEnd.controller.exceptions.UnauthorizedException;
 import com.recruiters.recruiterssupportbackEnd.controller.http.HttpResponseEntity;
 import com.recruiters.recruiterssupportbackEnd.controller.request_entities.CreateRequestJobPosition;
@@ -18,6 +19,7 @@ import com.recruiters.recruiterssupportbackEnd.repository.JobPositionRepository;
 import com.recruiters.recruiterssupportbackEnd.repository.JobSkillRepository;
 import com.recruiters.recruiterssupportbackEnd.repository.ProcessRepository;
 import com.recruiters.recruiterssupportbackEnd.repository.SkillRepository;
+import com.recruiters.recruiterssupportbackEnd.repository.VacantRepository;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -43,16 +45,15 @@ public class JobPositionController {
 
     private final CompanyRepository companyRepository;
     private final JobPositionRepository jobPositionRepository;
-
     private final CareerRepository careerRepository;
     private final SkillRepository skillRepository;
-
     private final JobSkillRepository jobSkillRepository;
     private final JobCareerRepository jobCareerRepository;
     private final ProcessRepository processRepository;
+    private final VacantRepository vacantRepository;
 
     @Autowired
-    public JobPositionController(CompanyRepository companyRepository, JobPositionRepository jobPositionRepository, CareerRepository careerRepository, SkillRepository skillRepository, JobSkillRepository jobSkillRepository, ProcessRepository processRepository, JobCareerRepository jobCareerRepository) {
+    public JobPositionController(CompanyRepository companyRepository, JobPositionRepository jobPositionRepository, CareerRepository careerRepository, SkillRepository skillRepository, JobSkillRepository jobSkillRepository, ProcessRepository processRepository, JobCareerRepository jobCareerRepository,VacantRepository vacantRepository) {
         this.companyRepository = companyRepository;
         this.jobPositionRepository = jobPositionRepository;
         this.careerRepository = careerRepository;
@@ -60,6 +61,7 @@ public class JobPositionController {
         this.jobSkillRepository = jobSkillRepository;
         this.processRepository = processRepository;
         this.jobCareerRepository = jobCareerRepository;
+        this.vacantRepository = vacantRepository;
     }
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET}, allowedHeaders = {"Content-Type", "Authorization"})
@@ -198,12 +200,20 @@ public class JobPositionController {
                 if (!recruiter.isEmpty()) {
 
                     for (int i = 0; i < recruiter.size(); i++) {
-                        Vacant newVacant = new Vacant();
-                        newVacant.setPlaceNumber(placesNumber);
-                        newVacant.setStartDate(new Date());
-                        Date date = new Date(System.currentTimeMillis());
-                        //newVacant.setNitJobPosition(date);
 
+                        Date date = new Date(System.currentTimeMillis());
+                        Vacant newVacant = new Vacant();
+
+                        newVacant.setPlacesNumber(placesNumber);
+                        newVacant.setStartDate(date);
+                        newVacant.setNitJobPosition(idJob);
+                        
+                        vacantRepository.save(newVacant);
+                        
+                        int idVacant=vacantRepository.findByDateJobNum(placesNumber,date,idJob).get().getId();
+                        
+                        
+                        
                     }
 
                 }
