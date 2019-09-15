@@ -85,33 +85,36 @@ public class VacantController {
     @GetMapping("/withoutRelation/{id_career}")
     public ResponseEntity<List<VacantForPostulantWithoutRelation>> getVacantsByCareer(@PathVariable int id_career) throws Throwable {
 
-        Optional<CareerJobPosition> optCareerJobPosition = careerJobPositionRepository.findByCareerId(id_career);
+        List<CareerJobPosition> careerJobPositionList = careerJobPositionRepository.findByCareerId(id_career);
 
-        if (optCareerJobPosition.isPresent()) {
-
-            int jobPositionId = optCareerJobPosition.get().getJobPositionId();
-            JobPosition jobPosition = jobPositionRepository.findById(jobPositionId).get();
-
-            List<Vacant> vacants = vacantRepository.findByJobPositionId(jobPositionId);
+        if (!careerJobPositionList.isEmpty()) {
             List<VacantForPostulantWithoutRelation> vacantForPostulantWithoutRelationList = new ArrayList<>();
 
-            VacantForPostulantWithoutRelation newVacant;
-            for (Vacant vacant : vacants) {
-                newVacant = new VacantForPostulantWithoutRelation();
-                newVacant.setId(vacant.getId());
-                newVacant.setStartDate(vacant.getStartDate());
-                newVacant.setEndDate(vacant.getEndDate());
-                newVacant.setPlacesNumber(vacant.getPlacesNumber());
-                newVacant.setJobPositionName(jobPosition.getName());
-                newVacant.setMaxSalary(jobPosition.getSalaryMax());
-                newVacant.setMinSalary(jobPosition.getSalaryMin());
-                vacantForPostulantWithoutRelationList.add(newVacant);
+            for (CareerJobPosition careerJobPosition : careerJobPositionList) {
+
+                int jobPositionId = careerJobPosition.getJobPositionId();
+                JobPosition jobPosition = jobPositionRepository.findById(jobPositionId).get();
+
+                List<Vacant> vacants = vacantRepository.findByJobPositionId(jobPositionId);
+
+                VacantForPostulantWithoutRelation newVacant;
+                for (Vacant vacant : vacants) {
+                    newVacant = new VacantForPostulantWithoutRelation();
+                    newVacant.setId(vacant.getId());
+                    newVacant.setStartDate(vacant.getStartDate());
+                    newVacant.setEndDate(vacant.getEndDate());
+                    newVacant.setPlacesNumber(vacant.getPlacesNumber());
+                    newVacant.setJobPositionName(jobPosition.getName());
+                    newVacant.setMaxSalary(jobPosition.getSalaryMax());
+                    newVacant.setMinSalary(jobPosition.getSalaryMin());
+                    vacantForPostulantWithoutRelationList.add(newVacant);
+                }
             }
 
             return HttpResponseEntity.getOKStatus(vacantForPostulantWithoutRelationList);
 
         } else {
-            throw new ExpectationFailedException("Career doesn't exist");
+            throw new ExpectationFailedException("Career doesn't exist on career_job_position data");
         }
 
     }

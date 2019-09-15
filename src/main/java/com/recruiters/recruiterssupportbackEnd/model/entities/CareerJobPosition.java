@@ -16,18 +16,18 @@ import javax.persistence.Table;
 public class CareerJobPosition {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private String id;
     @Column(name = "id_career")
     private String careerId;
     @Column(name = "id_job_position")
     private int jobPositionId;
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
