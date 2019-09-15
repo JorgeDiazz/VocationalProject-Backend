@@ -2,9 +2,8 @@ package com.recruiters.recruiterssupportbackEnd.controller;
 
 import com.recruiters.recruiterssupportbackEnd.controller.exceptions.UnauthorizedException;
 import com.recruiters.recruiterssupportbackEnd.controller.http.HttpResponseEntity;
-import com.recruiters.recruiterssupportbackEnd.controller.http.ResponseUtils;
+import org.springframework.util.StringUtils;
 import com.recruiters.recruiterssupportbackEnd.controller.request_entities.CreatePostulantRequest;
-import com.recruiters.recruiterssupportbackEnd.controller.request_entities.CreateRequestRecruiter;
 import com.recruiters.recruiterssupportbackEnd.model.entities.Person;
 import com.recruiters.recruiterssupportbackEnd.model.entities.Postulant;
 import com.recruiters.recruiterssupportbackEnd.model.entities.UserEntity;
@@ -15,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -66,11 +66,50 @@ public class PostulantController {
                 person.setPassword(newPostulant.getPassword());
                 person.setType(UserEntity.TYPE.POSTULANT.name());
 
-                personRepository.save(person);
-                postulantRepository.save(postulant);
-
+                try {
+                    personRepository.save(person);
+                    postulantRepository.save(postulant);
+                } catch (Exception e) {
+                    throw new UnauthorizedException("person/postulant data is incorrect");
+                }
+                
                 return HttpResponseEntity.getOKStatus(person);
             }
+        }
+    }
+
+    @CrossOrigin(origins = "*", methods = {RequestMethod.POST, RequestMethod.GET}, allowedHeaders = {"Content-Type", "Authorization"})
+    @PutMapping("/")
+    public ResponseEntity<UserEntity> updatePostulant(@RequestBody CreatePostulantRequest newPostulant) throws Throwable {
+
+        String id = newPostulant.getId();
+
+        Optional<Person> optPerson = personRepository.findById(id);
+
+        if (!optPerson.isPresent()) { // Si existe envia mensaje de Error
+            throw new UnauthorizedException("user doesn't exist");
+        } else {
+
+            Person person = optPerson.get();
+            Postulant postulant = new Postulant();
+
+            postulant.setType(UserEntity.TYPE.POSTULANT.name());
+            postulant.setIdPerson(newPostulant.getId());
+
+            person.setId(id);
+            person.setName(StringUtils.isEmpty(newPostulant.getName()) ? person.getName() : newPostulant.getName());
+            person.setEmail(StringUtils.isEmpty(newPostulant.getEmail()) ? person.getEmail() : newPostulant.getEmail());
+            person.setPassword(StringUtils.isEmpty(newPostulant.getPassword()) ? person.getPassword() : newPostulant.getPassword());
+            person.setType(UserEntity.TYPE.POSTULANT.name());
+
+            try {
+                personRepository.save(person);
+                postulantRepository.save(postulant);
+            } catch (Exception e) {
+                throw new UnauthorizedException("person/postulant data is incorrect");
+            }
+
+            return HttpResponseEntity.getOKStatus(person);
         }
     }
 
