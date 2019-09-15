@@ -44,13 +44,13 @@ public class CareerController {
     
     
     @GetMapping("/")
-    public List<Career> getAllCareer(){
-       return careerRepository.findAll();   
+    public ResponseEntity<List<Career>> getAllCareer(){
+       return HttpResponseEntity.getOKStatus(careerRepository.findAll());   
     }
     
-     @CrossOrigin(origins = "*", methods = {RequestMethod.POST, RequestMethod.GET}, allowedHeaders = {"Content-Type","Authorization"})
+    
     @PostMapping("/register")
-    public ResponseEntity<UserEntity> createRecruiter(@RequestBody CreateRequestCareer createRequestCareer) throws Throwable {
+    public ResponseEntity<UserEntity> createCareer(@RequestBody CreateRequestCareer createRequestCareer) throws Throwable {
 
         String name=createRequestCareer.getName();
         
@@ -63,7 +63,7 @@ public class CareerController {
                 Career career = new Career();
                 career.setName(name);
                 careerRepository.save(career);
-                return HttpResponseEntity.getOKStatus(career,ResponseUtils.generateTokenHeader((UserEntity) career));
+                return HttpResponseEntity.getOKStatus(career);
 
         }
     }

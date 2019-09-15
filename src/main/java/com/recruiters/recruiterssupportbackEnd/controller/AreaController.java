@@ -45,12 +45,13 @@ public class AreaController {
     @CrossOrigin(origins = "*", methods = {RequestMethod.POST, RequestMethod.GET}, allowedHeaders = {"Content-Type","Authorization"})
     
     @GetMapping("/{nit}")
-    public List<Area> getAllAreaByNit(@PathVariable String nit){
-        return areaRepository.findByNit(nit);
+    public ResponseEntity<List<Area>> getAllAreaByNit(@PathVariable String nit){
+        return HttpResponseEntity.getOKStatus(areaRepository.findByNit(nit));
     }
-     @CrossOrigin(origins = "*", methods = {RequestMethod.POST, RequestMethod.GET}, allowedHeaders = {"Content-Type","Authorization"})
+    
+    
     @PostMapping("/register")
-    public ResponseEntity<UserEntity> createRecruiter(@RequestBody CreateRequestArea createRequestArea) throws Throwable {
+    public ResponseEntity<UserEntity> createArea(@RequestBody CreateRequestArea createRequestArea) throws Throwable {
 
         String nitCompany= createRequestArea.getNitCompany();
         String name=createRequestArea.getName();
@@ -65,8 +66,7 @@ public class AreaController {
                 area.setName(name);
                 area.setNit_company(nitCompany);
                 areaRepository.save(area);
-                return HttpResponseEntity.getOKStatus(area,ResponseUtils.generateTokenHeader((UserEntity) area));
-
+                return HttpResponseEntity.getOKStatus(area);
         }
     }
 }
