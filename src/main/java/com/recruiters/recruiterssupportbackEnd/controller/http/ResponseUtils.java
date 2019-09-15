@@ -1,6 +1,5 @@
 package com.recruiters.recruiterssupportbackEnd.controller.http;
 
-
 import com.recruiters.recruiterssupportbackEnd.model.entities.Company;
 import com.recruiters.recruiterssupportbackEnd.model.entities.Person;
 import com.recruiters.recruiterssupportbackEnd.model.entities.UserEntity;
@@ -30,8 +29,9 @@ public class ResponseUtils {
         Date actualdate = new Date();//fecha de creacion de token
         dateFormat.format(actualdate);
         String token = null;
-        // si es un reclutador
-        try {
+
+        if (userEntity instanceof Person) // si es un reclutador o postulante
+        {
             Person optPerson = (Person) userEntity;
             token = optPerson.getEmail() + "," + optPerson.getType() + "," + dateFormat.format(actualdate);
 
@@ -42,13 +42,9 @@ public class ResponseUtils {
                     .setExpiration(ZonedDateTime.now(ZoneOffset.UTC).plusMinutes(60));
             String encodedJWT = JWT.getEncoder().encode(jwt, signer);
             headers.add("token", encodedJWT);
-            
-        } catch (Exception e) {
-            
-        }
 
-        //si es una company
-        try {
+        } else //si es una company
+        {
             Company optPerson = (Company) userEntity;
             token = optPerson.getEmail() + "," + optPerson.getType() + "," + dateFormat.format(actualdate);
 
@@ -60,8 +56,6 @@ public class ResponseUtils {
             String encodedJWT = JWT.getEncoder().encode(jwt, signer);
             headers.add("token", encodedJWT);
             System.out.println(token);
-        } catch (Exception e) {
-            
         }
         headers.add("Access-Control-Allow-Methods", "POST,GET");
         headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization");
@@ -69,14 +63,14 @@ public class ResponseUtils {
         return headers;
     }
 
-    public static ArrayList<String> Validation(String encodedJWT)  {
-        ArrayList<String> validtype= new ArrayList<>();// arreglo de 2 posiciones que tiene 0,1 si  no ha caducado el token y el Type
+    public static ArrayList<String> Validation(String encodedJWT) {
+        ArrayList<String> validtype = new ArrayList<>();// arreglo de 2 posiciones que tiene 0,1 si  no ha caducado el token y el Type
         try {
             Verifier verifier = HMACVerifier.newVerifier("Jasaroestaenlacasatrasnochandohaciendoesto");
 
             JWT jwt = JWT.getDecoder().decode(encodedJWT, verifier);
             String[] parts = jwt.subject.split(",");//separar el optPerson.getEmail() + "," + optPerson.getType() + "," + actualdate;
-            String tokendate=parts[2];//guargar la fecha
+            String tokendate = parts[2];//guargar la fecha
             DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
             Date actualdate = new Date();
             dateFormat.format(actualdate); // fecha actual
@@ -91,11 +85,11 @@ public class ResponseUtils {
             } else {
                 validtype.add("0");//Se VENCIO
             }
-          validtype.add(parts[1]);// meter el type que se supondria que vendria en el body pero dudo */
+            validtype.add(parts[1]);// meter el type que se supondria que vendria en el body pero dudo */
         } catch (Exception e) {
             System.out.println("no srvio esta wea");
         }
-        
+
         return validtype;
     }
 

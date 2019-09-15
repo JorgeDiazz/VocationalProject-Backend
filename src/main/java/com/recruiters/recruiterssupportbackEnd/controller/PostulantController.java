@@ -38,7 +38,7 @@ public class PostulantController {
         this.postulantRepository = postulantRepository;
     }
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.POST, RequestMethod.GET}, allowedHeaders = {"Content-Type", "Authorization"})
+    @CrossOrigin(origins = "*", methods = {RequestMethod.POST}, allowedHeaders = {"Content-Type", "Authorization"})
     @PostMapping("/")
     public ResponseEntity<UserEntity> createPostulant(@RequestBody CreatePostulantRequest newPostulant) throws Throwable {
 
@@ -79,7 +79,7 @@ public class PostulantController {
         }
     }
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.POST, RequestMethod.GET}, allowedHeaders = {"Content-Type", "Authorization"})
+    @CrossOrigin(origins = "*", methods = {RequestMethod.PUT}, allowedHeaders = {"Content-Type", "Authorization"})
     @PutMapping("/")
     public ResponseEntity<UserEntity> updatePostulant(@RequestBody CreatePostulantRequest newPostulant) throws Throwable {
 
