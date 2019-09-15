@@ -3,7 +3,9 @@ package com.recruiters.recruiterssupportbackEnd.controller;
 import com.recruiters.recruiterssupportbackEnd.controller.exceptions.ExpectationFailedException;
 import com.recruiters.recruiterssupportbackEnd.controller.http.HttpResponseEntity;
 import com.recruiters.recruiterssupportbackEnd.controller.request_entities.CreateVacantRequest;
+import com.recruiters.recruiterssupportbackEnd.model.entities.RecruiterVacant;
 import com.recruiters.recruiterssupportbackEnd.model.entities.Vacant;
+import com.recruiters.recruiterssupportbackEnd.repository.RecruiterVacantRepository;
 import com.recruiters.recruiterssupportbackEnd.repository.VacantRepository;
 import java.sql.Date;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +26,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class VacantController {
 
     private final VacantRepository vacantRepository;
+    private final RecruiterVacantRepository recruiterVacantRepository;
 
     @Autowired
-    public VacantController(VacantRepository vacantRepository) {
+    public VacantController(VacantRepository vacantRepository, RecruiterVacantRepository recruiterVacantRepository) {
         this.vacantRepository = vacantRepository;
+        this.recruiterVacantRepository = recruiterVacantRepository;
     }
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.POST}, allowedHeaders = {"Content-Type", "Authorization"})
@@ -43,10 +47,21 @@ public class VacantController {
 
         try {
             vacantRepository.save(vacant);
-            return HttpResponseEntity.getOKStatus(vacant);
-
         } catch (Exception e) {
             throw new ExpectationFailedException("Vacant data is incorrect");
         }
+        try {
+            RecruiterVacant recruiterVacant;
+            for (String idRecruiter : newVacant.getPostulantsId()) {
+                recruiterVacant = new RecruiterVacant();
+                recruiterVacant.setIdPerson(idRecruiter);
+                recruiterVacant.setIdVacant(vacant.getId());
+                recruiterVacantRepository.save(recruiterVacant);
+            }
+        } catch (Exception e) {
+            throw new ExpectationFailedException("Recruiter doesn't exist or recruiter-vacant already on database");
+        }
+
+        return HttpResponseEntity.getOKStatus(vacant);
     }
 }
