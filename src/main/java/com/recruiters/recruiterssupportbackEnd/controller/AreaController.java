@@ -28,42 +28,41 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author seam33
  */
-
 @RestController
 @RequestMapping("/area")
 public class AreaController {
-    
+
     private final AreaRepository areaRepository;
 
     @Autowired
     public AreaController(AreaRepository areaRepository) {
         this.areaRepository = areaRepository;
     }
-    
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET}, allowedHeaders = {"Content-Type","Authorization"})
+
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET}, allowedHeaders = {"Content-Type", "Authorization"})
     @GetMapping("/{nit}")
-    public ResponseEntity<List<Area>> getAllAreaByNit(@PathVariable String nit){
+    public ResponseEntity<List<Area>> getAllAreaByNit(@PathVariable String nit) {
         return HttpResponseEntity.getOKStatus(areaRepository.findByNit(nit));
     }
-    
+
     @CrossOrigin(origins = "*", methods = {RequestMethod.POST}, allowedHeaders = {"Content-Type", "Authorization"})
     @PostMapping("/register")
     public ResponseEntity<UserEntity> createArea(@RequestBody CreateRequestArea createRequestArea) throws Throwable {
 
-        String nitCompany= createRequestArea.getNitCompany();
-        String name=createRequestArea.getName();
-        
-        Optional<Area> optArea = areaRepository.findByNitAndName(nitCompany,name); //Busqueda por ID
+        String nitCompany = createRequestArea.getNitCompany();
+        String name = createRequestArea.getName();
+
+        Optional<Area> optArea = areaRepository.findByNitAndName(nitCompany, name); //Busqueda por ID
 
         if (optArea.isPresent()) { // Si existe envia mensaje de Error
             throw new UnauthorizedException("area already exist");
         } else {
 
-                Area area = new Area();
-                area.setName(name);
-                area.setNit_company(nitCompany);
-                areaRepository.save(area);
-                return HttpResponseEntity.getOKStatus(area);
+            Area area = new Area();
+            area.setName(name);
+            area.setNit_company(nitCompany);
+            areaRepository.save(area);
+            return HttpResponseEntity.getOKStatus(area);
         }
     }
 }

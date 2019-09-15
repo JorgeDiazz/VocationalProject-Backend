@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author JorgeDíaz
  */
+
 @RestController
 @RequestMapping("/postulant")
 public class PostulantController {

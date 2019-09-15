@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.recruiters.recruiterssupportbackEnd.model.entities;
 
 import javax.persistence.Column;
@@ -18,15 +13,16 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "development")
-public class Process implements UserEntity{
+public class Processs implements UserEntity {
 
-    @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column(name = "nameD")
     private String name;
-     @Column(name = "description")
+    @Column(name = "description")
     private String description;
-      @Column(name = "id_job_position")
+    @Column(name = "id_job_position")
     private int id_job_position;
 
     public int getId() {
@@ -65,8 +61,5 @@ public class Process implements UserEntity{
     public String toString() {
         return "Process{" + "id=" + id + ", name=" + name + ", description=" + description + ", id_job_position=" + id_job_position + '}';
     }
-
-     
- 
 
 }

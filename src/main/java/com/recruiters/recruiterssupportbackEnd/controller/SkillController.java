@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.recruiters.recruiterssupportbackEnd.controller;
 
 import com.recruiters.recruiterssupportbackEnd.controller.exceptions.UnauthorizedException;
@@ -36,6 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author katemorales
  */
+
 @RestController
 @RequestMapping("/skill")
 public class SkillController {
@@ -47,38 +43,45 @@ public class SkillController {
     private final JobPositionRepository jobPositionRepository;
 
     @Autowired
-    public SkillController(SkillRepository skillRepository, CompanyRepository companyRepository,GlobalSkillRepository globalSkillRepository, JobSkillRepository jobSkillRepository,JobPositionRepository jobPositionRepository) {
+    public SkillController(SkillRepository skillRepository, CompanyRepository companyRepository, GlobalSkillRepository globalSkillRepository, JobSkillRepository jobSkillRepository, JobPositionRepository jobPositionRepository) {
         this.skillRepository = skillRepository;
         this.companyRepository = companyRepository;
         this.globalSkillRepository = globalSkillRepository;
         this.jobSkillRepository = jobSkillRepository;
         this.jobPositionRepository = jobPositionRepository;
-        
+
     }
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.POST, RequestMethod.GET}, allowedHeaders = {"Content-Type", "Authorization"})
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET}, allowedHeaders = {"Content-Type", "Authorization"})
 
     @GetMapping("/Soft")
-    public List<Skill> getSoftSkills() {
-        return skillRepository.findAllSoft();
+    public ResponseEntity<List<Skill>> getSoftSkills() {
+        return HttpResponseEntity.getOKStatus(skillRepository.findAllSoft()); 
     }
- @CrossOrigin(origins = "*", methods = {RequestMethod.POST, RequestMethod.GET}, allowedHeaders = {"Content-Type","Authorization"})
-    @GetMapping("/Hard")
-    public List<Skill> getHardSkills() {
-        return skillRepository.findAllHard();
-    }
- @CrossOrigin(origins = "*", methods = {RequestMethod.POST, RequestMethod.GET}, allowedHeaders = {"Content-Type","Authorization"})
-    @GetMapping("/GlobalByCompany/{nit}")
-    public List<Skill> getGlobalSkillsCompany(@PathVariable String nit) {
-        return globalSkillRepository.findGlobalCompany(nit);
-    }
-     @CrossOrigin(origins = "*", methods = {RequestMethod.POST, RequestMethod.GET}, allowedHeaders = {"Content-Type","Authorization"})
-    @GetMapping("/LocalByJobPosition/{id}")
-    public List<Skill>  getJobSkillsCompany(@PathVariable int id) {
-        return jobSkillRepository.findLocalJob(id);
-    }
+
     
-     @CrossOrigin(origins = "*", methods = {RequestMethod.POST, RequestMethod.GET}, allowedHeaders = {"Content-Type","Authorization"})
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET}, allowedHeaders = {"Content-Type", "Authorization"})
+    @GetMapping("/Hard")
+    public ResponseEntity<List<Skill>> getHardSkills() {
+        return HttpResponseEntity.getOKStatus(skillRepository.findAllHard()); 
+    }
+
+    
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET}, allowedHeaders = {"Content-Type", "Authorization"})
+    @GetMapping("/GlobalByCompany/{nit}")
+    public ResponseEntity<List<Skill>> getGlobalSkillsCompany(@PathVariable String nit) {
+        return HttpResponseEntity.getOKStatus(globalSkillRepository.findGlobalCompany(nit)); 
+    }
+
+    
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET}, allowedHeaders = {"Content-Type", "Authorization"})
+    @GetMapping("/LocalByJobPosition/{id}")
+    public ResponseEntity<List<Skill>> getJobSkillsCompany(@PathVariable int id) {
+        return HttpResponseEntity.getOKStatus(jobSkillRepository.findLocalJob(id)); 
+    }
+
+    
+    @CrossOrigin(origins = "*", methods = {RequestMethod.POST}, allowedHeaders = {"Content-Type", "Authorization"})
     @PostMapping("/register")
     public ResponseEntity<UserEntity> createSkill(@RequestBody Skill createRequestSkill) throws Throwable {
 
@@ -90,11 +93,11 @@ public class SkillController {
             throw new UnauthorizedException("skill already exist");
         } else {
             skillRepository.save(createRequestSkill);
-            return HttpResponseEntity.getOKStatus(createRequestSkill, ResponseUtils.generateTokenHeader((UserEntity) createRequestSkill));
-
+            return HttpResponseEntity.getOKStatus(createRequestSkill);
         }
     }
- @CrossOrigin(origins = "*", methods = {RequestMethod.POST, RequestMethod.GET}, allowedHeaders = {"Content-Type","Authorization"})
+
+    @CrossOrigin(origins = "*", methods = {RequestMethod.POST}, allowedHeaders = {"Content-Type", "Authorization"})
     @PostMapping("/CreateGlobal")
     public ResponseEntity<UserEntity> createGlobalSkill(@RequestBody GlobalSkill createRequestSkill) throws Throwable {
 
@@ -112,23 +115,24 @@ public class SkillController {
             } else {
 
                 Optional<GlobalSkill> optGlobalSkill = globalSkillRepository.findById(createRequestSkill.getId()); //Busqueda por ID
-            if (optGlobalSkill.isPresent()) { // Si existe envia mensaje de Error
-                throw new UnauthorizedException("skill already exist");
-            } else {
-                 globalSkillRepository.save(createRequestSkill);
-                return HttpResponseEntity.getOKStatus(createRequestSkill, ResponseUtils.generateTokenHeader((UserEntity) createRequestSkill));
-            }
-               
+                if (optGlobalSkill.isPresent()) { // Si existe envia mensaje de Error
+                    throw new UnauthorizedException("skill already exist");
+                } else {
+                    globalSkillRepository.save(createRequestSkill);
+                    return HttpResponseEntity.getOKStatus(createRequestSkill, ResponseUtils.generateTokenHeader((UserEntity) createRequestSkill));
+                }
+
             }
 
         }
     }
-     @CrossOrigin(origins = "*", methods = {RequestMethod.POST, RequestMethod.GET}, allowedHeaders = {"Content-Type","Authorization"})
+
+    @CrossOrigin(origins = "*", methods = {RequestMethod.POST}, allowedHeaders = {"Content-Type", "Authorization"})
     @PostMapping("/CreateLocal")
     public ResponseEntity<UserEntity> createLocalSkill(@RequestBody SkillJob createRequestSkill) throws Throwable {
 
         createRequestSkill.setId(String.valueOf(createRequestSkill.getIdJob()), String.valueOf(createRequestSkill.getIdSkill()));
-
+        
         Optional<Skill> optSkill = skillRepository.findById(createRequestSkill.getIdSkill()); //Busqueda por ID
 
         if (optSkill.isPresent()) { // Si existe envia mensaje de Error
@@ -141,15 +145,14 @@ public class SkillController {
             } else {
 
                 Optional<SkillJob> optLocalSkill = jobSkillRepository.findById(createRequestSkill.getId()); //Busqueda por ID
-            if (optLocalSkill.isPresent()) { // Si existe envia mensaje de Error
-                throw new UnauthorizedException("skill already exist");
-            } else {
-                 jobSkillRepository.save(createRequestSkill);
-                return HttpResponseEntity.getOKStatus(createRequestSkill, ResponseUtils.generateTokenHeader((UserEntity) createRequestSkill));
-            }
-               
-            }
+                if (optLocalSkill.isPresent()) { // Si existe envia mensaje de Error
+                    throw new UnauthorizedException("skill already exist");
+                } else {
+                    jobSkillRepository.save(createRequestSkill);
+                    return HttpResponseEntity.getOKStatus(createRequestSkill);
+                }
 
+            }
         }
     }
 }

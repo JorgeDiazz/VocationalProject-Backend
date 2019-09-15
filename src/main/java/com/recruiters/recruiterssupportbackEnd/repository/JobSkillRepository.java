@@ -15,6 +15,6 @@ import org.springframework.data.jpa.repository.Query;
  */
 public interface JobSkillRepository extends JpaRepository<SkillJob, String>{
     
-     @Query("from Skill where id = ?1")
+    @Query("from Skill where id = ?1")
     List<Skill> findLocalJob(int id);
 }

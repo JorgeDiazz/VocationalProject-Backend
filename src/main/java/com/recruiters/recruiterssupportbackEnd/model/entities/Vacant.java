@@ -27,16 +27,8 @@ public class Vacant {
     private Date startDate;
     @Column(name = "end_date")
     private Date endDate;
-    @Column(name = "id_job_psotion")
-    private String nitJobPosition;
-
-    public Vacant(int id, int placeNumber, Date startDate, Date endDate, String nitJobPosition) {
-        this.id = id;
-        this.placeNumber = placeNumber;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.nitJobPosition = nitJobPosition;
-    }
+    @Column(name = "id_job_position")
+    private int nitJobPosition;
 
     public int getId() {
         return id;
@@ -70,11 +62,11 @@ public class Vacant {
         this.endDate = endDate;
     }
 
-    public String getNitJobPosition() {
+    public int getNitJobPosition() {
         return nitJobPosition;
     }
 
-    public void setNitJobPosition(String nitJobPosition) {
+    public void setNitJobPosition(int nitJobPosition) {
         this.nitJobPosition = nitJobPosition;
     }
 

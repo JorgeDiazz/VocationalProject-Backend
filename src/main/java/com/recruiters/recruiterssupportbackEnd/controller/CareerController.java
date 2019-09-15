@@ -3,6 +3,7 @@ package com.recruiters.recruiterssupportbackEnd.controller;
 import com.recruiters.recruiterssupportbackEnd.controller.exceptions.UnauthorizedException;
 import com.recruiters.recruiterssupportbackEnd.controller.http.HttpResponseEntity;
 import com.recruiters.recruiterssupportbackEnd.controller.request_entities.CreateRequestCareer;
+import com.recruiters.recruiterssupportbackEnd.controller.request_entities.CreateRequestCareerJob;
 import com.recruiters.recruiterssupportbackEnd.model.entities.Career;
 import com.recruiters.recruiterssupportbackEnd.model.entities.UserEntity;
 import com.recruiters.recruiterssupportbackEnd.repository.CareerRepository;
@@ -59,26 +60,26 @@ public class CareerController {
         }
     }
 
+    
     /*
     @PostMapping("/RegisterJob")
     public ResponseEntity<UserEntity> createRecruiter(@RequestBody CreateRequestCareerJob createRequestCareerJob) throws Throwable {
 
-        String name=createRequestCareerJob.getName();
-        
+        String name = createRequestCareerJob.getName();
+
         Optional<Career> optCareer = careerRepository.findByName(name); //Busqueda por ID
 
         if (optCareer.isPresent()) { // Si existe envia mensaje de Error
             throw new UnauthorizedException("area already exist");
         } else {
 
-                Career career = new Career();
-                career.setName(name);
-                careerRepository.save(career);
-                return HttpResponseEntity.getOKStatus(career,ResponseUtils.generateTokenHeader((UserEntity) career));
+            Career career = new Career();
+            career.setName(name);
+            careerRepository.save(career);
+            
+            return HttpResponseEntity.getOKStatus(career);
 
         }
-    }
-    
-    @PostMapping("/RegisterPerson")
-     */
+    }*/
+
 }

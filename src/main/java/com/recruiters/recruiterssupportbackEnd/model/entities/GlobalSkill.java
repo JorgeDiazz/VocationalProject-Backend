@@ -19,7 +19,7 @@ import javax.persistence.Table;
 public class GlobalSkill implements UserEntity {
     
     @Id
-    private String id;
+    private String id;  
     @Column(name = "nitCompany")
     private String nit;
     @Column(name = "id_skill")

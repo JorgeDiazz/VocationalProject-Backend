@@ -92,7 +92,7 @@ public class RecruiterController {
 
         String id = createRequestRecruiter.getId();
         String email = createRequestRecruiter.getEmail();
-        String nit = createRequestRecruiter.getNit();
+        String nit = createRequestRecruiter.getNitCompany();
 
         if (Integer.parseInt(ResponseUtils.Validation(token).get(0)) != 1 /*&& ResponseUtils.Validation(token).get(1)== "COMPANY"*/) {//1 para no se vencio   
             throw new UnauthorizedException("Validation Problem");

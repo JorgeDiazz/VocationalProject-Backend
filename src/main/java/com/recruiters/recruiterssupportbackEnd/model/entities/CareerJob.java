@@ -24,7 +24,7 @@ public class CareerJob {
     @Column(name = "id_career")
     private int idCareer;
     @Column(name = "id_job_position")
-    private int idjob;
+    private int idJob;
 
     public int getIdCareer() {
         return idCareer;
@@ -35,19 +35,19 @@ public class CareerJob {
     }
 
     public int getIdjob() {
-        return idjob;
+        return idJob;
     }
 
-    public void setIdjob(int idjob) {
-        this.idjob = idjob;
+    public void setIdjob(int idJob) {
+        this.idJob = idJob;
     }
 
     public String getId() {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setId(String idJob, String idCareer) {
+        this.id = idJob+idCareer;
     }
     
     
