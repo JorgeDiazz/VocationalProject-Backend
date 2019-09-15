@@ -6,9 +6,10 @@
 package com.recruiters.recruiterssupportbackEnd.model.entities;
 
 import java.util.Date;
-import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -17,12 +18,14 @@ import javax.persistence.Table;
  * @author jhanuar sanchez
  */
 @Entity
-@Table(name = "person")
+@Table(name = "vacant")
 public class Vacant {
+
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Column(name = "place_number")
-    private int placeNumber;
+    @Column(name = "places_number")
+    private int placesNumber;
     @Column(name = "start_date")
     private Date startDate;
     @Column(name = "end_date")
@@ -38,12 +41,12 @@ public class Vacant {
         this.id = id;
     }
 
-    public int getPlaceNumber() {
-        return placeNumber;
+    public int getPlacesNumber() {
+        return placesNumber;
     }
 
-    public void setPlaceNumber(int placeNumber) {
-        this.placeNumber = placeNumber;
+    public void setPlacesNumber(int placesNumber) {
+        this.placesNumber = placesNumber;
     }
 
     public Date getStartDate() {
@@ -72,6 +75,6 @@ public class Vacant {
 
     @Override
     public String toString() {
-        return "Vacant{" + "id=" + id + ", placeNumber=" + placeNumber + ", startDate=" + startDate + ", endDate=" + endDate + ", nitJobPosition=" + nitJobPosition + '}';
+        return "Vacant{" + "id=" + id + ", placeNumber=" + placesNumber + ", startDate=" + startDate + ", endDate=" + endDate + ", nitJobPosition=" + nitJobPosition + '}';
     }
 }
