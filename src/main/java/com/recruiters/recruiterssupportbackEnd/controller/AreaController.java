@@ -7,14 +7,12 @@ package com.recruiters.recruiterssupportbackEnd.controller;
 
 import com.recruiters.recruiterssupportbackEnd.controller.exceptions.UnauthorizedException;
 import com.recruiters.recruiterssupportbackEnd.controller.http.HttpResponseEntity;
-import com.recruiters.recruiterssupportbackEnd.controller.http.ResponseUtils;
 import com.recruiters.recruiterssupportbackEnd.controller.request_entities.CreateRequestArea;
 import com.recruiters.recruiterssupportbackEnd.model.entities.Area;
 import com.recruiters.recruiterssupportbackEnd.model.entities.UserEntity;
 import com.recruiters.recruiterssupportbackEnd.repository.AreaRepository;
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -48,7 +46,6 @@ public class AreaController {
     public ResponseEntity<List<Area>> getAllAreaByNit(@PathVariable String nit){
         return HttpResponseEntity.getOKStatus(areaRepository.findByNit(nit));
     }
-    
     
     @PostMapping("/register")
     public ResponseEntity<UserEntity> createArea(@RequestBody CreateRequestArea createRequestArea) throws Throwable {
