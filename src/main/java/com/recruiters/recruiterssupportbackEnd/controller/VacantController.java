@@ -40,14 +40,13 @@ public class VacantController {
 
         Date date = new Date(System.currentTimeMillis());
         vacant.setStartDate(date);
-        vacant.setEndDate(date);
 
         try {
             vacantRepository.save(vacant);
             return HttpResponseEntity.getOKStatus(vacant);
 
         } catch (Exception e) {
-            throw new ExpectationFailedException("vacant data incorrect");
+            throw new ExpectationFailedException("Vacant data is incorrect");
         }
     }
 }
