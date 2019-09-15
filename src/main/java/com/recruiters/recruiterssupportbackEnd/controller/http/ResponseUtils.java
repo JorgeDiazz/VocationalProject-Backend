@@ -1,6 +1,5 @@
 package com.recruiters.recruiterssupportbackEnd.controller.http;
 
-
 import com.recruiters.recruiterssupportbackEnd.controller.exceptions.UnauthorizedException;
 import com.recruiters.recruiterssupportbackEnd.model.entities.Company;
 import com.recruiters.recruiterssupportbackEnd.model.entities.Person;
@@ -25,14 +24,15 @@ import org.springframework.http.HttpHeaders;
  */
 public class ResponseUtils {
 
-    public static HttpHeaders generateTokenHeader(UserEntity userEntity) {
+    public static HttpHeaders generateTokenHeader(UserEntity userEntity) throws UnauthorizedException {
         HttpHeaders headers = new HttpHeaders();
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date actualdate = new Date();//fecha de creacion de token
         dateFormat.format(actualdate);
         String Authorization = null;
-        // si es un reclutador
-        try {
+
+        if (userEntity instanceof Person) // si es un reclutador o postulante
+        {
             Person optPerson = (Person) userEntity;
             Authorization = optPerson.getEmail() + "," + optPerson.getType() + "," + dateFormat.format(actualdate);
 
@@ -43,26 +43,38 @@ public class ResponseUtils {
                     .setExpiration(ZonedDateTime.now(ZoneOffset.UTC).plusMinutes(60));
             String encodedJWT = JWT.getEncoder().encode(jwt, signer);
             headers.add("Authorization", encodedJWT);
-            
-        } catch (Exception e) {
-            
-        }
 
-        //si es una company
-        try {
-            Company optPerson = (Company) userEntity;
-            Authorization = optPerson.getEmail() + "," + optPerson.getType() + "," + dateFormat.format(actualdate);
+        } else //si es una company
+        {
+            if (userEntity instanceof Company) {// si es una company
+                Company optPerson = (Company) userEntity;
+                Authorization = optPerson.getEmail() + "," + optPerson.getType() + "," + dateFormat.format(actualdate);
 
-            Signer signer = HMACSigner.newSHA256Signer("Jasaroestaenlacasatrasnochandohaciendoesto");
-            JWT jwt = new JWT().setIssuer("www.acme.com")
-                    .setIssuedAt(ZonedDateTime.now(ZoneOffset.UTC))
-                    .setSubject(Authorization)
-                    .setExpiration(ZonedDateTime.now(ZoneOffset.UTC).plusMinutes(60));
-            String encodedJWT = JWT.getEncoder().encode(jwt, signer);
-            headers.add("Authorization", encodedJWT);
-            System.out.println(Authorization);
-        } catch (Exception e) {
-            
+                Signer signer = HMACSigner.newSHA256Signer("Jasaroestaenlacasatrasnochandohaciendoesto");
+                JWT jwt = new JWT().setIssuer("www.acme.com")
+                        .setIssuedAt(ZonedDateTime.now(ZoneOffset.UTC))
+                        .setSubject(Authorization)
+                        .setExpiration(ZonedDateTime.now(ZoneOffset.UTC).plusMinutes(60));
+                String encodedJWT = JWT.getEncoder().encode(jwt, signer);
+                headers.add("Authorization", encodedJWT);
+            } else {
+
+                if (true) {//si es un reclutador
+                    Person optPerson = (Person) userEntity;
+                    Authorization = optPerson.getEmail() + "," + optPerson.getType() + "," + dateFormat.format(actualdate);
+
+                    Signer signer = HMACSigner.newSHA256Signer("Jasaroestaenlacasatrasnochandohaciendoesto");
+                    JWT jwt = new JWT().setIssuer("www.acme.com")
+                            .setIssuedAt(ZonedDateTime.now(ZoneOffset.UTC))
+                            .setSubject(Authorization)
+                            .setExpiration(ZonedDateTime.now(ZoneOffset.UTC).plusMinutes(60));
+                    String encodedJWT = JWT.getEncoder().encode(jwt, signer);
+                    headers.add("Authorization", encodedJWT);
+                } else {
+                    throw new UnauthorizedException("empty fields");
+                }
+                ;
+            }
         }
         headers.add("Access-Control-Allow-Methods", "POST,GET");
         headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization");
@@ -70,14 +82,14 @@ public class ResponseUtils {
         return headers;
     }
 
-    public static ArrayList<String> Validation(String encodedJWT) throws UnauthorizedException  {
-        ArrayList<String> validtype= new ArrayList<>();// arreglo de 2 posiciones que tiene 0,1 si  no ha caducado el token y el Type
+    public static ArrayList<String> Validation(String encodedJWT) throws UnauthorizedException {
+        ArrayList<String> validtype = new ArrayList<>();// arreglo de 2 posiciones que tiene 0,1 si  no ha caducado el token y el Type
         try {
             Verifier verifier = HMACVerifier.newVerifier("Jasaroestaenlacasatrasnochandohaciendoesto");
 
             JWT jwt = JWT.getDecoder().decode(encodedJWT, verifier);
             String[] parts = jwt.subject.split(",");//separar el optPerson.getEmail() + "," + optPerson.getType() + "," + actualdate;
-            String Authorizationdate=parts[2];//guargar la fecha
+            String Authorizationdate = parts[2];//guargar la fecha
             DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
             Date actualdate = new Date();
             dateFormat.format(actualdate); // fecha actual
@@ -92,11 +104,11 @@ public class ResponseUtils {
             } else {
                 validtype.add("0");//Se VENCIO
             }
-          validtype.add(parts[1]);// meter el type que se supondria que vendria en el body pero dudo */
+            validtype.add(parts[1]);// meter el type que se supondria que vendria en el body pero dudo */
         } catch (Exception e) {
             throw new UnauthorizedException("Validation Problem");
         }
-        
+
         return validtype;
     }
 
