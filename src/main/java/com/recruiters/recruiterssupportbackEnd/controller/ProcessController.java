@@ -48,7 +48,7 @@ public class ProcessController {
     }
      @CrossOrigin(origins = "*", methods = {RequestMethod.POST, RequestMethod.GET}, allowedHeaders = {"Content-Type","Authorization"})
     @PostMapping("/register")
-    public ResponseEntity<Process> createRecruiter(@RequestBody CreateRequestProcess createRequestProcess) throws Throwable {
+    public ResponseEntity<Process> createProcess(@RequestBody CreateRequestProcess createRequestProcess) throws Throwable {
 
         int idJob= createRequestProcess.getId_job_position();
         String name=createRequestProcess.getName();
