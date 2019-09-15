@@ -1,5 +1,6 @@
 package com.recruiters.recruiterssupportbackEnd.controller;
 
+import com.recruiters.recruiterssupportbackEnd.controller.exceptions.ExpectationFailedException;
 import com.recruiters.recruiterssupportbackEnd.controller.exceptions.UnauthorizedException;
 import com.recruiters.recruiterssupportbackEnd.controller.http.HttpResponseEntity;
 import org.springframework.util.StringUtils;
@@ -70,9 +71,9 @@ public class PostulantController {
                     personRepository.save(person);
                     postulantRepository.save(postulant);
                 } catch (Exception e) {
-                    throw new UnauthorizedException("person/postulant data is incorrect");
+                    throw new ExpectationFailedException("person/postulant data is incorrect");
                 }
-                
+
                 return HttpResponseEntity.getOKStatus(person);
             }
         }
@@ -106,7 +107,7 @@ public class PostulantController {
                 personRepository.save(person);
                 postulantRepository.save(postulant);
             } catch (Exception e) {
-                throw new UnauthorizedException("person/postulant data is incorrect");
+                throw new ExpectationFailedException("person/postulant data is incorrect");
             }
 
             return HttpResponseEntity.getOKStatus(person);
