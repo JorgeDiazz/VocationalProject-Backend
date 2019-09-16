@@ -11,17 +11,17 @@ import org.springframework.data.jpa.repository.Query;
  * @author Jhanuar
  */
 public interface PostulantRVRepository extends JpaRepository<PostulantRV, Integer> {
-    /*
-    @Query("from postulant_rv where id = ?1")
-    List<PostulantRV> findById(int id);
     
-    @Query("from postulant_rv where id = ?1")
+    @Query("from PostulantRV where id = ?1")
+    List<PostulantRV> findById(int Id);
+
+    @Query("from PostulantRV where state = ?1")
     List<PostulantRV> findByState(int id);
-    
-    @Query("from postulant_rv where id_postulant = ?1")
+  
+    @Query("from PostulantRV where idPerson = ?1")
     List<PostulantRV> findByPostulant(String id);
 
-    @Query("from postulant_rv where id_rv = ?1")
+    @Query("from PostulantRV where idVacant = ?1")
     List<PostulantRV> findByRV(int id);
-*/
+
 }
