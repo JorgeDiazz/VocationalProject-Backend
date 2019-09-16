@@ -14,10 +14,10 @@ public interface RecruiterVacantRepository extends JpaRepository<RecruiterVacant
     @Query("from RecruiterVacant where id = ?1")
     List<RecruiterVacant> findById(int id);
     
-    @Query("from RecruiterVacant where idperson = ?1")
+    @Query("from RecruiterVacant where id_person = ?1")
     List<RecruiterVacant> findByRecruiter(String id);
     
-    @Query("from RecruiterVacant where idvacant = ?1")
+    @Query("from RecruiterVacant where id_vacant = ?1")
     List<RecruiterVacant> findByvacant(int id);
     
 }

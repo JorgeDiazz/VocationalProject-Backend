@@ -9,11 +9,11 @@ import javax.persistence.Table;
 
 /**
  *
- * @author jhanu
+ * @author jhanuar sanchez
  */
 @Entity
-@Table(name = "postulant_rv")
-public class PostulantRV {
+@Table(name = "PostulantRv")
+public class PostulantRv {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,9 +21,9 @@ public class PostulantRV {
     @Column(name = "state")
     private int state;
     @Column(name = "id_postulant")
-    private String idPerson;
+    private String idPostulant;
     @Column(name = "id_rv")
-    private int idVacant;
+    private int idRv;
 
     public int getId() {
         return id;
@@ -41,23 +41,21 @@ public class PostulantRV {
         this.state = state;
     }
 
-    public String getIdPerson() {
-        return idPerson;
+    public String getIdPostulant() {
+        return idPostulant;
     }
 
-    public void setIdPerson(String idPerson) {
-        this.idPerson = idPerson;
+    public void setIdPostulant(String idPostulant) {
+        this.idPostulant = idPostulant;
     }
 
-    public int getIdVacant() {
-        return idVacant;
+    public int getIdRv() {
+        return idRv;
     }
 
-    public void setIdVacant(int idVacant) {
-        this.idVacant = idVacant;
+    public void setIdRv(int idRv) {
+        this.idRv = idRv;
     }
 
-   
-
-   
+ 
 }

@@ -9,12 +9,12 @@ import com.recruiters.recruiterssupportbackEnd.controller.request_entities.Creat
 import com.recruiters.recruiterssupportbackEnd.controller.request_entities.UpdateRequestRecruiter;
 import com.recruiters.recruiterssupportbackEnd.model.entities.CareerJobPosition;
 import com.recruiters.recruiterssupportbackEnd.model.entities.Person;
-import com.recruiters.recruiterssupportbackEnd.model.entities.PostulantRV;
+import com.recruiters.recruiterssupportbackEnd.model.entities.PostulantRv;
 import com.recruiters.recruiterssupportbackEnd.model.entities.RecruiterVacant;
 import com.recruiters.recruiterssupportbackEnd.model.entities.UserEntity;
 import com.recruiters.recruiterssupportbackEnd.model.entities.UserEntity.TYPE;
 import com.recruiters.recruiterssupportbackEnd.repository.PersonRepository;
-import com.recruiters.recruiterssupportbackEnd.repository.PostulantRVRepository;
+import com.recruiters.recruiterssupportbackEnd.repository.PostulantRvRepository;
 import com.recruiters.recruiterssupportbackEnd.repository.RecruiterVacantRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,25 +41,21 @@ import org.springframework.web.bind.annotation.RestController;
 public class RecruiterController {
 
     private final PersonRepository personRepository;
-    //private final RecruiterVacantRepository recruiterVacantRepository;
-    //private final PostulantRVRepository postulantRVRepository;
+    private final RecruiterVacantRepository recruiterVacantRepository;
+    private final PostulantRvRepository postulantRvRepository;
 
     @Autowired
-    public RecruiterController(PersonRepository personRepository, RecruiterVacantRepository recruiterVacantRepository, PostulantRVRepository postulantRVRepository) {
+    public RecruiterController(PersonRepository personRepository, RecruiterVacantRepository recruiterVacantRepository, PostulantRvRepository postulantRVRepository) {
         this.personRepository = personRepository;
-        //this.recruiterVacantRepository = recruiterVacantRepository;
-        //this.postulantRVRepository = postulantRVRepository;
+        this.recruiterVacantRepository = recruiterVacantRepository;
+        this.postulantRvRepository = postulantRVRepository;
     }
-    
-    
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET}, allowedHeaders = {"Content-Type", "Authorization"})
     @GetMapping("/{nit}")
     public ResponseEntity<List<Person>> getAllRecruiterByNit(@PathVariable String nit) {
         return HttpResponseEntity.getOKStatus(personRepository.findByNit(nit));
     }
-
-    
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.PUT}, allowedHeaders = {"Content-Type", "Authorization"})
     @PutMapping("/")
@@ -133,39 +129,46 @@ public class RecruiterController {
             }
         }
     }
-/*
+
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET}, allowedHeaders = {"Content-Type", "Authorization"})
     @GetMapping("/manager/{nit}")
     public ResponseEntity<List<CreateResponseRecluitersByCompany>> getAllRecruiterByComany(@PathVariable String nit) throws ExpectationFailedException {
 
         List<Person> reclutadores = personRepository.findByNit(nit);
+        System.out.println("lista de reclutadores:   "+reclutadores.toString());
         if (!reclutadores.isEmpty()) {
             List<CreateResponseRecluitersByCompany> recluiterBycompanylist = new ArrayList<>();
+            
             for (Person recluiter : reclutadores) {
-
-                if (recluiter.getType() == "RECRUITER") {// revisar si es una persona recluiter
-                    List<RecruiterVacant> recluitervacantlist = recruiterVacantRepository.findByRecruiter(recluiter.getId());
-
+                int vacantcount = 0;
+                int postulantcount = 0;
+                // revisar si es una persona recluiter
+                    
+                    try {
+                    String recluiterid=recluiter.getId();
+                    List<RecruiterVacant> recluitervacantlist = recruiterVacantRepository.findByRecruiter(recluiterid);
+                    System.out.println("lista de vacantes:   "+recluitervacantlist.toString());
                     for (RecruiterVacant rv : recluitervacantlist) {
-                        int vacantcount = 0;
-
-                        if (recluiter.getId() == rv.getIdPerson()) {
                             vacantcount++;
-                            List<PostulantRV> postulantlist = postulantRVRepository.findByRV(rv.getId());
-                            for (PostulantRV prv : postulantlist) {
-                                
-
+                            int recruitervacantid=rv.getId();
+                            List<PostulantRv> postulantlist = postulantRvRepository.findByRV(recruitervacantid);
+                            System.out.println("lista de postulantes:   "+postulantlist.toString());
+                            for (PostulantRv prv : postulantlist) {
+                                postulantcount++;   
                             }
-                        }
-
                     }
+                } catch (Exception e) {
                 }
-
+                    
+                    CreateResponseRecluitersByCompany newrecru = new CreateResponseRecluitersByCompany(recluiter.getId(), recluiter.getName(), vacantcount, postulantcount);
+                    recluiterBycompanylist.add(newrecru);
+                    
+                
             }
             return HttpResponseEntity.getOKStatus(recluiterBycompanylist);
         } else {
             throw new ExpectationFailedException("there are no recruiters in the database");
         }
 
-    }*/
+    }
 }

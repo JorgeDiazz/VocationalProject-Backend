@@ -18,9 +18,9 @@ public class RecruiterVacant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Column(name = "idperson")
+    @Column(name = "id_person")
     private String idPerson;
-    @Column(name = "idvacant")
+    @Column(name = "id_vacant")
     private int idVacant;
 
     public int getId() {
