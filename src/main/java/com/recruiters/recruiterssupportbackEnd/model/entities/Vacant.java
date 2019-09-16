@@ -15,7 +15,7 @@ import javax.persistence.Table;
 
 /**
  *
- * @author jhanuar sanchez
+ * @author jorge diaz
  */
 @Entity
 @Table(name = "vacant")
