@@ -53,62 +53,69 @@ public class RecruiterController {
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET}, allowedHeaders = {"Content-Type", "Authorization"})
     @GetMapping("/{nit}")
-    public ResponseEntity<List<Person>> getAllRecruiterByNit(@PathVariable String nit) {
-        return HttpResponseEntity.getOKStatus(personRepository.findByNit(nit));
+    public ResponseEntity<List<Person>> getAllRecruiterByNit(@PathVariable String nit, @RequestHeader(value = "Authorization") String token) throws UnauthorizedException {
+        if (Integer.parseInt(ResponseUtils.Validation(token).get(0)) != 1 /*&& ResponseUtils.Validation(token).get(1)== "COMPANY"*/) {//1 para no se vencio   
+            throw new UnauthorizedException("Validation Problem");
+        } else {
+            return HttpResponseEntity.getOKStatus(personRepository.findByNit(nit));
+        }
     }
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.PUT}, allowedHeaders = {"Content-Type", "Authorization"})
     @PutMapping("/")
-    public ResponseEntity<Person> updateRecruiter(@RequestBody UpdateRequestRecruiter updateRequestRecruiter) throws UnauthorizedException {
+    public ResponseEntity<Person> updateRecruiter(@RequestBody UpdateRequestRecruiter updateRequestRecruiter, @RequestHeader(value = "Authorization") String token) throws UnauthorizedException {
+        if (Integer.parseInt(ResponseUtils.Validation(token).get(0)) != 1 /*&& ResponseUtils.Validation(token).get(1)== "COMPANY"*/) {//1 para no se vencio   
+            throw new UnauthorizedException("Validation Problem");
+        } else {
 
-        String id = updateRequestRecruiter.getId();
-        String name = updateRequestRecruiter.getName();
-        String email = updateRequestRecruiter.getEmail();
-        String password = updateRequestRecruiter.getPassword();
+            String id = updateRequestRecruiter.getId();
+            String name = updateRequestRecruiter.getName();
+            String email = updateRequestRecruiter.getEmail();
+            String password = updateRequestRecruiter.getPassword();
 
-        Optional<Person> optPerson = personRepository.findById(id);
+            Optional<Person> optPerson = personRepository.findById(id);
 
-        if (optPerson.isPresent()) {
+            if (optPerson.isPresent()) {
 
-            Person newPerson = optPerson.get();
+                Person newPerson = optPerson.get();
 
-            if (name != null && !name.isEmpty()) {
-                newPerson.setName(name);
-            }
-
-            if (email != null && !email.isEmpty()) {
-
-                if (personRepository.findByEmail(email).isPresent()) {
-                    throw new UnauthorizedException("email in use");
-                } else {
-                    newPerson.setEmail(email);
+                if (name != null && !name.isEmpty()) {
+                    newPerson.setName(name);
                 }
+
+                if (email != null && !email.isEmpty()) {
+
+                    if (personRepository.findByEmail(email).isPresent()) {
+                        throw new UnauthorizedException("email in use");
+                    } else {
+                        newPerson.setEmail(email);
+                    }
+                }
+
+                if (password != null && !password.isEmpty()) {
+                    newPerson.setPassword(password);
+                }
+
+                personRepository.save(newPerson);
+
+                return HttpResponseEntity.getOKStatus(newPerson, ResponseUtils.generateTokenHeader(newPerson));
+
             }
-
-            if (password != null && !password.isEmpty()) {
-                newPerson.setPassword(password);
-            }
-
-            personRepository.save(newPerson);
-
-            return HttpResponseEntity.getOKStatus(newPerson, ResponseUtils.generateTokenHeader(newPerson));
-
         }
-
         throw new UnauthorizedException("could not update");
     }
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.POST}, allowedHeaders = {"Content-Type", "Authorization"})
     @PostMapping("/")//nit,id,email
     public ResponseEntity<UserEntity> createRecruiter(@RequestBody CreateRequestRecruiter createRequestRecruiter, @RequestHeader(value = "Authorization") String token) throws Throwable {
-
-        String id = createRequestRecruiter.getId();
-        String email = createRequestRecruiter.getEmail();
-        String nit = createRequestRecruiter.getNit();
-
         if (Integer.parseInt(ResponseUtils.Validation(token).get(0)) != 1 /*&& ResponseUtils.Validation(token).get(1)== "COMPANY"*/) {//1 para no se vencio   
             throw new UnauthorizedException("Validation Problem");
         } else {
+
+            String id = createRequestRecruiter.getId();
+            String email = createRequestRecruiter.getEmail();
+            String nit = createRequestRecruiter.getNit();
+
             if (personRepository.existsById(id)) { // Si existe envia mensaje de Error
                 throw new UnauthorizedException("user already exist");
             } else {
@@ -127,48 +134,53 @@ public class RecruiterController {
                     return HttpResponseEntity.getOKStatus(recruiter);
                 }
             }
+
         }
     }
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET}, allowedHeaders = {"Content-Type", "Authorization"})
     @GetMapping("/manager/{nit}")
-    public ResponseEntity<List<CreateResponseRecluitersByCompany>> getAllRecruiterByComany(@PathVariable String nit) throws ExpectationFailedException {
+    public ResponseEntity<List<CreateResponseRecluitersByCompany>> getAllRecruiterByComany(@PathVariable String nit, @RequestHeader(value = "Authorization") String token) throws ExpectationFailedException, UnauthorizedException {
 
-        List<Person> reclutadores = personRepository.findByNit(nit);
-        System.out.println("lista de reclutadores:   "+reclutadores.toString());
-        if (!reclutadores.isEmpty()) {
-            List<CreateResponseRecluitersByCompany> recluiterBycompanylist = new ArrayList<>();
-            
-            for (Person recluiter : reclutadores) {
-                int vacantcount = 0;
-                int postulantcount = 0;
-                // revisar si es una persona recluiter
-                    
+        if (Integer.parseInt(ResponseUtils.Validation(token).get(0)) != 1 /*&& ResponseUtils.Validation(token).get(1)== "COMPANY"*/) {//1 para no se vencio   
+            throw new UnauthorizedException("Validation Problem");
+        } else {
+
+            List<Person> reclutadores = personRepository.findByNit(nit);
+            System.out.println("lista de reclutadores:   " + reclutadores.toString());
+            if (!reclutadores.isEmpty()) {
+                List<CreateResponseRecluitersByCompany> recluiterBycompanylist = new ArrayList<>();
+
+                for (Person recluiter : reclutadores) {
+                    int vacantcount = 0;
+                    int postulantcount = 0;
+                    // revisar si es una persona recluiter
+
                     try {
-                    String recluiterid=recluiter.getId();
-                    List<RecruiterVacant> recluitervacantlist = recruiterVacantRepository.findByRecruiter(recluiterid);
-                    System.out.println("lista de vacantes:   "+recluitervacantlist.toString());
-                    for (RecruiterVacant rv : recluitervacantlist) {
+                        String recluiterid = recluiter.getId();
+                        List<RecruiterVacant> recluitervacantlist = recruiterVacantRepository.findByRecruiter(recluiterid);
+                        System.out.println("lista de vacantes:   " + recluitervacantlist.toString());
+                        for (RecruiterVacant rv : recluitervacantlist) {
                             vacantcount++;
-                            int recruitervacantid=rv.getId();
+                            int recruitervacantid = rv.getId();
                             List<PostulantRv> postulantlist = postulantRvRepository.findByRV(recruitervacantid);
-                            System.out.println("lista de postulantes:   "+postulantlist.toString());
+                            System.out.println("lista de postulantes:   " + postulantlist.toString());
                             for (PostulantRv prv : postulantlist) {
-                                postulantcount++;   
+                                postulantcount++;
                             }
+                        }
+                    } catch (Exception e) {
                     }
-                } catch (Exception e) {
-                }
-                    
+
                     CreateResponseRecluitersByCompany newrecru = new CreateResponseRecluitersByCompany(recluiter.getId(), recluiter.getName(), vacantcount, postulantcount);
                     recluiterBycompanylist.add(newrecru);
-                    
-                
-            }
-            return HttpResponseEntity.getOKStatus(recluiterBycompanylist);
-        } else {
-            throw new ExpectationFailedException("there are no recruiters in the database");
-        }
 
+                }
+                return HttpResponseEntity.getOKStatus(recluiterBycompanylist);
+            } else {
+                throw new ExpectationFailedException("there are no recruiters in the database");
+            }
+
+        }
     }
 }
