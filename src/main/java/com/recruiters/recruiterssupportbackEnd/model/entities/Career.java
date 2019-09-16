@@ -18,7 +18,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "career")
-public class Career implements UserEntity {
+public class Career{
 
     @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;

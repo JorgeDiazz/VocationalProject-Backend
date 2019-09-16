@@ -13,7 +13,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "development")
-public class Processs implements UserEntity {
+public class Processs {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

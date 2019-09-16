@@ -16,7 +16,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "global_skill")
-public class GlobalSkill implements UserEntity {
+public class GlobalSkill{
     
     @Id
     private String id;  

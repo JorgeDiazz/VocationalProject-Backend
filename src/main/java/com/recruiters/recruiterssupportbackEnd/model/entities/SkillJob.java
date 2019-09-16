@@ -1,4 +1,3 @@
-
 package com.recruiters.recruiterssupportbackEnd.model.entities;
 
 import javax.persistence.Column;
@@ -13,7 +12,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "jb_skill")
-public class SkillJob implements UserEntity {
+public class SkillJob {
     
     @Id
     private String id;
@@ -44,6 +43,11 @@ public class SkillJob implements UserEntity {
 
     public void setIdSkill(int idSkill) {
         this.idSkill = idSkill;
+    }
+
+    @Override
+    public String toString() {
+        return "SkillJob{" + "id=" + id + ", idJob=" + idJob + ", idSkill=" + idSkill + '}';
     }
     
     

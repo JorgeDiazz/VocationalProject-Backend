@@ -1,5 +1,6 @@
 package com.recruiters.recruiterssupportbackEnd.controller;
 
+import com.recruiters.recruiterssupportbackEnd.controller.exceptions.ExpectationFailedException;
 import com.recruiters.recruiterssupportbackEnd.controller.exceptions.UnauthorizedException;
 import com.recruiters.recruiterssupportbackEnd.controller.http.HttpResponseEntity;
 import com.recruiters.recruiterssupportbackEnd.controller.request_entities.CreateRequestJobPosition;
@@ -23,7 +24,7 @@ import com.recruiters.recruiterssupportbackEnd.repository.SkillRepository;
 import com.recruiters.recruiterssupportbackEnd.repository.VacantRepository;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -39,12 +40,11 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author seam33
  */
-
 @RestController
 @RequestMapping("/jobPosition")
 
 public class JobPositionController {
-    
+
     private final CompanyRepository companyRepository;
     private final JobPositionRepository jobPositionRepository;
     private final CareerRepository careerRepository;
@@ -54,7 +54,7 @@ public class JobPositionController {
     private final ProcessRepository processRepository;
     private final VacantRepository vacantRepository;
     private final RecruiterVacantRepository recruiterVacantRepository;
-    
+
     @Autowired
     public JobPositionController(CompanyRepository companyRepository, JobPositionRepository jobPositionRepository, CareerRepository careerRepository, SkillRepository skillRepository, JobSkillRepository jobSkillRepository, ProcessRepository processRepository, JobCareerRepository jobCareerRepository, VacantRepository vacantRepository, RecruiterVacantRepository recruiterVacantRepository) {
         this.companyRepository = companyRepository;
@@ -67,127 +67,143 @@ public class JobPositionController {
         this.vacantRepository = vacantRepository;
         this.recruiterVacantRepository = recruiterVacantRepository;
     }
-    
+
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET}, allowedHeaders = {"Content-Type", "Authorization"})
     @GetMapping("/{nit}")
     public ResponseEntity<List<JobPosition>> getAllJobPosition(@PathVariable String nit) {
-        return HttpResponseEntity.getOKStatus(jobPositionRepository.findAll());
+        return HttpResponseEntity.getOKStatus(jobPositionRepository.findJobs(nit));
     }
-    
+
     @CrossOrigin(origins = "*", methods = {RequestMethod.POST}, allowedHeaders = {"Content-Type", "Authorization"})
     @PostMapping("/")
-    public ResponseEntity<JobPosition> createJobPosition(@RequestBody CreateRequestJobPosition createRequestJobPosition) throws UnauthorizedException {
-        
+    public void createJobPosition(@RequestBody CreateRequestJobPosition createRequestJobPosition) throws UnauthorizedException, ExpectationFailedException {
+
         String nitCompany = createRequestJobPosition.getNitCompany();
-        
-        if (!companyRepository.existsById(nitCompany)) {
-            throw new UnauthorizedException("company doesn't exist");
-        } else {
-            
+
+        if (nitCompany != null && companyRepository.existsById(nitCompany)) {
+
             String name = createRequestJobPosition.getName();
             double salaryMin = createRequestJobPosition.getSalaryMin();
             double salaryMax = createRequestJobPosition.getSalaryMax();
             int idArea = createRequestJobPosition.getIdArea();
             String description = createRequestJobPosition.getDescription();
+            List<Career> career = createRequestJobPosition.getCareer();
+            List<Career> newCareer = createRequestJobPosition.getNewCareer();
+            List<Skill> hardSkill = createRequestJobPosition.getHardSkill();
+            List<Skill> newHardSkill = createRequestJobPosition.getNewHardSkill();
+            List<Processs> processs = createRequestJobPosition.getProcess();
+            List<Person> recruiter = createRequestJobPosition.getRecruiter();
+            int placesNumber = createRequestJobPosition.getPlaceNumber();
 
-            //CREATE JOBPOSITION PART I
-            JobPosition newJobPosition = new JobPosition();
-            newJobPosition.setName(name);
-            newJobPosition.setSalaryMin(salaryMin);
-            newJobPosition.setSalaryMax(salaryMax);
-            newJobPosition.setIdArea(String.valueOf(idArea));
-            newJobPosition.setDescription(description);
-            jobPositionRepository.save(newJobPosition);
-            
-            Optional<JobPosition> newJB = jobPositionRepository.findByName(name);
-            
-            if (newJB.isPresent()) {
-                
-                int idJob = newJB.get().getId();
-                List<Career> career = createRequestJobPosition.getCareer();
-                List<Career> newCareer = createRequestJobPosition.getNewCareer();
-                List<Skill> hardSkill = createRequestJobPosition.getHardSkill();
-                List<Skill> newHardSkill = createRequestJobPosition.getNewHardSkill();
-                List<Processs> processs = createRequestJobPosition.getProcess();
-                List<Person> recruiter = createRequestJobPosition.getRecruiter();
-                
-                int placesNumber = createRequestJobPosition.getPlaceNumber();
-                
-                if (!career.isEmpty()) {
-                    
-                    career.stream().map((career1) -> {
-                        CareerJob careerJob = new CareerJob();
-                        careerJob.setId(String.valueOf(idJob), String.valueOf(career1.getId()));
-                        careerJob.setIdjob(idJob);
-                        careerJob.setIdCareer(career1.getId());
-                        return careerJob;
-                    }).forEachOrdered((careerJob) -> {
-                        jobCareerRepository.save(careerJob);
-                    });
-                    
-                }
-                
-                if (!newCareer.isEmpty()) {
-                    
-                    newCareer.stream().map((newCareer1) -> {
-                        Career newC = new Career();
-                        newC.setName(newCareer1.getName());
-                        return newC;
-                    }).map((newC) -> {
-                        careerRepository.save(newC);
-                        return newC;
-                    }).map((newC) -> careerRepository.findByName(newC.getName()).get().getId()).map((idC) -> {
-                        CareerJob careerJob = new CareerJob();
-                        careerJob.setId(String.valueOf(idJob), String.valueOf(idC));
-                        careerJob.setIdjob(idJob);
-                        careerJob.setIdCareer(idC);
-                        return careerJob;
-                    }).forEachOrdered((careerJob) -> {
-                        jobCareerRepository.save(careerJob);
-                    });
-                    
-                }
-                
-                if (!hardSkill.isEmpty()) {  //ASOCIATE HARDSKILL AND JOBPOSITION
+            if (!Strings.isEmpty(name) && salaryMin > 0.0 && salaryMax > 0.0 && salaryMin < salaryMax && idArea > 0 && !Strings.isEmpty(description)) {
 
-                    hardSkill.stream().map((hardSkill1) -> {
-                        SkillJob newSkillJob = new SkillJob();
-                        newSkillJob.setId(String.valueOf(idJob), String.valueOf(hardSkill1.getId()));
-                        newSkillJob.setIdJob(idJob);
-                        newSkillJob.setIdSkill(hardSkill1.getId());
-                        return newSkillJob;
-                    }).forEachOrdered((newSkillJob) -> {
-                        jobSkillRepository.save(newSkillJob);
-                    });
-                    
+                int auxVacant = 0;
+
+                if (career == null && newCareer == null) {
+                    throw new ExpectationFailedException("the careers lists are empty");
                 }
-                
-                if (!newHardSkill.isEmpty()) {
-                    
-                    hardSkill.stream().map((hardSkill1) -> {
-                        Skill newHS = new Skill();
-                        newHS.setName(hardSkill1.getName());
-                        return newHS;
-                    }).map((newHS) -> {
-                        newHS.setType("Hard");
-                        return newHS;
-                    }).map((newHS) -> {
-                        skillRepository.save(newHS);
-                        return newHS;
-                    }).map((newHS) -> skillRepository.findByName(newHS.getName()).get().getId()).map((idSkill) -> {
-                        SkillJob newSkillJob = new SkillJob();
-                        newSkillJob.setId(String.valueOf(idJob), String.valueOf(idSkill));
-                        newSkillJob.setIdJob(idJob);
-                        newSkillJob.setIdSkill(idSkill);
-                        return newSkillJob;
-                    }).forEachOrdered((newSkillJob) -> {
-                        jobSkillRepository.save(newSkillJob);
-                    });
-                    
+
+                if (hardSkill == null && newHardSkill == null) {
+                    throw new ExpectationFailedException("the skills lists are empty");
                 }
-                
-                if (!processs.isEmpty()) {
+
+                if (processs == null) {
+                    throw new ExpectationFailedException("the process list are empty");
+                }
+
+                if (recruiter != null && placesNumber > 0) {
+                    auxVacant = 1;
+                } else {
+                    throw new ExpectationFailedException("Vacant data is incorrect");
+                }
+
+                if (jobPositionRepository.findAtributes(name, nitCompany, idArea) == null) {
+
+                    /*JOB-POSITION*/
                     
+                    JobPosition newJobPosition = new JobPosition();
+                    newJobPosition.setName(name.trim());
+                    newJobPosition.setSalaryMin(salaryMin);
+                    newJobPosition.setSalaryMax(salaryMax);
+                    newJobPosition.setIdArea(idArea);
+                    newJobPosition.setDescription(description.trim());
+                    newJobPosition.setNit(nitCompany.trim());
+                    int idJob = jobPositionRepository.save(newJobPosition).getId();
+
+                    /*CAREERS*/
+                    
+                    if (career != null) {
+                        career.stream().map((career1) -> {
+                            CareerJob careerJob = new CareerJob();
+                            careerJob.setId(String.valueOf(idJob), String.valueOf(career1.getId()));
+                            careerJob.setIdjob(idJob);
+                            careerJob.setIdCareer(career1.getId());
+                            return careerJob;
+                        }).forEachOrdered((careerJob) -> {
+                            jobCareerRepository.save(careerJob);
+                        });
+
+                    }
+
+                    if (newCareer != null) {
+                        newCareer.stream().map((newCareer1) -> {
+                            Career newC = new Career();
+                            newC.setName(newCareer1.getName());
+                            return newC;
+                        }).map((newC) -> {
+                            careerRepository.save(newC);
+                            return newC;
+                        }).map((newC) -> careerRepository.findByName(newC.getName()).get().getId()).map((idC) -> {
+                            CareerJob careerJob = new CareerJob();
+                            careerJob.setId(String.valueOf(idJob), String.valueOf(idC));
+                            careerJob.setIdjob(idJob);
+                            careerJob.setIdCareer(idC);
+                            return careerJob;
+                        }).forEachOrdered((careerJob) -> {
+                            jobCareerRepository.save(careerJob);
+                        });
+                    }
+                    
+                    /*SKILLS*/
+
+                    if (hardSkill != null) {  //ASOCIATE HARDSKILL AND JOBPOSITION
+                        hardSkill.stream().map((hardSkill1) -> {
+                            SkillJob newSkillJob = new SkillJob();
+                            newSkillJob.setId(String.valueOf(idJob), String.valueOf(hardSkill1.getId()));
+                            newSkillJob.setIdJob(idJob);
+                            newSkillJob.setIdSkill(hardSkill1.getId());
+                            return newSkillJob;
+                        }).forEachOrdered((newSkillJob) -> {
+                            jobSkillRepository.save(newSkillJob);
+                        });
+                    }
+
+                    if (!newHardSkill.isEmpty()) {
+
+                        hardSkill.stream().map((hardSkill1) -> {
+                            Skill newHS = new Skill();
+                            newHS.setName(hardSkill1.getName());
+                            return newHS;
+                        }).map((newHS) -> {
+                            newHS.setType("Hard");
+                            return newHS;
+                        }).map((newHS) -> {
+                            skillRepository.save(newHS);
+                            return newHS;
+                        }).map((newHS) -> skillRepository.findByName(newHS.getName()).get().getId()).map((idSkill) -> {
+                            SkillJob newSkillJob = new SkillJob();
+                            newSkillJob.setId(String.valueOf(idJob), String.valueOf(idSkill));
+                            newSkillJob.setIdJob(idJob);
+                            newSkillJob.setIdSkill(idSkill);
+                            return newSkillJob;
+                        }).forEachOrdered((newSkillJob) -> {
+                            jobSkillRepository.save(newSkillJob);
+                        });
+
+                    }
+                    
+                    /*PROCESS*/
+
                     processs.stream().map((proces) -> {
                         Processs newProcess = new Processs();
                         newProcess.setName(proces.getName());
@@ -198,33 +214,37 @@ public class JobPositionController {
                     }).forEachOrdered((newProcess) -> {
                         processRepository.save(newProcess);
                     });
+
+                    /*VACANT*/
                     
+                    if (auxVacant == 1) {
+                        recruiter.forEach((recruiter1) -> {
+
+                            Date date = new Date(System.currentTimeMillis());
+                            Vacant newVacant = new Vacant();
+
+                            newVacant.setPlacesNumber(placesNumber);
+                            newVacant.setStartDate(date);
+                            newVacant.setNitJobPosition(idJob);
+                            int idVacant = vacantRepository.save(newVacant).getId();
+
+                            RecruiterVacant rv = new RecruiterVacant();
+                            rv.setIdPerson(recruiter1.getId());
+                            rv.setIdVacant(idVacant);
+                            recruiterVacantRepository.save(rv);
+                        });
+                    }
+
+                } else {
+                    throw new ExpectationFailedException("JobPosition already exist");
                 }
-                
-                if (!recruiter.isEmpty()) {
-                    
-                    recruiter.forEach((recruiter1) -> {
-                        Date date = new Date(System.currentTimeMillis());
-                        Vacant newVacant = new Vacant();
-                        
-                        newVacant.setPlacesNumber(placesNumber);
-                        newVacant.setStartDate(date);
-                        newVacant.setNitJobPosition(idJob);
-                        
-                        vacantRepository.save(newVacant);
-                        
-                        int idVacant = vacantRepository.findByDateJobNum(placesNumber, date, idJob).get().getId();
-                        
-                        RecruiterVacant rv = new RecruiterVacant();
-                        rv.setIdPerson(recruiter1.getId());
-                        rv.setIdVacant(idVacant);
-                        recruiterVacantRepository.save(rv);
-                    });
-                    
-                }
+
+            } else {
+                throw new ExpectationFailedException("JobPosition data is incorrect");
             }
-            
-            return HttpResponseEntity.getOKStatus(newJobPosition);
+
+        } else {
+            throw new ExpectationFailedException("the company doesn't exist");
         }
     }
 }

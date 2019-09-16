@@ -1,6 +1,5 @@
 package com.recruiters.recruiterssupportbackEnd.model.entities;
 
-import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,10 +13,9 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "job_position")
-public class JobPosition implements UserEntity {
+public class JobPosition {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column(name = "nameJ")
     private String name;
@@ -30,7 +28,7 @@ public class JobPosition implements UserEntity {
     @Column(name = "nit_company")
     private String nit;
     @Column(name = "id_area")
-    private String idArea;
+    private int idArea;
 
     public int getId() {
         return id;
@@ -80,13 +78,15 @@ public class JobPosition implements UserEntity {
         this.nit = nit;
     }
 
-    public String getIdArea() {
+    public int getIdArea() {
         return idArea;
     }
 
-    public void setIdArea(String idArea) {
+    public void setIdArea(int idArea) {
         this.idArea = idArea;
     }
+
+   
 
     @Override
     public String toString() {

@@ -13,7 +13,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "skill")
-public class Skill implements UserEntity{
+public class Skill{
     
     @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;

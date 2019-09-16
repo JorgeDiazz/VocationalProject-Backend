@@ -5,7 +5,6 @@ import com.recruiters.recruiterssupportbackEnd.controller.http.HttpResponseEntit
 import com.recruiters.recruiterssupportbackEnd.controller.request_entities.CreateRequestCareer;
 import com.recruiters.recruiterssupportbackEnd.controller.request_entities.CreateRequestCareerJob;
 import com.recruiters.recruiterssupportbackEnd.model.entities.Career;
-import com.recruiters.recruiterssupportbackEnd.model.entities.UserEntity;
 import com.recruiters.recruiterssupportbackEnd.repository.CareerRepository;
 import java.util.List;
 import java.util.Optional;
