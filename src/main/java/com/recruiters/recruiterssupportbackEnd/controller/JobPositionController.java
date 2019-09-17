@@ -79,6 +79,8 @@ public class JobPositionController {
     public void createJobPosition(@RequestBody CreateRequestJobPosition createRequestJobPosition) throws UnauthorizedException, ExpectationFailedException {
 
         String nitCompany = createRequestJobPosition.getNitCompany();
+        List<Career> career = createRequestJobPosition.getCareer();
+        System.out.println(career);
 
         if (nitCompany != null && companyRepository.existsById(nitCompany)) {
 
@@ -87,7 +89,7 @@ public class JobPositionController {
             double salaryMax = createRequestJobPosition.getSalaryMax();
             int idArea = createRequestJobPosition.getIdArea();
             String description = createRequestJobPosition.getDescription();
-            List<Career> career = createRequestJobPosition.getCareer();
+            // List<Career> career = createRequestJobPosition.getCareer();
             List<Career> newCareer = createRequestJobPosition.getNewCareer();
             List<Skill> hardSkill = createRequestJobPosition.getHardSkill();
             List<Skill> newHardSkill = createRequestJobPosition.getNewHardSkill();
@@ -111,16 +113,13 @@ public class JobPositionController {
                     throw new ExpectationFailedException("the process list are empty");
                 }
 
-                if (recruiter != null && placesNumber > 0) {
+                if (!recruiter.isEmpty() && placesNumber > 0) {
                     auxVacant = 1;
-                } else {
-                    throw new ExpectationFailedException("Vacant data is incorrect");
                 }
 
                 if (jobPositionRepository.findAtributes(name, nitCompany, idArea) == null) {
 
                     /*JOB-POSITION*/
-                    
                     JobPosition newJobPosition = new JobPosition();
                     newJobPosition.setName(name.trim());
                     newJobPosition.setSalaryMin(salaryMin);
@@ -131,7 +130,6 @@ public class JobPositionController {
                     int idJob = jobPositionRepository.save(newJobPosition).getId();
 
                     /*CAREERS*/
-                    
                     if (career != null) {
                         career.stream().map((career1) -> {
                             CareerJob careerJob = new CareerJob();
@@ -163,9 +161,8 @@ public class JobPositionController {
                             jobCareerRepository.save(careerJob);
                         });
                     }
-                    
-                    /*SKILLS*/
 
+                    /*SKILLS*/
                     if (hardSkill != null) {  //ASOCIATE HARDSKILL AND JOBPOSITION
                         hardSkill.stream().map((hardSkill1) -> {
                             SkillJob newSkillJob = new SkillJob();
@@ -178,7 +175,7 @@ public class JobPositionController {
                         });
                     }
 
-                    if (!newHardSkill.isEmpty()) {
+                    if (newHardSkill != null) {
 
                         hardSkill.stream().map((hardSkill1) -> {
                             Skill newHS = new Skill();
@@ -201,9 +198,8 @@ public class JobPositionController {
                         });
 
                     }
-                    
-                    /*PROCESS*/
 
+                    /*PROCESS*/
                     processs.stream().map((proces) -> {
                         Processs newProcess = new Processs();
                         newProcess.setName(proces.getName());
@@ -216,18 +212,17 @@ public class JobPositionController {
                     });
 
                     /*VACANT*/
-                    
                     if (auxVacant == 1) {
+
+                        Date date = new Date(System.currentTimeMillis());
+                        Vacant newVacant = new Vacant();
+
+                        newVacant.setPlacesNumber(placesNumber);
+                        newVacant.setStartDate(date);
+                        newVacant.setNitJobPosition(idJob);
+                        int idVacant = vacantRepository.save(newVacant).getId();
+
                         recruiter.forEach((recruiter1) -> {
-
-                            Date date = new Date(System.currentTimeMillis());
-                            Vacant newVacant = new Vacant();
-
-                            newVacant.setPlacesNumber(placesNumber);
-                            newVacant.setStartDate(date);
-                            newVacant.setNitJobPosition(idJob);
-                            int idVacant = vacantRepository.save(newVacant).getId();
-
                             RecruiterVacant rv = new RecruiterVacant();
                             rv.setIdPerson(recruiter1.getId());
                             rv.setIdVacant(idVacant);
