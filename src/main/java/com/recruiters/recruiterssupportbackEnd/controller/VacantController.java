@@ -10,7 +10,7 @@ import com.recruiters.recruiterssupportbackEnd.model.entities.CareerJobPosition;
 import com.recruiters.recruiterssupportbackEnd.model.entities.JobPosition;
 import com.recruiters.recruiterssupportbackEnd.model.entities.RecruiterVacant;
 import com.recruiters.recruiterssupportbackEnd.model.entities.Vacant;
-import com.recruiters.recruiterssupportbackEnd.model.entities.VacantForPostulantWithoutRelation;
+import com.recruiters.recruiterssupportbackEnd.controller.response_entities.VacantForPostulantWithoutRelation;
 import com.recruiters.recruiterssupportbackEnd.repository.CareerJobPositionRepository;
 import com.recruiters.recruiterssupportbackEnd.repository.CareerRepository;
 import com.recruiters.recruiterssupportbackEnd.repository.JobPositionRepository;

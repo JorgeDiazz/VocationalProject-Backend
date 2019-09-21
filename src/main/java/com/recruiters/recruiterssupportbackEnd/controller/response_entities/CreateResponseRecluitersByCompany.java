@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.recruiters.recruiterssupportbackEnd.controller.request_entities;
+package com.recruiters.recruiterssupportbackEnd.controller.response_entities;
 
 /**
  *

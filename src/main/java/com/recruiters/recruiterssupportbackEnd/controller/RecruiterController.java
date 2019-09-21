@@ -5,7 +5,7 @@ import com.recruiters.recruiterssupportbackEnd.controller.exceptions.Unauthorize
 import com.recruiters.recruiterssupportbackEnd.controller.http.HttpResponseEntity;
 import com.recruiters.recruiterssupportbackEnd.controller.http.ResponseUtils;
 import com.recruiters.recruiterssupportbackEnd.controller.request_entities.CreateRequestRecruiter;
-import com.recruiters.recruiterssupportbackEnd.controller.request_entities.CreateResponseRecluitersByCompany;
+import com.recruiters.recruiterssupportbackEnd.controller.response_entities.CreateResponseRecluitersByCompany;
 import com.recruiters.recruiterssupportbackEnd.controller.request_entities.UpdateRequestRecruiter;
 import com.recruiters.recruiterssupportbackEnd.model.entities.CareerJobPosition;
 import com.recruiters.recruiterssupportbackEnd.model.entities.Person;
