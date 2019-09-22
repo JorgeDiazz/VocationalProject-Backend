@@ -20,20 +20,19 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
  *
  * @author seam33
  */
+
 @RestController
 @RequestMapping("/recruiter")
 public class RecruiterController {
@@ -49,13 +48,13 @@ public class RecruiterController {
         this.postulantRvRepository = postulantRVRepository;
     }
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET}, allowedHeaders = {"Content-Type", "Authorization"})
+
     @GetMapping("/{nit}")
     public ResponseEntity<List<Person>> getAllRecruiterByNit(@PathVariable String nit) {
         return HttpResponseEntity.getOKStatus(personRepository.findByNit(nit));
     }
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.PUT}, allowedHeaders = {"Content-Type", "Authorization"})
+
     @PutMapping("/")
     public ResponseEntity<Person> updateRecruiter(@RequestBody UpdateRequestRecruiter updateRequestRecruiter) throws UnauthorizedException {
 
@@ -96,7 +95,7 @@ public class RecruiterController {
         throw new UnauthorizedException("could not update");
     }
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.POST}, allowedHeaders = {"Content-Type", "Authorization"})
+
     @PostMapping("/")//nit,id,email
     public ResponseEntity<UserEntity> createRecruiter(@RequestBody CreateRequestRecruiter createRequestRecruiter) throws Throwable {
 
@@ -124,12 +123,11 @@ public class RecruiterController {
         }
     }
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET}, allowedHeaders = {"Content-Type", "Authorization"})
+
     @GetMapping("/recruiter/{nit}")
     public ResponseEntity<List<CreateResponseRecluitersByCompany>> getAllRecruiterByComany(@PathVariable String nit) throws ExpectationFailedException, UnauthorizedException {
 
         List<Person> reclutadores = personRepository.findByNit(nit);
-        System.out.println("lista de reclutadores:   " + reclutadores.toString());
         if (!reclutadores.isEmpty()) {
             List<CreateResponseRecluitersByCompany> recluiterBycompanylist = new ArrayList<>();
 

@@ -21,13 +21,11 @@ import com.recruiters.recruiterssupportbackEnd.repository.JobSkillRepository;
 import com.recruiters.recruiterssupportbackEnd.repository.SkillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -54,31 +52,26 @@ public class SkillController {
 
     }
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.POST, RequestMethod.GET}, allowedHeaders = {"Content-Type", "Authorization"})
     @GetMapping("/Soft")
     public List<Skill> getSoftSkills()  {
         return skillRepository.findAllSoft();
     }
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.POST, RequestMethod.GET}, allowedHeaders = {"Content-Type", "Authorization"})
     @GetMapping("/Hard")
     public List<Skill> getHardSkills()  {
         return skillRepository.findAllHard();
     }
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.POST, RequestMethod.GET}, allowedHeaders = {"Content-Type", "Authorization"})
     @GetMapping("/GlobalByCompany/{nit}")
     public List<Skill> getGlobalSkillsCompany(@PathVariable String nit) {
         return globalSkillRepository.findGlobalCompany(nit);
     }
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.POST, RequestMethod.GET}, allowedHeaders = {"Content-Type", "Authorization"})
     @GetMapping("/LocalByJobPosition/{id}")
     public List<Skill> getJobSkillsCompany(@PathVariable int id) {
         return jobSkillRepository.findLocalJob(id);
     }
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.POST, RequestMethod.GET}, allowedHeaders = {"Content-Type", "Authorization"})
     @PostMapping("/register")
     public ResponseEntity<Skill> createSkill(@RequestBody Skill createRequestSkill) throws Throwable {
 
@@ -95,7 +88,6 @@ public class SkillController {
         }
     }
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.POST, RequestMethod.GET}, allowedHeaders = {"Content-Type", "Authorization"})
     @PostMapping("/CreateGlobal")
     public ResponseEntity<GlobalSkill> createGlobalSkill(@RequestBody GlobalSkill createRequestSkill) throws Throwable {
 
@@ -123,7 +115,6 @@ public class SkillController {
         }
     }
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.POST, RequestMethod.GET}, allowedHeaders = {"Content-Type", "Authorization"})
     @PostMapping("/CreateLocal")
     public ResponseEntity<SkillJob> createLocalSkill(@RequestBody SkillJob createRequestSkill) throws Throwable {
 

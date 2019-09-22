@@ -113,6 +113,7 @@ public class ResponseUtils {
     }
 }
 //el if() para pedir el token y lo que pido por el metodo
+//allowedHeaders = {"Content-Type","Authorization" en el @crossorigin
 //@RequestHeader(value = "Authorization") String token
 //if (Integer.parseInt(ResponseUtils.Validation(token).get(0)) != 1 /*&& ResponseUtils.Validation(token).get(1)== "COMPANY"*/) {//1 para no se vencio   
 //        throw new UnauthorizedException("Validation Problem");

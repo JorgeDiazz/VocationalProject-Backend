@@ -13,12 +13,10 @@ import com.recruiters.recruiterssupportbackEnd.repository.PostulantRepository;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -38,7 +36,6 @@ public class PostulantController {
         this.postulantRepository = postulantRepository;
     }
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.POST}, allowedHeaders = {"Content-Type", "Authorization"})
     @PostMapping("/")
     public ResponseEntity<UserEntity> createPostulant(@RequestBody CreatePostulantRequest newPostulant) throws Throwable {
 
@@ -79,7 +76,6 @@ public class PostulantController {
         }
     }
 
-    @CrossOrigin(origins = "*", methods = {RequestMethod.PUT}, allowedHeaders = {"Content-Type", "Authorization"})
     @PutMapping("/")
     public ResponseEntity<UserEntity> updatePostulant(@RequestBody CreatePostulantRequest newPostulant) throws Throwable {
 
