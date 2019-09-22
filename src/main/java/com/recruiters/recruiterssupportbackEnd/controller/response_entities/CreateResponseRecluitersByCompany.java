@@ -13,14 +13,14 @@ public class CreateResponseRecluitersByCompany {
 
     private String id;
     private String name;
-    private int vacants_number_to_care;
-    private int postulants_number_to_care;
+    private int vacantsNumber;
+    private int postulantsNumber;
 
-    public CreateResponseRecluitersByCompany(String id, String name, int vacants_number_to_care, int postulants_number_to_care) {
+    public CreateResponseRecluitersByCompany(String id, String name, int vacantsNumber, int postulantsNumber) {
         this.id = id;
         this.name = name;
-        this.vacants_number_to_care = vacants_number_to_care;
-        this.postulants_number_to_care = postulants_number_to_care;
+        this.vacantsNumber = vacantsNumber;
+        this.postulantsNumber = postulantsNumber;
     }
 
     public String getId() {
@@ -39,24 +39,24 @@ public class CreateResponseRecluitersByCompany {
         this.name = name;
     }
 
-    public int getVacants_number_to_care() {
-        return vacants_number_to_care;
+    public int getVacantsNumber() {
+        return vacantsNumber;
     }
 
-    public void setVacants_number_to_care(int vacants_number_to_care) {
-        this.vacants_number_to_care = vacants_number_to_care;
+    public void setVacantsNumber(int vacantsNumber) {
+        this.vacantsNumber = vacantsNumber;
     }
 
-    public int getPostulants_number_to_care() {
-        return postulants_number_to_care;
+    public int getPostulantsNumber() {
+        return postulantsNumber;
     }
 
-    public void setPostulants_number_to_care(int postulants_number_to_care) {
-        this.postulants_number_to_care = postulants_number_to_care;
+    public void setPostulantsNumber(int postulantsNumber) {
+        this.postulantsNumber = postulantsNumber;
     }
 
     @Override
     public String toString() {
-        return "CreateRespponseRecluitersByCompany{" + "id=" + id + ", name=" + name + ", vacants_number_to_care=" + vacants_number_to_care + ", postulants_number_to_care=" + postulants_number_to_care + '}';
+        return "CreateResponseRecluitersByCompany{" + "id=" + id + ", name=" + name + ", vacantsNumber=" + vacantsNumber + ", postulantsNumber=" + postulantsNumber + '}';
     }
 }
