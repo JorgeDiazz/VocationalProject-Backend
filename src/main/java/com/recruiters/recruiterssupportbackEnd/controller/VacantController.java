@@ -5,21 +5,18 @@ import com.recruiters.recruiterssupportbackEnd.controller.exceptions.Unauthorize
 import com.recruiters.recruiterssupportbackEnd.controller.http.HttpResponseEntity;
 import com.recruiters.recruiterssupportbackEnd.controller.http.ResponseUtils;
 import com.recruiters.recruiterssupportbackEnd.controller.request_entities.CreateVacantRequest;
-import com.recruiters.recruiterssupportbackEnd.model.entities.Career;
 import com.recruiters.recruiterssupportbackEnd.model.entities.CareerJobPosition;
 import com.recruiters.recruiterssupportbackEnd.model.entities.JobPosition;
 import com.recruiters.recruiterssupportbackEnd.model.entities.RecruiterVacant;
 import com.recruiters.recruiterssupportbackEnd.model.entities.Vacant;
 import com.recruiters.recruiterssupportbackEnd.model.entities.VacantForPostulantWithoutRelation;
 import com.recruiters.recruiterssupportbackEnd.repository.CareerJobPositionRepository;
-import com.recruiters.recruiterssupportbackEnd.repository.CareerRepository;
 import com.recruiters.recruiterssupportbackEnd.repository.JobPositionRepository;
 import com.recruiters.recruiterssupportbackEnd.repository.RecruiterVacantRepository;
 import com.recruiters.recruiterssupportbackEnd.repository.VacantRepository;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -62,7 +59,7 @@ public class VacantController {
 
             Vacant vacant = new Vacant();
             vacant.setPlacesNumber(newVacant.getPlacesNumber());
-            vacant.setNitJobPosition(newVacant.getIdJobPosition());
+            vacant.setIdJobPosition(newVacant.getIdJobPosition());
 
             Date date = new Date(System.currentTimeMillis());
             vacant.setStartDate(date);

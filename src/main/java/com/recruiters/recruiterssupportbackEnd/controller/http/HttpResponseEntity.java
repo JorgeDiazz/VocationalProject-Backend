@@ -18,13 +18,16 @@ public class HttpResponseEntity {
         return new ResponseEntity<>((T) object, httpHeaders, HttpStatus.OK);
     }
 
+    public static <T> ResponseEntity<T> getOKStatus(T object) {
+        return new ResponseEntity<>((T) object, HttpStatus.OK);
+    }
+
+    public static <T> ResponseEntity<T> getOKStatus() {
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     public static ResponseEntity getMissingFieldsStatus() {
         return new ResponseEntity<>(null, HttpStatus.EXPECTATION_FAILED);
     }
-
-    public static<T> ResponseEntity<T> getOKStatus(T object) {
-        return new ResponseEntity<>((T) object,HttpStatus.OK);
-    }
-
 
 }

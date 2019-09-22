@@ -14,7 +14,7 @@ import com.recruiters.recruiterssupportbackEnd.model.entities.JobPosition;
 import java.util.List;
 import java.util.Optional;
 import com.recruiters.recruiterssupportbackEnd.model.entities.Skill;
-import com.recruiters.recruiterssupportbackEnd.model.entities.SkillJob;
+import com.recruiters.recruiterssupportbackEnd.model.entities.JobSkill;
 import com.recruiters.recruiterssupportbackEnd.model.entities.UserEntity;
 import com.recruiters.recruiterssupportbackEnd.repository.CompanyRepository;
 import com.recruiters.recruiterssupportbackEnd.repository.GlobalSkillRepository;
@@ -156,7 +156,7 @@ public class SkillController {
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.POST, RequestMethod.GET}, allowedHeaders = {"Content-Type", "Authorization"})
     @PostMapping("/CreateLocal")
-    public ResponseEntity<SkillJob> createLocalSkill(@RequestBody SkillJob createRequestSkill, @RequestHeader(value = "Authorization") String token) throws Throwable {
+    public ResponseEntity<JobSkill> createLocalSkill(@RequestBody JobSkill createRequestSkill, @RequestHeader(value = "Authorization") String token) throws Throwable {
         if (Integer.parseInt(ResponseUtils.Validation(token).get(0)) != 1 /*&& ResponseUtils.Validation(token).get(1)== "COMPANY"*/) {//1 para no se vencio   
             throw new UnauthorizedException("Validation Problem");
         } else {
@@ -174,7 +174,7 @@ public class SkillController {
                     throw new UnauthorizedException("Job doesn't exist");
                 } else {
 
-                    Optional<SkillJob> optLocalSkill = jobSkillRepository.findById(createRequestSkill.getId()); //Busqueda por ID
+                    Optional<JobSkill> optLocalSkill = jobSkillRepository.findById(createRequestSkill.getId()); //Busqueda por ID
                     if (optLocalSkill.isPresent()) { // Si existe envia mensaje de Error
                         throw new UnauthorizedException("skill already exist");
                     } else {

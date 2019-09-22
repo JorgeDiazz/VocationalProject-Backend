@@ -18,7 +18,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "jb_skill")
-public class SkillJob implements UserEntity {
+public class JobSkill implements UserEntity {
     
     @Id
     private String id;
