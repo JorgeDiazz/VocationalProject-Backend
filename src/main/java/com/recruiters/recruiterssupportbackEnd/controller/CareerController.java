@@ -56,27 +56,4 @@ public class CareerController {
             return HttpResponseEntity.getOKStatus(career);
         }
     }
-
-    /*
-     @PostMapping("/RegisterJob")
-     public ResponseEntity<UserEntity> createRecruiter(@RequestBody CreateRequestCareerJob createRequestCareerJob, @RequestHeader(value = "Authorization") String token) throws Throwable {
-    
-     String name=createRequestCareerJob.getName();
-        
-     Optional<Career> optCareer = careerRepository.findByName(name); //Busqueda por ID
-
-     if (optCareer.isPresent()) { // Si existe envia mensaje de Error
-     throw new UnauthorizedException("area already exist");
-     } else {
-
-     Career career = new Career();
-     career.setName(name);
-     careerRepository.save(career);
-     return HttpResponseEntity.getOKStatus(career,ResponseUtils.generateTokenHeader((UserEntity) career));
-
-     }
-     }
-    
-     @PostMapping("/RegisterPerson")
-     */
 }
