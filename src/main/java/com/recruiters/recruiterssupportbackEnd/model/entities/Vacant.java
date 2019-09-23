@@ -15,7 +15,7 @@ import javax.persistence.Table;
 
 /**
  *
- * @author jhanuar sanchez
+ * @author jorge diaz
  */
 @Entity
 @Table(name = "vacant")
@@ -69,7 +69,7 @@ public class Vacant {
         return nitJobPosition;
     }
 
-    public void setNitJobPosition(int nitJobPosition) {
+    public void setIdJobPosition(int nitJobPosition) {
         this.nitJobPosition = nitJobPosition;
     }
 

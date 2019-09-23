@@ -2,6 +2,7 @@ package com.recruiters.recruiterssupportbackEnd.controller;
 
 import com.recruiters.recruiterssupportbackEnd.controller.exceptions.UnauthorizedException;
 import com.recruiters.recruiterssupportbackEnd.controller.http.HttpResponseEntity;
+import com.recruiters.recruiterssupportbackEnd.controller.http.ResponseUtils;
 import com.recruiters.recruiterssupportbackEnd.controller.request_entities.CreateRequestCareer;
 import com.recruiters.recruiterssupportbackEnd.model.entities.Career;
 import com.recruiters.recruiterssupportbackEnd.model.entities.UserEntity;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  *
  * @author seam33
+ * uff
  */
 @RestController
 @RequestMapping("/career")
@@ -35,13 +38,21 @@ public class CareerController {
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET}, allowedHeaders = {"Content-Type", "Authorization"})
     @GetMapping("/")
-    public ResponseEntity<List<Career>> getAllCareer() {
+    public ResponseEntity<List<Career>> getAllCareer(@RequestHeader(value = "Authorization") String token) throws UnauthorizedException {
+        if (Integer.parseInt(ResponseUtils.Validation(token).get(0)) != 1 /*&& ResponseUtils.Validation(token).get(1)== "COMPANY"*/) {//1 para no se vencio   
+            throw new UnauthorizedException("Validation Problem");
+        } else {
+
         return HttpResponseEntity.getOKStatus(careerRepository.findAll());
+        }
     }
 
     @CrossOrigin(origins = "*", methods = {RequestMethod.POST}, allowedHeaders = {"Content-Type", "Authorization"})
     @PostMapping("/register")
-    public ResponseEntity<Career> createCareer(@RequestBody CreateRequestCareer createRequestCareer) throws Throwable {
+    public ResponseEntity<Career> createCareer(@RequestBody CreateRequestCareer createRequestCareer, @RequestHeader(value = "Authorization") String token) throws Throwable {
+        if (Integer.parseInt(ResponseUtils.Validation(token).get(0)) != 1 /*&& ResponseUtils.Validation(token).get(1)== "COMPANY"*/) {//1 para no se vencio   
+            throw new UnauthorizedException("Validation Problem");
+        } else {
 
         String name = createRequestCareer.getName();
 
@@ -56,13 +67,13 @@ public class CareerController {
             careerRepository.save(career);
             return HttpResponseEntity.getOKStatus(career);
 
-        }
+        }}
     }
 
     /*
     @PostMapping("/RegisterJob")
-    public ResponseEntity<UserEntity> createRecruiter(@RequestBody CreateRequestCareerJob createRequestCareerJob) throws Throwable {
-
+    public ResponseEntity<UserEntity> createRecruiter(@RequestBody CreateRequestCareerJob createRequestCareerJob, @RequestHeader(value = "Authorization") String token) throws Throwable {
+    
         String name=createRequestCareerJob.getName();
         
         Optional<Career> optCareer = careerRepository.findByName(name); //Busqueda por ID

@@ -37,8 +37,5 @@ public class CreateRequestRecruiter {
 
     public void setId(String id) {
         this.id = id;
-    }
-    
-    
-    
+    }  
 }
