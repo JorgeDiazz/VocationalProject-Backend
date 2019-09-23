@@ -19,7 +19,7 @@ public class CareerJobPosition {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private String id;
     @Column(name = "id_career")
-    private String careerId;
+    private int careerId;
     @Column(name = "id_job_position")
     private int jobPositionId;
 
@@ -31,11 +31,11 @@ public class CareerJobPosition {
         this.id = id;
     }
 
-    public String getCareerId() {
+    public int getCareerId() {
         return careerId;
     }
 
-    public void setCareerId(String careerId) {
+    public void setCareerId(int careerId) {
         this.careerId = careerId;
     }
 

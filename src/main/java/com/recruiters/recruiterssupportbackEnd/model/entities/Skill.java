@@ -13,9 +13,10 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "skill")
-public class Skill implements UserEntity{
-    
-    @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
+public class Skill implements UserEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column(name = "nameSK")
     private String name;
@@ -51,6 +52,9 @@ public class Skill implements UserEntity{
         return "Skill{" + "id=" + id + ", name=" + name + ", type=" + type + '}';
     }
 
-   
-    
+    public enum TYPE {
+        HARD,
+        SOFT
+    }
+
 }

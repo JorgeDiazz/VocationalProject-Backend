@@ -1,7 +1,9 @@
 package com.recruiters.recruiterssupportbackEnd.controller;
 
 import com.recruiters.recruiterssupportbackEnd.controller.exceptions.ExpectationFailedException;
+import com.recruiters.recruiterssupportbackEnd.controller.exceptions.UnauthorizedException;
 import com.recruiters.recruiterssupportbackEnd.controller.http.HttpResponseEntity;
+import com.recruiters.recruiterssupportbackEnd.controller.http.ResponseUtils;
 import com.recruiters.recruiterssupportbackEnd.controller.request_entities.CreateVacantRequest;
 import com.recruiters.recruiterssupportbackEnd.model.entities.CareerJobPosition;
 import com.recruiters.recruiterssupportbackEnd.model.entities.JobPosition;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -48,30 +51,32 @@ public class VacantController {
     @PostMapping("/")
     public ResponseEntity<Vacant> createVacant(@RequestBody CreateVacantRequest newVacant) throws Throwable {
 
-        Vacant vacant = new Vacant();
-        vacant.setPlacesNumber(newVacant.getPlacesNumber());
-        vacant.setNitJobPosition(newVacant.getIdJobPosition());
+            Vacant vacant = new Vacant();
+            vacant.setPlacesNumber(newVacant.getPlacesNumber());
+            vacant.setIdJobPosition(newVacant.getIdJobPosition());
 
-        Date date = new Date(System.currentTimeMillis());
-        vacant.setStartDate(date);
+            Date date = new Date(System.currentTimeMillis());
+            vacant.setStartDate(date);
 
-        try {
-            vacantRepository.save(vacant);
-        } catch (Exception e) {
-            throw new ExpectationFailedException("Vacant data is incorrect");
-        }
-        try {
-            RecruiterVacant recruiterVacant;
-            for (String idRecruiter : newVacant.getPostulantsId()) {
-                recruiterVacant = new RecruiterVacant();
-                recruiterVacant.setIdPerson(idRecruiter);
-                recruiterVacant.setIdVacant(vacant.getId());
-                recruiterVacantRepository.save(recruiterVacant);
+            try {
+                vacantRepository.save(vacant);
+            } catch (Exception e) {
+                throw new ExpectationFailedException("Vacant data is incorrect");
             }
-        } catch (Exception e) {
-            throw new ExpectationFailedException("Any recruiter doesn't exist");
-        }
-        return HttpResponseEntity.getOKStatus(vacant);
+            try {
+                RecruiterVacant recruiterVacant;
+                for (String idRecruiter : newVacant.getPostulantsId()) {
+                    recruiterVacant = new RecruiterVacant();
+                    recruiterVacant.setIdPerson(idRecruiter);
+                    recruiterVacant.setIdVacant(vacant.getId());
+                    recruiterVacantRepository.save(recruiterVacant);
+                }
+            } catch (Exception e) {
+                throw new ExpectationFailedException("Any recruiter doesn't exist");
+            }
+
+            return HttpResponseEntity.getOKStatus(vacant);
+        
     }
 
     @GetMapping("/withoutRelation/{id_career}")
@@ -102,9 +107,7 @@ public class VacantController {
                     vacantForPostulantWithoutRelationList.add(newVacant);
                 }
             }
-
             return HttpResponseEntity.getOKStatus(vacantForPostulantWithoutRelationList);
-
         } else {
             throw new ExpectationFailedException("Career doesn't exist on career_job_position data");
         }
