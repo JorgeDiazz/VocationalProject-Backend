@@ -1,36 +1,31 @@
 package com.recruiters.recruiterssupportbackEnd.model.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 @Entity
-@Table(name = "company")
+@Table(name = "Company")
 public class Company implements UserEntity {
 
     @Id
     private String nit;
     @Column(name = "nameC")
     private String name;
+    @Column(name = "address")
     private String address;
+    @Column(name = "phone")
     private String phone;
-    private String email;
+    @Column(name = "image")
     private Byte[] image;
+    @Column(name = "email")
+    private String email;
     @JsonIgnore
     @Column(name = "_password")
     private String password;
-    @Transient
-    private List<Person> persons;
-    @Transient
-    private List<Skill> globalSkills;
-    @Transient
-    private List<JobPosition> JobsPositions;
-    @Transient
-    private TYPE type;
+
 
     public String getNit() {
         return nit;
@@ -86,27 +81,6 @@ public class Company implements UserEntity {
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    public List<JobPosition> getJobsPositions() {
-        return JobsPositions;
-    }
-
-    public void setJobsPositions(List<JobPosition> JobsPositions) {
-        this.JobsPositions = JobsPositions;
-    }
-
-    public TYPE getType() {
-        return type;
-    }
-
-    public void setType(TYPE type) {
-        this.type = type;
-    }
-
-    @Override
-    public String toString() {
-        return "Company{" + "nit=" + nit + ", name=" + name + ", address=" + address + ", phone=" + phone + ", email=" + email + ", image=" + image + ", password=" + password + ", persons=" + persons + ", globalSkills=" + globalSkills + ", JobsPositions=" + JobsPositions + '}';
     }
 
 }

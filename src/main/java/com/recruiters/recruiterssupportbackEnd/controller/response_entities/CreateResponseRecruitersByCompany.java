@@ -9,14 +9,14 @@ package com.recruiters.recruiterssupportbackEnd.controller.response_entities;
  *
  * @author jhanu
  */
-public class CreateResponseRecluitersByCompany {
+public class CreateResponseRecruitersByCompany {
 
     private String id;
     private String name;
     private int vacantsNumber;
     private int postulantsNumber;
 
-    public CreateResponseRecluitersByCompany(String id, String name, int vacantsNumber, int postulantsNumber) {
+    public CreateResponseRecruitersByCompany(String id, String name, int vacantsNumber, int postulantsNumber) {
         this.id = id;
         this.name = name;
         this.vacantsNumber = vacantsNumber;

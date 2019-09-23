@@ -5,7 +5,7 @@ import com.recruiters.recruiterssupportbackEnd.controller.exceptions.Unauthorize
 import com.recruiters.recruiterssupportbackEnd.controller.http.HttpResponseEntity;
 import com.recruiters.recruiterssupportbackEnd.controller.http.ResponseUtils;
 import com.recruiters.recruiterssupportbackEnd.controller.request_entities.CreateRequestRecruiter;
-import com.recruiters.recruiterssupportbackEnd.controller.response_entities.CreateResponseRecluitersByCompany;
+import com.recruiters.recruiterssupportbackEnd.controller.response_entities.CreateResponseRecruitersByCompany;
 import com.recruiters.recruiterssupportbackEnd.controller.request_entities.UpdateRequestRecruiter;
 import com.recruiters.recruiterssupportbackEnd.model.entities.Person;
 import com.recruiters.recruiterssupportbackEnd.model.entities.PostulantRv;
@@ -125,11 +125,11 @@ public class RecruiterController {
 
 
     @GetMapping("/recruiter/{nit}")
-    public ResponseEntity<List<CreateResponseRecluitersByCompany>> getAllRecruiterByComany(@PathVariable String nit) throws ExpectationFailedException, UnauthorizedException {
+    public ResponseEntity<List<CreateResponseRecruitersByCompany>> getAllRecruiterByComany(@PathVariable String nit) throws ExpectationFailedException, UnauthorizedException {
 
         List<Person> reclutadores = personRepository.findByNit(nit);
         if (!reclutadores.isEmpty()) {
-            List<CreateResponseRecluitersByCompany> recluiterBycompanylist = new ArrayList<>();
+            List<CreateResponseRecruitersByCompany> recluiterBycompanylist = new ArrayList<>();
 
             for (Person recluiter : reclutadores) {
                 int vacantcount = 0;
@@ -150,7 +150,7 @@ public class RecruiterController {
                 } catch (Exception e) {
                 }
 
-                CreateResponseRecluitersByCompany newrecru = new CreateResponseRecluitersByCompany(recluiter.getId(), recluiter.getName(), vacantcount, postulantcount);
+                CreateResponseRecruitersByCompany newrecru = new CreateResponseRecruitersByCompany(recluiter.getId(), recluiter.getName(), vacantcount, postulantcount);
                 recluiterBycompanylist.add(newrecru);
 
             }

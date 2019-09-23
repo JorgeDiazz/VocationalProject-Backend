@@ -25,8 +25,8 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Order(1)
-public class TokenFilter implements Filter {
-
+public class TokenFilter /*implements Filter*/ {
+/*
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
         HttpServletRequest req = (HttpServletRequest) request;
@@ -59,5 +59,5 @@ public class TokenFilter implements Filter {
     @Override
     public Class<? extends Annotation> annotationType() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    }*/
 }

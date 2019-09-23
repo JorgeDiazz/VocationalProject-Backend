@@ -38,28 +38,26 @@ public class ProcessController {
 
     @GetMapping("/{nit}")
     public List<Process> getProcessesByJob(@PathVariable int nit) {
-            return processRepository.findByIdJob(nit);
+        return processRepository.findByIdJob(nit);
     }
 
     @PostMapping("/register")
     public ResponseEntity<Process> createProcess(@RequestBody CreateRequestProcess createRequestProcess) throws Throwable {
 
-            int idJob = createRequestProcess.getId_job_position();
-            String name = createRequestProcess.getName();
+        int idJob = createRequestProcess.getId_job_position();
+        String name = createRequestProcess.getName();
 
-            Optional<Process> optArea = processRepository.findByIdJobAndName(idJob, name); //Busqueda por ID
+        Optional<Process> optArea = processRepository.findByIdJobAndName(idJob, name); //Busqueda por ID
 
-            if (optArea.isPresent()) { // Si existe envia mensaje de Error
-                throw new UnauthorizedException("process already exist");
-            } else {
+        if (optArea.isPresent()) { // Si existe envia mensaje de Error
+            throw new UnauthorizedException("process already exist");
+        } else {
 
-                Process process = new Process();
-                process.setName(name);
-                process.setId_job_position(idJob);
-                processRepository.save(process);
-                return HttpResponseEntity.getOKStatus(process);
-
-            }
-        
+            Process process = new Process();
+            process.setName(name);
+            process.setId_job_position(idJob);
+            processRepository.save(process);
+            return HttpResponseEntity.getOKStatus(process);
+        }
     }
 }

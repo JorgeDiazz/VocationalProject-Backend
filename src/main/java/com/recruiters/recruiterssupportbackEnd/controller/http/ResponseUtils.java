@@ -48,7 +48,7 @@ public class ResponseUtils {
         {
             if (userEntity instanceof Company) {// si es una company
                 Company optPerson = (Company) userEntity;
-                Authorization = optPerson.getEmail() + "," + optPerson.getType() + "," + dateFormat.format(actualdate);
+                Authorization = optPerson.getEmail() + ",COMPANY," + dateFormat.format(actualdate);
 
                 Signer signer = HMACSigner.newSHA256Signer("Jasaroestaenlacasatrasnochandohaciendoesto");
                 JWT jwt = new JWT().setIssuer("www.acme.com")
