@@ -1,11 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.recruiters.recruiterssupportbackEnd.controller.response_entities;
 
 import com.recruiters.recruiterssupportbackEnd.model.entities.UserEntity;
+import java.util.List;
 
 /**
  *
@@ -16,9 +12,9 @@ public class CreateResponsePostulantLogin implements UserEntity {
     private String id;
     private String name;
     private String email;
-    private int[] careers;//lista de id de carrera
+    private List careers;//lista de id de carrera
 
-    public CreateResponsePostulantLogin(String id, String name, String email, int[] careers) {
+    public CreateResponsePostulantLogin(String id, String name, String email, List careers) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -49,11 +45,13 @@ public class CreateResponsePostulantLogin implements UserEntity {
         this.email = email;
     }
 
-    public int[] getCareers() {
+    public List getCareers() {
         return careers;
     }
 
-    public void setCareers(int[] careers) {
+    public void setCareers(List careers) {
         this.careers = careers;
     }
+
+    
 }

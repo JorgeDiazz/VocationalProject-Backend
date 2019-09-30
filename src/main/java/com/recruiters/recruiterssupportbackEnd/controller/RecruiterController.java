@@ -88,7 +88,7 @@ public class RecruiterController {
 
             personRepository.save(newPerson);
 
-            return HttpResponseEntity.getOKStatus(newPerson, ResponseUtils.generateTokenHeader(newPerson));
+            return HttpResponseEntity.getOKStatus(newPerson,ResponseUtils.getJWTToken(newPerson));
 
         }
 

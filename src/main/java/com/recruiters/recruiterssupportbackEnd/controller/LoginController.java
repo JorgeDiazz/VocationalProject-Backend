@@ -6,15 +6,16 @@ import com.recruiters.recruiterssupportbackEnd.controller.http.HttpResponseEntit
 import com.recruiters.recruiterssupportbackEnd.controller.http.ResponseUtils;
 import com.recruiters.recruiterssupportbackEnd.controller.request_entities.LoginRequest;
 import com.recruiters.recruiterssupportbackEnd.controller.response_entities.CreateResponsePostulantLogin;
+import com.recruiters.recruiterssupportbackEnd.controller.response_entities.CreateResponseRecruiterLogin;
 import com.recruiters.recruiterssupportbackEnd.model.entities.CareerP;
 import com.recruiters.recruiterssupportbackEnd.model.entities.Company;
 import com.recruiters.recruiterssupportbackEnd.model.entities.Person;
 import com.recruiters.recruiterssupportbackEnd.model.entities.UserEntity;
-import com.recruiters.recruiterssupportbackEnd.model.entities.UserEntity.TYPE;
 import com.recruiters.recruiterssupportbackEnd.repository.CareerPersonRepository;
 import com.recruiters.recruiterssupportbackEnd.repository.CompanyRepository;
 import com.recruiters.recruiterssupportbackEnd.repository.PersonRepository;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -43,42 +44,46 @@ public class LoginController {
 
         String user = loginRequest.getUser();
         String password = loginRequest.getPassword();
-
-        Optional<Person> optPerson = personRepository.findByEmail(user);
-        if (optPerson.isPresent()) {
-            Person person = optPerson.get();
-            if (person.getPassword().equals(password)) {
-/*
-                if (person.getType() == "RECRUITER") {
-                    return HttpResponseEntity.getOKStatus(person, ResponseUtils.generateTokenHeader(person));
-                } else {
-                    if (person.getType() == "POSTULANT") {
-                        ArrayList<CareerP> listcarreerp = (ArrayList<CareerP>) careerPersonRepository.findByIdPerson(person.getId());
-                        int[] ids = null;
-                        int number = 0;
-                        for (CareerP carrerp : listcarreerp) {
-                            ids[number] = carrerp.getIdCareer();
-                            number++;
-                        }
-                        CreateResponsePostulantLogin sendpostulant = new CreateResponsePostulantLogin(person.getId(), person.getName(), person.getEmail(), ids);
-                        return HttpResponseEntity.getOKStatus(sendpostulant, ResponseUtils.generateTokenHeader(person));
+        try {
+            Optional<Person> optPerson = personRepository.findByEmail(user);
+            if (optPerson.isPresent()) {
+                Person person = optPerson.get();
+                if (person.getPassword().equals(password)) {
+                    if (person.getType().equals("RECRUITER")) {
+                        Optional<Company> optCompany = companyRepository.findByNit(person.getNitCompany());                  
+                        CreateResponseRecruiterLogin sendreruiter = new CreateResponseRecruiterLogin(person.getId(), person.getName(), person.getEmail(), person.getNitCompany(), optCompany.get().getName());
+                        return HttpResponseEntity.getOKStatus(sendreruiter, ResponseUtils.getJWTToken(person));
                     } else {
-                        throw new UnauthorizedException("algo raro paso");
+                        if (person.getType().equals("POSTULANT")) {
+                            List<CareerP> listcarreerp = careerPersonRepository.findByIdPersonforlist(person.getId());
+                            List ids = new ArrayList();
+                            for (CareerP carrerp : listcarreerp) {
+                                ids.add(carrerp.getIdCareer());
+                            }
+                            CreateResponsePostulantLogin sendpostulant = new CreateResponsePostulantLogin(person.getId(), person.getName(), person.getEmail(), ids);
+                            return HttpResponseEntity.getOKStatus(sendpostulant, ResponseUtils.getJWTToken(person));
+                        } else {
+                            throw new UnauthorizedException("algo raro paso");
+                        }
                     }
-                }*/
-                return HttpResponseEntity.getOKStatus(person, ResponseUtils.generateTokenHeader(person));
-            } 
-        } else {
-            throw new UnauthorizedException(INCORRECT_CREDENTIALS);
+                }
+            } else {
+                throw new UnauthorizedException(INCORRECT_CREDENTIALS);
+            }
+        } catch (Exception e) {
         }
 
-        Optional<Company> optCompany = companyRepository.findByEmail(user);
-        if (optCompany.isPresent()) {
-            Company company = optCompany.get();
-            if (company.getPassword().equals(password)) {
-                return HttpResponseEntity.getOKStatus(company, ResponseUtils.generateTokenHeader(company));
+        try {
+            Optional<Company> optCompany = companyRepository.findByEmail(user);
+            if (optCompany.isPresent()) {
+                Company company = optCompany.get();
+                if (company.getPassword().equals(password)) {
+                    return HttpResponseEntity.getOKStatus(company, ResponseUtils.getJWTToken(company));
+                }
+            } else {
             }
+        } catch (Exception e) {
         }
-        throw new UnauthorizedException(INCORRECT_CREDENTIALS);
+        throw new UnauthorizedException("se molestaro los try");
     }
 }

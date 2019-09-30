@@ -16,16 +16,15 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
  * @author jhanuar sanchez
  */
 @Configuration
-public class MyConfiguration {
-
+public class WebCorsConfigurer {
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurerAdapter() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**")
-                        .allowedOrigins("*")
-                        .allowedMethods("PUT", "DELETE", "POST","GET")
+                registry.addMapping("/**")// aceptar desde cualquier ip
+                        .allowedOrigins("*")// aceptar desde cualquier destino url
+                        .allowedMethods("PUT", "DELETE", "POST", "GET")
                         .allowedHeaders("Content-Type", "Authorization")
                         .exposedHeaders("Content-Type", "Authorization");
             }

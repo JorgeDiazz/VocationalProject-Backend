@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  *
- * @author  jhanu
+ * @author jhanu
  */
 @RestController
 @RequestMapping("/company")
@@ -26,13 +26,13 @@ public class CompanyController {
 
     private final CompanyRepository companyRepository;
 
-     @Autowired
-     public CompanyController(CompanyRepository companyRepository) {
-     this.companyRepository = companyRepository;
-     }
-    
+    @Autowired
+    public CompanyController(CompanyRepository companyRepository) {
+        this.companyRepository = companyRepository;
+    }
+
     @PostMapping("/")
-    public ResponseEntity<UserEntity> createPostulant(@RequestBody CreateCompanyRequest newCompany) throws Throwable {
+    public ResponseEntity<UserEntity> createCompany(@RequestBody CreateCompanyRequest newCompany) throws Throwable {
 
         String nit = newCompany.getNit();
         String email = newCompany.getEmail();
@@ -49,14 +49,14 @@ public class CompanyController {
                 throw new UnauthorizedException("email in use");
             } else {
                 Company company = new Company();
-                company.setNit(newCompany.getNit()); 
+                company.setNit(newCompany.getNit());
                 company.setName(newCompany.getName());
                 company.setAddress("KRA JIJI");
                 company.setPhone(newCompany.getPhone());
                 company.setImage(null);
                 company.setEmail(newCompany.getEmail());
                 company.setPassword("12345");
-                
+
                 try {
                     companyRepository.save(company);
                 } catch (Exception e) {
@@ -67,5 +67,5 @@ public class CompanyController {
             }
         }
     }
-    
+
 }

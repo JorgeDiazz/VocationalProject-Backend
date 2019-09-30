@@ -13,10 +13,11 @@ import javax.persistence.Table;
  * @author jhanuar Sanchez
  */
 @Entity
-@Table(name = "careerp")
+@Table(name = "CareerP")
 public class CareerP{
     
-    @Id
+    @Id 
+    @GeneratedValue(strategy = GenerationType.IDENTITY) 
     private int id;
     @Column(name = "university")
     private String university;

@@ -12,7 +12,9 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface CareerPersonRepository extends JpaRepository<CareerP, Integer> {
 
-    @Query("from careerp where id_person = ?1")
-    List<CareerP> findByIdPerson(String idperson);
+    @Query("from CareerP where id_person = ?1")//nombre de la clase
+    List<CareerP> findByIdPersonforlist(String idperson);
+    
+
  
 }

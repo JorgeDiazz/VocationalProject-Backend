@@ -9,5 +9,4 @@ public class RecruitersSupportBackEndApplication {
     public static void main(String[] args) {
         SpringApplication.run(RecruitersSupportBackEndApplication.class, args);
     }
-
 }
