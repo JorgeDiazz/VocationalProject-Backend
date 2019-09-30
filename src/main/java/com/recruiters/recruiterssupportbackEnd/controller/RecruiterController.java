@@ -32,7 +32,6 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author seam33
  */
-
 @RestController
 @RequestMapping("/recruiter")
 public class RecruiterController {
@@ -48,15 +47,13 @@ public class RecruiterController {
         this.postulantRvRepository = postulantRVRepository;
     }
 
-
     @GetMapping("/{nit}")
     public ResponseEntity<List<Person>> getAllRecruiterByNit(@PathVariable String nit) {
         return HttpResponseEntity.getOKStatus(personRepository.findByNit(nit));
     }
 
-
     @PutMapping("/")
-    public ResponseEntity<Person> updateRecruiter(@RequestBody UpdateRequestRecruiter updateRequestRecruiter) throws UnauthorizedException {
+    public ResponseEntity<Person> updateRecruiter(@RequestBody UpdateRequestRecruiter updateRequestRecruiter) throws UnauthorizedException, ExpectationFailedException {
 
         String id = updateRequestRecruiter.getId();
         String name = updateRequestRecruiter.getName();
@@ -86,15 +83,19 @@ public class RecruiterController {
                 newPerson.setPassword(password);
             }
 
-            personRepository.save(newPerson);
+            try {
+                personRepository.save(newPerson);
+            } catch (Exception e) {
+                throw new ExpectationFailedException("recruiter data is incorrect");
+            }
 
-            return HttpResponseEntity.getOKStatus(newPerson,ResponseUtils.getJWTToken(newPerson));
+            return HttpResponseEntity.getOKStatus(newPerson);
 
+        } else {
+            throw new UnauthorizedException("recruiter doesn't exist");
         }
 
-        throw new UnauthorizedException("could not update");
     }
-
 
     @PostMapping("/")//nit,id,email
     public ResponseEntity<UserEntity> createRecruiter(@RequestBody CreateRequestRecruiter createRequestRecruiter) throws Throwable {
@@ -117,12 +118,17 @@ public class RecruiterController {
                 recruiter.setEmail(email);
                 recruiter.setPassword("12345");
                 recruiter.setType(TYPE.RECRUITER.name());
-                personRepository.save(recruiter);
+
+                try {
+                    personRepository.save(recruiter);
+                } catch (Exception e) {
+                    throw new ExpectationFailedException("recruiter data is incorrect");
+                }
+
                 return HttpResponseEntity.getOKStatus(recruiter);
             }
         }
     }
-
 
     @GetMapping("/recruiter/{nit}")
     public ResponseEntity<List<CreateResponseRecruitersByCompany>> getAllRecruiterByComany(@PathVariable String nit) throws ExpectationFailedException, UnauthorizedException {

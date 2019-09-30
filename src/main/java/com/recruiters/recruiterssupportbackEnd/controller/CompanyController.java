@@ -7,11 +7,12 @@ import com.recruiters.recruiterssupportbackEnd.controller.request_entities.Creat
 import com.recruiters.recruiterssupportbackEnd.model.entities.Company;
 import com.recruiters.recruiterssupportbackEnd.model.entities.UserEntity;
 import com.recruiters.recruiterssupportbackEnd.repository.CompanyRepository;
-import static java.lang.Integer.TYPE;
 import java.util.Optional;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,6 +30,53 @@ public class CompanyController {
     @Autowired
     public CompanyController(CompanyRepository companyRepository) {
         this.companyRepository = companyRepository;
+    }
+
+    @PutMapping("/")
+    public ResponseEntity<UserEntity> updateCompany(@RequestBody CreateCompanyRequest updateCompany) throws UnauthorizedException, ExpectationFailedException {
+
+        String nit = updateCompany.getNit();
+
+        Optional<Company> optCompany = companyRepository.findByNit(nit);
+
+        if (optCompany.isPresent()) {
+
+            String email = updateCompany.getEmail();
+            Optional<Company> optCompany2 = companyRepository.findByEmail(email);
+
+            if (optCompany2.isPresent()) {
+                throw new UnauthorizedException("email in use");
+            } else {
+
+                String name = updateCompany.getName();
+                String phone = updateCompany.getPhone();
+
+                Company company = optCompany.get();
+
+                if (!Strings.isEmpty(name)) {
+                    company.setName(name);
+                }
+
+                if (!Strings.isEmpty(email)) {
+                    company.setEmail(email);
+                }
+
+                if (!Strings.isEmpty(phone)) {
+                    company.setPhone(phone);
+                }
+
+                try {
+                    companyRepository.save(company);
+                } catch (Exception e) {
+                    throw new ExpectationFailedException("company data is incorrect");
+                }
+
+                return HttpResponseEntity.getOKStatus(company);
+            }
+        } else {
+            throw new UnauthorizedException("company doesn't exist");
+        }
+
     }
 
     @PostMapping("/")

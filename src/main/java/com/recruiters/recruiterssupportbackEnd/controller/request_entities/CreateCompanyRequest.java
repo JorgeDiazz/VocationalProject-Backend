@@ -12,9 +12,9 @@ package com.recruiters.recruiterssupportbackEnd.controller.request_entities;
 public class CreateCompanyRequest {
 
     private String name;
-   private String email;
-  private String  nit;
-  private String phone;
+    private String email;
+    private String nit;
+    private String phone;
 
     public CreateCompanyRequest(String name, String email, String nit, String phone) {
         this.name = name;
@@ -55,6 +55,4 @@ public class CreateCompanyRequest {
         this.phone = phone;
     }
 
-
-    
 }
