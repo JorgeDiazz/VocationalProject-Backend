@@ -3,6 +3,7 @@ package com.recruiters.recruiterssupportbackEnd.controller;
 import com.recruiters.recruiterssupportbackEnd.controller.exceptions.ExpectationFailedException;
 import com.recruiters.recruiterssupportbackEnd.controller.exceptions.UnauthorizedException;
 import com.recruiters.recruiterssupportbackEnd.controller.http.HttpResponseEntity;
+import com.recruiters.recruiterssupportbackEnd.controller.http.ResponseUtils;
 import com.recruiters.recruiterssupportbackEnd.controller.request_entities.CreateCompanyRequest;
 import com.recruiters.recruiterssupportbackEnd.model.entities.Company;
 import com.recruiters.recruiterssupportbackEnd.model.entities.UserEntity;
@@ -10,6 +11,7 @@ import com.recruiters.recruiterssupportbackEnd.repository.CompanyRepository;
 import java.util.Optional;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -48,6 +50,7 @@ public class CompanyController {
                 throw new UnauthorizedException("email in use");
             } else {
 
+                boolean flag=false;
                 String name = updateCompany.getName();
                 String phone = updateCompany.getPhone();
 
@@ -57,12 +60,13 @@ public class CompanyController {
                     company.setName(name);
                 }
 
-                if (!Strings.isEmpty(email)) {
-                    company.setEmail(email);
-                }
-
                 if (!Strings.isEmpty(phone)) {
                     company.setPhone(phone);
+                }
+
+                if (!Strings.isEmpty(email)) {
+                    company.setEmail(email);
+                    flag=true;
                 }
 
                 try {
@@ -71,6 +75,11 @@ public class CompanyController {
                     throw new ExpectationFailedException("company data is incorrect");
                 }
 
+                
+                if(flag){
+                    return HttpResponseEntity.getOKStatus(company, ResponseUtils.getJWTToken(company));
+                }
+                
                 return HttpResponseEntity.getOKStatus(company);
             }
         } else {
