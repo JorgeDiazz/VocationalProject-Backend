@@ -11,20 +11,24 @@ import com.recruiters.recruiterssupportbackEnd.model.entities.UserEntity;
  *
  * @author jhanu
  */
-public class CreateResponseRecruiterLogin implements UserEntity{
-    
+public class CreateResponseRecruiterLogin implements UserEntity {
+
     private String id;
     private String name;
     private String email;
+    private String image;
     private String nitCompany;
     private String nameCompany;
+    private String type;
 
-    public CreateResponseRecruiterLogin(String id, String name, String email, String nitCompany, String nameCompany) {
+    public CreateResponseRecruiterLogin(String id, String name, String email, String image, String nitCompany, String nameCompany, String type) {
         this.id = id;
         this.name = name;
         this.email = email;
+        this.image = image;
         this.nitCompany = nitCompany;
         this.nameCompany = nameCompany;
+        this.type = type;
     }
 
     public String getId() {
@@ -51,6 +55,14 @@ public class CreateResponseRecruiterLogin implements UserEntity{
         this.email = email;
     }
 
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
     public String getNitCompany() {
         return nitCompany;
     }
@@ -65,6 +77,14 @@ public class CreateResponseRecruiterLogin implements UserEntity{
 
     public void setNameCompany(String nameCompany) {
         this.nameCompany = nameCompany;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
 }

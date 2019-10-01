@@ -5,6 +5,7 @@ import static com.recruiters.recruiterssupportbackEnd.controller.http.Constants.
 import com.recruiters.recruiterssupportbackEnd.controller.http.HttpResponseEntity;
 import com.recruiters.recruiterssupportbackEnd.controller.http.ResponseUtils;
 import com.recruiters.recruiterssupportbackEnd.controller.request_entities.LoginRequest;
+import com.recruiters.recruiterssupportbackEnd.controller.response_entities.CreateResponseCompanyLogin;
 import com.recruiters.recruiterssupportbackEnd.controller.response_entities.CreateResponsePostulantLogin;
 import com.recruiters.recruiterssupportbackEnd.controller.response_entities.CreateResponseRecruiterLogin;
 import com.recruiters.recruiterssupportbackEnd.model.entities.CareerP;
@@ -51,7 +52,7 @@ public class LoginController {
                 if (person.getPassword().equals(password)) {
                     if (person.getType().equals("RECRUITER")) {
                         Optional<Company> optCompany = companyRepository.findByNit(person.getNitCompany());                  
-                        CreateResponseRecruiterLogin sendreruiter = new CreateResponseRecruiterLogin(person.getId(), person.getName(), person.getEmail(), person.getNitCompany(), optCompany.get().getName());
+                        CreateResponseRecruiterLogin sendreruiter = new CreateResponseRecruiterLogin(person.getId(), person.getName(), person.getEmail(),"http:cualquierurl.com", person.getNitCompany(), optCompany.get().getName(),person.getType());
                         return HttpResponseEntity.getOKStatus(sendreruiter, ResponseUtils.getJWTToken(person));
                     } else {
                         if (person.getType().equals("POSTULANT")) {
@@ -60,7 +61,7 @@ public class LoginController {
                             for (CareerP carrerp : listcarreerp) {
                                 ids.add(carrerp.getIdCareer());
                             }
-                            CreateResponsePostulantLogin sendpostulant = new CreateResponsePostulantLogin(person.getId(), person.getName(), person.getEmail(), ids);
+                            CreateResponsePostulantLogin sendpostulant = new CreateResponsePostulantLogin(person.getId(), person.getName(), person.getEmail(),"http:cualquierurl.com", ids,person.getType());
                             return HttpResponseEntity.getOKStatus(sendpostulant, ResponseUtils.getJWTToken(person));
                         } else {
                             throw new UnauthorizedException("algo raro paso");
@@ -78,12 +79,13 @@ public class LoginController {
             if (optCompany.isPresent()) {
                 Company company = optCompany.get();
                 if (company.getPassword().equals(password)) {
-                    return HttpResponseEntity.getOKStatus(company, ResponseUtils.getJWTToken(company));
+                    CreateResponseCompanyLogin sendcompany = new CreateResponseCompanyLogin(company.getNit(), company.getName(), company.getAddress(), company.getPhone(), "http:cualquierurl.com", company.getEmail(), "COMPANY");
+                    return HttpResponseEntity.getOKStatus(sendcompany, ResponseUtils.getJWTToken(company));
                 }
             } else {
             }
         } catch (Exception e) {
         }
-        throw new UnauthorizedException("se molestaro los try");
+        throw new UnauthorizedException("error imprevisto");
     }
 }
