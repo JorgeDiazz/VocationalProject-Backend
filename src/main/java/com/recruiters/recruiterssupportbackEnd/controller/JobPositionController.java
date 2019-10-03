@@ -159,7 +159,7 @@ public class JobPositionController {
                 processRepository.save(process);
             }
         } catch (Exception e) {
-            throw new ExpectationFailedException("Data is incorrect/repeated by database");
+            throw new ExpectationFailedException(e.getMessage());
         }
 
         return HttpResponseEntity.getOKStatus();

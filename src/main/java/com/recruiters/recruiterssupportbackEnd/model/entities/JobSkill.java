@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
 
 /**
  *
@@ -19,8 +20,10 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "jb_skill")
 public class JobSkill implements UserEntity {
-    
+
     @Id
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String id;
     @Column(name = "id_job_position")
     private int idJob;
@@ -31,8 +34,8 @@ public class JobSkill implements UserEntity {
         return id;
     }
 
-    public void setId(String idJob,String idSkill) {
-        this.id = idJob+idSkill;
+    public void setId(String idJob, String idSkill) {
+        this.id = idJob + idSkill;
     }
 
     public int getIdJob() {
@@ -50,6 +53,5 @@ public class JobSkill implements UserEntity {
     public void setIdSkill(int idSkill) {
         this.idSkill = idSkill;
     }
-    
-    
+
 }

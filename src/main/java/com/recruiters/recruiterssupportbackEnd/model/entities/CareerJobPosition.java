@@ -3,9 +3,9 @@ package com.recruiters.recruiterssupportbackEnd.model.entities;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
 
 /**
  *
@@ -16,7 +16,8 @@ import javax.persistence.Table;
 public class CareerJobPosition {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String id;
     @Column(name = "id_career")
     private int careerId;
