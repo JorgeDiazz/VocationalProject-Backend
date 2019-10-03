@@ -1,4 +1,4 @@
-package com.recruiters.recruiterssupportbackEnd.model.entities;
+package com.recruiters.recruiterssupportbackEnd.controller.response_entities;
 
 import java.util.Date;
 

@@ -1,34 +1,42 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.recruiters.recruiterssupportbackEnd.model.entities;
+
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
  *
- * @author katemorales
+ * @author jhanuar Sanchez
  */
 @Entity
-@Table(name = "careerP")
-public class CareerPerson {
+@Table(name = "CareerP")
+public class CareerP{
     
+    @Id 
+    @GeneratedValue(strategy = GenerationType.IDENTITY) 
+    private int id;
     @Column(name = "university")
-    @Id
     private String university;
     @Column(name = "aga")
-    private double pga;
+    private Double aga;
     @Column(name = "semester")
     private int semester;
     @Column(name = "id_person")
     private String idPerson;
     @Column(name = "id_career")
     private int idCareer;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getUniversity() {
         return university;
@@ -38,12 +46,12 @@ public class CareerPerson {
         this.university = university;
     }
 
-    public double getPga() {
-        return pga;
+    public double getAga() {
+        return aga;
     }
 
-    public void setPga(double pga) {
-        this.pga = pga;
+    public void setAga(double aga) {
+        this.aga = aga;
     }
 
     public int getSemester() {
@@ -69,6 +77,5 @@ public class CareerPerson {
     public void setIdCareer(int idCareer) {
         this.idCareer = idCareer;
     }
-    
-    
+   
 }

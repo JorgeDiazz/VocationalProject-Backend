@@ -40,5 +40,4 @@ public class CreateVacantRequest {
     public void setIdJobPosition(int idJobPosition) {
         this.idJobPosition = idJobPosition;
     }
-
 }

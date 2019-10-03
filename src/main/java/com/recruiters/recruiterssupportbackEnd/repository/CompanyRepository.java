@@ -10,4 +10,7 @@ public interface CompanyRepository extends JpaRepository<Company, String> {
     @Query("from Company where email = ?1")
     Optional<Company> findByEmail(String email);
     
+    @Query("from Company where nit = ?1")
+    Optional<Company> findByNit(String nit);
+    
 }
