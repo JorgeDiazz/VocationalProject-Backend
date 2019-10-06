@@ -19,7 +19,7 @@ public class Company implements UserEntity {
     @Column(name = "phone")
     private String phone;
     @Column(name = "image")
-    private Byte[] image;
+    private String image;
     @Column(name = "email")
     private String email;
     @JsonIgnore
@@ -59,11 +59,11 @@ public class Company implements UserEntity {
         this.phone = phone;
     }
 
-    public Byte[] getImage() {
+    public String getImage() {
         return image;
     }
 
-    public void setImage(Byte[] image) {
+    public void setImage(String image) {
         this.image = image;
     }
 
