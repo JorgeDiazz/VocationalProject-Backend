@@ -108,7 +108,7 @@ public class CompanyController {
                 Company company = new Company();
                 company.setNit(newCompany.getNit());
                 company.setName(newCompany.getName());
-                company.setAddress("KRA JIJI");
+                company.setAddress("KRA 1234");
                 company.setPhone(newCompany.getPhone());
                 company.setImage(null);
                 company.setEmail(newCompany.getEmail());
@@ -119,7 +119,6 @@ public class CompanyController {
                 } catch (Exception e) {
                     throw new ExpectationFailedException("company data is incorrect");
                 }
-
                 return HttpResponseEntity.getOKStatus(company);
             }
         }

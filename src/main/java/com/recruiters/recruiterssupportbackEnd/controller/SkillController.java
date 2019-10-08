@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -63,17 +62,17 @@ public class SkillController {
         return skillRepository.findAllHard();
     }
 
-    @GetMapping("/GlobalByCompany/{nit}")
+    @GetMapping("/GlobalByCompany/{nit}")//re hacer
     public List<Skill> getGlobalSkillsCompany(@PathVariable String nit) {
         return globalSkillRepository.findGlobalCompany(nit);
     }
 
-    @GetMapping("/LocalByJobPosition/{id}")
+    @GetMapping("/LocalByJobPosition/{id}")//re hacer
     public List<Skill> getJobSkillsCompany(@PathVariable int id) {
         return jobSkillRepository.findLocalJob(id);
     }
 
-    @PostMapping("/register")
+    @PostMapping("/")
     public ResponseEntity<Skill> createSkill(@RequestBody Skill createRequestSkill) throws Throwable {
         String name = createRequestSkill.getName();
 

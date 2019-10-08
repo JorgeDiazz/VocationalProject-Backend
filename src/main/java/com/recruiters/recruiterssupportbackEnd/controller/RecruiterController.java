@@ -131,7 +131,7 @@ public class RecruiterController {
     }
 
     @GetMapping("/recruiter/{nit}")
-    public ResponseEntity<List<CreateResponseRecruitersByCompany>> getAllRecruiterByComany(@PathVariable String nit) throws ExpectationFailedException, UnauthorizedException {
+    public ResponseEntity<List<CreateResponseRecruitersByCompany>> getAllRecruiterByComanpy(@PathVariable String nit) throws ExpectationFailedException, UnauthorizedException {
 
         List<Person> reclutadores = personRepository.findByNit(nit);
         if (!reclutadores.isEmpty()) {
