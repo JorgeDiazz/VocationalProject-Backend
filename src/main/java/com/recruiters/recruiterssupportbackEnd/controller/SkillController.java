@@ -16,6 +16,7 @@ import com.recruiters.recruiterssupportbackEnd.repository.GlobalSkillRepository;
 import com.recruiters.recruiterssupportbackEnd.repository.JobPositionRepository;
 import com.recruiters.recruiterssupportbackEnd.repository.JobSkillRepository;
 import com.recruiters.recruiterssupportbackEnd.repository.SkillRepository;
+import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -56,10 +57,22 @@ public class SkillController {
     }
 
     @GetMapping("/GlobalByCompany/{nit}")
-    public ResponseEntity<List<Skill>> getGlobalSkillsCompany(@PathVariable String nit) {
-        return HttpResponseEntity.getOKStatus(skillRepository.findAllLocal(nit)); 
+    public ResponseEntity<List<Skill>> getGlobalSkillsCompany(@PathVariable String nit) throws ExpectationFailedException {
+        List<GlobalSkill> companyskills = globalSkillRepository.findGlobalCompany(nit);
+        List<Skill> skillsbycompany = new ArrayList<>();
+
+        if (!companyskills.isEmpty()) {
+            for (GlobalSkill myskill : companyskills) {
+                Optional<Skill> insert = skillRepository.findById(myskill.getIdSkill());
+                skillsbycompany.add(insert.get());
+            }
+        } else {
+            throw new ExpectationFailedException("there are no skills for this company");
+        }
+
+        return HttpResponseEntity.getOKStatus(skillsbycompany);
     }
-    
+
     @GetMapping("/LocalByJobPosition/{id}")
     public List<Skill> getJobSkillsCompany(@PathVariable int id) {
         return jobSkillRepository.findLocalJob(id);
@@ -155,7 +168,7 @@ public class SkillController {
                     globalSkill.setId(nitCompany, String.valueOf(id));
                     globalSkill.setNit(nitCompany);
                     globalSkill.setIdSkill(id);
-               
+
                     try {
                         globalSkillRepository.save(globalSkill);
                     } catch (Exception e) {

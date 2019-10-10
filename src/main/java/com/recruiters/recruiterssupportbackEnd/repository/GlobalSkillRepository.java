@@ -6,7 +6,6 @@
 package com.recruiters.recruiterssupportbackEnd.repository;
 
 import com.recruiters.recruiterssupportbackEnd.model.entities.GlobalSkill;
-import com.recruiters.recruiterssupportbackEnd.model.entities.Skill;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,6 +16,6 @@ import org.springframework.data.jpa.repository.Query;
  */
 public interface GlobalSkillRepository extends JpaRepository<GlobalSkill, String>{
 
-    @Query("from Skill where name = ?1")
-    List<Skill> findGlobalCompany(String nit);
+    @Query("from GlobalSkill where nit_company = ?1")
+    List<GlobalSkill> findGlobalCompany(String nit);
 }
