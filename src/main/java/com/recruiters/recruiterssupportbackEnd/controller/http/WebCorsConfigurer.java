@@ -23,7 +23,7 @@ public class WebCorsConfigurer {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")// aceptar desde cualquier ip
-                        .allowedOrigins("*")// aceptar desde cualquier destino url
+                        .allowedOrigins("http://localhost:4200")// aceptar desde cualquier destino url
                         .allowedMethods("PUT", "DELETE", "POST", "GET")
                         .allowedHeaders("Content-Type", "Authorization")
                         .exposedHeaders("Content-Type", "Authorization");

@@ -3,8 +3,6 @@ package com.recruiters.recruiterssupportbackEnd.model.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 /**
@@ -16,12 +14,13 @@ import javax.persistence.Table;
 public class Person implements UserEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
     @Column(name = "nameP")
     private String name;
+    @Column(name = "email")
     private String email;
-    private Byte[] image;
+    @Column(name = "image")
+    private String image;
     @JsonIgnore
     @Column(name = "_password")
     private String password;
@@ -62,11 +61,11 @@ public class Person implements UserEntity {
         this.email = email;
     }
 
-    public Byte[] getImage() {
+    public String getImage() {
         return image;
     }
 
-    public void setImage(Byte[] image) {
+    public void setImage(String image) {
         this.image = image;
     }
 

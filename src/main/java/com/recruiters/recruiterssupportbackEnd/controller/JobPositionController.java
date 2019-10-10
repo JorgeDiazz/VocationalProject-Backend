@@ -3,7 +3,6 @@ package com.recruiters.recruiterssupportbackEnd.controller;
 import com.recruiters.recruiterssupportbackEnd.controller.exceptions.ExpectationFailedException;
 import com.recruiters.recruiterssupportbackEnd.controller.http.HttpResponseEntity;
 import com.recruiters.recruiterssupportbackEnd.controller.request_entities.CreateJobPositionRequest;
-import com.recruiters.recruiterssupportbackEnd.controller.response_entities.VacantForPostulantWithoutRelation;
 import com.recruiters.recruiterssupportbackEnd.model.entities.Career;
 import com.recruiters.recruiterssupportbackEnd.model.entities.CareerJobPosition;
 import com.recruiters.recruiterssupportbackEnd.model.entities.JobPosition;
@@ -27,9 +26,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.recruiters.recruiterssupportbackEnd.model.entities.Process;
 import com.recruiters.recruiterssupportbackEnd.repository.ProcessRepository;
-import java.util.ArrayList;
-import java.util.List;
-import org.springframework.web.bind.annotation.PathVariable;
 
 /**
  *
@@ -160,7 +156,7 @@ public class JobPositionController {
                 processRepository.save(process);
             }
         } catch (Exception e) {
-            throw new ExpectationFailedException("Data is incorrect/repeated by database");
+            throw new ExpectationFailedException(e.getMessage());
         }
 
         return HttpResponseEntity.getOKStatus();

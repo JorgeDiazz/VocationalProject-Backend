@@ -57,4 +57,15 @@ public class Skill implements UserEntity {
         SOFT
     }
 
+    public Skill(int id, String name, String type) {
+        this.id = id;
+        this.name = name;
+        this.type = type;
+    }
+
+    public Skill() {
+    }
+
+    
+    
 }
