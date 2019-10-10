@@ -69,13 +69,23 @@ public class SkillController {
         } else {
             throw new ExpectationFailedException("there are no skills for this company");
         }
-
         return HttpResponseEntity.getOKStatus(skillsbycompany);
     }
 
     @GetMapping("/LocalByJobPosition/{id}")
-    public List<Skill> getJobSkillsCompany(@PathVariable int id) {
-        return jobSkillRepository.findLocalJob(id);
+    public ResponseEntity<List<Skill>> getJobSkillsCompany(@PathVariable int id) throws ExpectationFailedException {
+        List<JobSkill> jobskills = jobSkillRepository.findbyidjob(id);
+        List<Skill> skillsbyjob = new ArrayList<>();
+
+        if (!jobskills.isEmpty()) {
+            for (JobSkill myskill : jobskills) {
+                Optional<Skill> insert = skillRepository.findById(myskill.getIdSkill());
+                skillsbyjob.add(insert.get());
+            }
+        } else {
+            throw new ExpectationFailedException("there are no skills for this job");
+        }
+        return HttpResponseEntity.getOKStatus(skillsbyjob);
     }
 
     @PostMapping("/register")
