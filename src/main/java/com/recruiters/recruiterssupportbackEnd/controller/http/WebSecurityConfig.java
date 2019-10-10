@@ -17,6 +17,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        
+        http.cors();
         http.csrf().disable()
                 .addFilterAfter(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
@@ -24,5 +26,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/postulant/").permitAll()
                 .antMatchers(HttpMethod.POST, "/company/").permitAll()//metodos a los que no se les pide  un token
                 .anyRequest().authenticated();//pedir registro a las demas direcciones
+
     }
 }
