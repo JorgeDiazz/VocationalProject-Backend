@@ -45,9 +45,9 @@ public class SkillController {
         this.jobPositionRepository = jobPositionRepository;
     }
 
-    @GetMapping("/Soft")
-    public ResponseEntity<List<Skill>> getSoftSkills() {
-        return HttpResponseEntity.getOKStatus(skillRepository.findAllSoft());
+    @GetMapping("/Soft/{nit}")
+    public ResponseEntity<List<Skill>> getSoftSkills(@PathVariable String nit) {
+        return HttpResponseEntity.getOKStatus(skillRepository.findAllSoft(nit));
     }
 
     @GetMapping("/Hard")
@@ -57,7 +57,7 @@ public class SkillController {
 
     @GetMapping("/GlobalByCompany/{nit}")
     public ResponseEntity<List<Skill>> getGlobalSkillsCompany(@PathVariable String nit) {
-        return HttpResponseEntity.getOKStatus(skillRepository.findAllLocal(nit)); 
+        return HttpResponseEntity.getOKStatus(skillRepository.findAllGlobal(nit)); 
     }
     
     @GetMapping("/LocalByJobPosition/{id}")
