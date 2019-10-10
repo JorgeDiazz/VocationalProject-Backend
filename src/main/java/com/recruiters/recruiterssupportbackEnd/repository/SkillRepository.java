@@ -28,7 +28,7 @@ public interface SkillRepository extends JpaRepository<Skill, Integer>{
     
     @Query(nativeQuery = true,value="SELECT skill.* from skill INNER JOIN global_skill ON skill.id=global_skill.id_skill WHERE global_skill.nit_company=?1")
     List<Skill> findAllLocal(String nit);
-    
+   
     
     
 }
