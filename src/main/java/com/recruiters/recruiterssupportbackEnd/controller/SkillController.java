@@ -56,10 +56,10 @@ public class SkillController {
     }
 
     @GetMapping("/GlobalByCompany/{nit}")
-    public List<Skill> getGlobalSkillsCompany(@PathVariable String nit) {
-        return globalSkillRepository.findGlobalCompany(nit);
+    public ResponseEntity<List<Skill>> getGlobalSkillsCompany(@PathVariable String nit) {
+        return HttpResponseEntity.getOKStatus(skillRepository.findAllLocal(nit)); 
     }
-
+    
     @GetMapping("/LocalByJobPosition/{id}")
     public List<Skill> getJobSkillsCompany(@PathVariable int id) {
         return jobSkillRepository.findLocalJob(id);
