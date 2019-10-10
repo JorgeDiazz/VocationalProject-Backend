@@ -19,13 +19,12 @@ import com.recruiters.recruiterssupportbackEnd.repository.SkillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 
 @RestController
 @RequestMapping("/skill")
@@ -47,13 +46,13 @@ public class SkillController {
     }
 
     @GetMapping("/Soft")
-    public List<Skill> getSoftSkills() {
-        return skillRepository.findAllSoft();
+    public ResponseEntity<List<Skill>> getSoftSkills() {
+        return HttpResponseEntity.getOKStatus(skillRepository.findAllSoft());
     }
 
     @GetMapping("/Hard")
-    public List<Skill> getHardSkills() {
-        return skillRepository.findAllHard();
+    public ResponseEntity<List<Skill>> getHardSkills() {
+        return HttpResponseEntity.getOKStatus(skillRepository.findAllHard());
     }
 
     @GetMapping("/GlobalByCompany/{nit}")
@@ -135,8 +134,8 @@ public class SkillController {
         }
     }
 
-    @PatchMapping("/")
-    public ResponseEntity<Skill> changeTypeSkill(@RequestBody CreateRequestChangeTypeSkill createRequestChangeTypeSkill) throws ExpectationFailedException {
+    @PutMapping("/")
+    public ResponseEntity<Object> changeTypeSkill(@RequestBody CreateRequestChangeTypeSkill createRequestChangeTypeSkill) throws ExpectationFailedException {
 
         String nitCompany = createRequestChangeTypeSkill.getNitCompany();
         Optional<Company> company = companyRepository.findById(nitCompany);
@@ -152,13 +151,18 @@ public class SkillController {
 
                 if (newType.equalsIgnoreCase("global")) {
 
+                    GlobalSkill globalSkill = new GlobalSkill();
+                    globalSkill.setId(nitCompany, String.valueOf(id));
+                    globalSkill.setNit(nitCompany);
+                    globalSkill.setIdSkill(id);
+               
                     try {
-                        GlobalSkill globalSkill = new GlobalSkill();
-                        globalSkill.setId(nitCompany, String.valueOf(id));
                         globalSkillRepository.save(globalSkill);
                     } catch (Exception e) {
                         throw new ExpectationFailedException("GlobalSkill data is incorrect");
                     }
+
+                    return HttpResponseEntity.getOKStatus(globalSkill);
 
                 } else {
                     if (newType.equalsIgnoreCase("specific")) {
@@ -168,6 +172,8 @@ public class SkillController {
                         } catch (Exception e) {
                             throw new ExpectationFailedException("GlobalSkill doesn't exist");
                         }
+
+                        return HttpResponseEntity.getOKStatus();
 
                     } else {
                         throw new ExpectationFailedException("newType is incorrect");
@@ -181,7 +187,5 @@ public class SkillController {
         } else {
             throw new ExpectationFailedException("Company doesn't exist");
         }
-
-        return HttpResponseEntity.getOKStatus();
     }
 }
