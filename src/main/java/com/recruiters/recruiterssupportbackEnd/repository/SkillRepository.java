@@ -13,14 +13,14 @@ import java.util.Optional;
 
 /**
  *
- * @author katemorales
+ * @author katemorales, Jhoan Saavedra and Sebastian Aya
  */
 public interface SkillRepository extends JpaRepository<Skill, Integer>{
     
     @Query("from Skill where name = ?1")
     Optional<Skill> findByName(String name);
     
-    @Query("from Skill where type='Soft'")
+    @Query(nativeQuery = true,value="SELECT skill.* FROM skill,global_skill WHERE skill.id!=global_skill.id_skill AND skill.class='Soft'")
     List<Skill> findAllSoft();
     
     @Query("from Skill where type='Hard'")
@@ -28,7 +28,5 @@ public interface SkillRepository extends JpaRepository<Skill, Integer>{
     
     @Query(nativeQuery = true,value="SELECT skill.* from skill INNER JOIN global_skill ON skill.id=global_skill.id_skill WHERE global_skill.nit_company=?1")
     List<Skill> findAllLocal(String nit);
-   
-    
     
 }
