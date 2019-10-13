@@ -45,6 +45,11 @@ public class VacantController {
         this.jobPositionRepository = jobPositionRepository;
     }
 
+    @GetMapping("/")
+    public ResponseEntity<List<Vacant>> getAllVacantByJobPosition(@PathVariable int id){
+        return HttpResponseEntity.getOKStatus(vacantRepository.findByJobPositionId(id));
+    }
+    
     @PostMapping("/")
     public ResponseEntity<Vacant> createVacant(@RequestBody CreateVacantRequest newVacant) throws Throwable {
 
