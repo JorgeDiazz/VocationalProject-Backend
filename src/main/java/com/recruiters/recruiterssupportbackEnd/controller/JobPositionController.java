@@ -46,7 +46,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 @RestController
 @RequestMapping("/jobPosition")
 public class JobPositionController {
-    
+
     private final JobPositionRepository jobPositionRepository;
     private final CareerJobPositionRepository careerJobPositionRepository;
     private final CareerRepository careerRepository;
@@ -57,7 +57,7 @@ public class JobPositionController {
     private final ProcessRepository processRepository;
     private final PersonRepository personRepository;
     private final PostulantRvRepository postulantRvRepository;
-    
+
     @Autowired
     public JobPositionController(JobPositionRepository jobPositionRepository, CareerJobPositionRepository careerJobPositionRepository, CareerRepository careerRepository, SkillRepository skillRepository, JobSkillRepository jobSkillRepository, VacantRepository vacantRepository, RecruiterVacantRepository recruiterVacantRepository, ProcessRepository processRepository, PersonRepository personRepository, PostulantRvRepository postulantRvRepository) {
         this.jobPositionRepository = jobPositionRepository;
@@ -71,10 +71,10 @@ public class JobPositionController {
         this.personRepository = personRepository;
         this.postulantRvRepository = postulantRvRepository;
     }
-    
+
     @PostMapping("/")
     public ResponseEntity<JobPosition> createJobPosition(@RequestBody CreateJobPositionRequest newJobPosition) throws Throwable {
-        
+
         try {
             JobPosition jobPosition = new JobPosition();
             jobPosition.setName(newJobPosition.getName());
@@ -83,12 +83,12 @@ public class JobPositionController {
             jobPosition.setDescription(newJobPosition.getDescription());
             jobPosition.setNit(newJobPosition.getNitCompany());
             jobPosition.setIdArea(newJobPosition.getIdArea());
-            
+
             jobPositionRepository.save(jobPosition);
-            
+
             int i = 0;
             int[] newCareersId1 = new int[newJobPosition.getNewCareersName().length];
-            
+
             Career career;
             for (String careerName : newJobPosition.getNewCareersName()) {
                 career = new Career();
@@ -96,20 +96,20 @@ public class JobPositionController {
                 careerRepository.save(career);
                 newCareersId1[i++] = career.getId();
             }
-            
+
             int[] newCareersId2 = newJobPosition.getCareersId();
-            
+
             int[] careersId = new int[newCareersId2.length + newCareersId1.length];
-            
+
             for (i = 0; i < newCareersId2.length; i++) {
                 careersId[i] = newCareersId2[i];
             }
-            
+
             int j;
             for (j = 0; j < newCareersId1.length; j++, i++) {
                 careersId[i] = newCareersId1[j];
             }
-            
+
             CareerJobPosition careerJobPosition;
             for (int careerId : careersId) {
                 careerJobPosition = new CareerJobPosition();
@@ -117,10 +117,10 @@ public class JobPositionController {
                 careerJobPosition.setJobPositionId(jobPosition.getId());
                 careerJobPositionRepository.save(careerJobPosition);
             }
-            
+
             i = 0;
             int[] hardSkillsId1 = new int[newJobPosition.getNewHardSkillsName().length];
-            
+
             Skill skill;
             for (String hardSkillName : newJobPosition.getNewHardSkillsName()) {
                 skill = new Skill();
@@ -129,19 +129,19 @@ public class JobPositionController {
                 skillRepository.save(skill);
                 hardSkillsId1[i++] = skill.getId();
             }
-            
+
             int[] hardSkillsId2 = newJobPosition.getHardSkillsId();
-            
+
             int[] newHardSkills = new int[hardSkillsId1.length + hardSkillsId2.length];
-            
+
             for (j = 0; j < hardSkillsId1.length; j++) {
                 newHardSkills[j] = hardSkillsId1[j];
             }
-            
+
             for (i = 0; i < hardSkillsId2.length; i++, j++) {
                 newHardSkills[j] = hardSkillsId2[i];
             }
-            
+
             JobSkill jobSkill;
             for (int newHardSkillId : newHardSkills) {
                 jobSkill = new JobSkill();
@@ -149,13 +149,13 @@ public class JobPositionController {
                 jobSkill.setIdSkill(newHardSkillId);
                 jobSkillRepository.save(jobSkill);
             }
-            
+
             Vacant vacant = new Vacant();
             vacant.setPlacesNumber(newJobPosition.getPlacesNumber());
             vacant.setStartDate(new Date(System.currentTimeMillis()));
             vacant.setIdJobPosition(jobPosition.getId());
             vacantRepository.save(vacant);
-            
+
             RecruiterVacant recruiterVacant;
             for (String recruiterId : newJobPosition.getRecruitersId()) {
                 recruiterVacant = new RecruiterVacant();
@@ -163,7 +163,7 @@ public class JobPositionController {
                 recruiterVacant.setIdVacant(vacant.getId());
                 recruiterVacantRepository.save(recruiterVacant);
             }
-            
+
             Process process;
             for (String processName : newJobPosition.getProcessesName()) {
                 process = new Process();
@@ -174,47 +174,49 @@ public class JobPositionController {
         } catch (Exception e) {
             throw new ExpectationFailedException(e.getMessage());
         }
-        
+
         return HttpResponseEntity.getOKStatus();
     }
-    
+
     @GetMapping("/{nit}")
     public ResponseEntity<List<ResponseGetJobPositionByNit>> getJobPositionByNit(@PathVariable String nit) throws Throwable {
-        
+
         List<ResponseGetJobPositionByNit> response = new ArrayList<>();
-        
+
         List<JobPosition> jobPositionList = jobPositionRepository.findByNit(nit);
-        
+
         if (jobPositionList != null) {
             for (JobPosition jobPosition : jobPositionList) {
                 List<Vacant> vacants = vacantRepository.findByJobPositionId(jobPosition.getId());
                 for (Vacant vacant : vacants) {
-                    ResponseGetJobPositionByNit respJobPosition = new ResponseGetJobPositionByNit();
-                    respJobPosition.setIdJobPosition(jobPosition.getId());
-                    respJobPosition.setIdVacant(vacant.getId());
-                    respJobPosition.setName(jobPosition.getName());
-                    respJobPosition.setPlacesNumber(vacant.getPlacesNumber());
-                    respJobPosition.setSalaryMax(jobPosition.getSalaryMax());
-                    respJobPosition.setSalaryMin(jobPosition.getSalaryMin());
-                    response.add(respJobPosition);
+                    if (vacant.getPlacesNumber() > 0) {
+                        ResponseGetJobPositionByNit respJobPosition = new ResponseGetJobPositionByNit();
+                        respJobPosition.setIdJobPosition(jobPosition.getId());
+                        respJobPosition.setIdVacant(vacant.getId());
+                        respJobPosition.setName(jobPosition.getName());
+                        respJobPosition.setPlacesNumber(vacant.getPlacesNumber());
+                        respJobPosition.setSalaryMax(jobPosition.getSalaryMax());
+                        respJobPosition.setSalaryMin(jobPosition.getSalaryMin());
+                        response.add(respJobPosition);
+                    }
                 }
             }
         } else {
             throw new ConflictException("Job position isn't present");
         }
-        
+
         return HttpResponseEntity.getOKStatus(response);
     }
-    
+
     @GetMapping("job/{id}")
     public ResponseEntity<ResponseGetSpecificJobPosition> getJobPositionById(@PathVariable int id) throws Throwable {
-        
+
         Optional<JobPosition> optJobPosition = jobPositionRepository.findById(id);
-        
+
         if (optJobPosition.isPresent()) {
-            
+
             ResponseGetSpecificJobPosition responseGetSpecificJobPosition = new ResponseGetSpecificJobPosition();
-            
+
             JobPosition jobPosition = optJobPosition.get();
             responseGetSpecificJobPosition.setId(id);
             responseGetSpecificJobPosition.setName(jobPosition.getName());
@@ -225,36 +227,36 @@ public class JobPositionController {
             // set careers
             List<ResponseGetSpecificJobPosition.Career> careerList = new ArrayList<>();
             List<CareerJobPosition> careerJobPositionList = careerJobPositionRepository.findByJobPositionId(id);
-            
+
             if (careerJobPositionList != null) {
                 for (CareerJobPosition careerJobPosition : careerJobPositionList) {
                     Optional<Career> optCareer = careerRepository.findById(careerJobPosition.getCareerId());
                     Career career = optCareer.get();
-                    
+
                     ResponseGetSpecificJobPosition.Career respCareer = new ResponseGetSpecificJobPosition.Career();
                     respCareer.setId(career.getId());
                     respCareer.setName(career.getName());
-                    
+
                     careerList.add(respCareer);
                 }
             }
-            
+
             responseGetSpecificJobPosition.setCareers(careerList);
 
             // set skills
             List<ResponseGetSpecificJobPosition.Skill> hardSkillList = new ArrayList<>();
             List<ResponseGetSpecificJobPosition.Skill> softSkillList = new ArrayList<>();
-            
+
             List<JobSkill> jobSkillList = jobSkillRepository.findbyJobPositionId(id);
             if (jobSkillList != null) {
                 for (JobSkill jobSkill : jobSkillList) {
                     Optional<Skill> optSkill = skillRepository.findById(jobSkill.getIdSkill());
                     Skill skill = optSkill.get();
-                    
+
                     ResponseGetSpecificJobPosition.Skill respSkill = new ResponseGetSpecificJobPosition.Skill();
                     respSkill.setId(skill.getId());
                     respSkill.setName(skill.getName());
-                    
+
                     if (skill.getType().equalsIgnoreCase(Skill.TYPE.HARD.name())) {
                         hardSkillList.add(respSkill);
                     } else {
@@ -262,29 +264,29 @@ public class JobPositionController {
                     }
                 }
             }
-            
+
             responseGetSpecificJobPosition.setHardSkills(hardSkillList);
             responseGetSpecificJobPosition.setSoftSkills(softSkillList);
 
             // set processes
             List<ResponseGetSpecificJobPosition.Process> processes = new ArrayList<>();
-            
+
             List<Process> processList = processRepository.findByJobPositionId(id);
             if (processList != null) {
                 for (Process process : processList) {
                     ResponseGetSpecificJobPosition.Process mProcess = new ResponseGetSpecificJobPosition.Process();
                     mProcess.setId(process.getId());
                     mProcess.setName(process.getName());
-                    
+
                     processes.add(mProcess);
                 }
             }
-            
+
             responseGetSpecificJobPosition.setProcesses(processes);
 
             // set vacants
             List<ResponseGetSpecificJobPosition.Vacant> vacants = new ArrayList<>();
-            
+
             List<Vacant> vacantList = vacantRepository.findByJobPositionId(id);
             if (vacantList != null) {
                 for (Vacant vacant : vacantList) {
@@ -299,7 +301,7 @@ public class JobPositionController {
                         for (RecruiterVacant recruiterVacant : recruiterVacantList) {
                             Optional<Person> optPerson = personRepository.findById(recruiterVacant.getIdPerson());
                             Person person = optPerson.get();
-                            
+
                             ResponseGetSpecificJobPosition.Vacant.Recruiter recruiter = new ResponseGetSpecificJobPosition.Vacant.Recruiter();
                             recruiter.setId(person.getId());
                             recruiter.setName(person.getName());
@@ -317,18 +319,18 @@ public class JobPositionController {
                                     postulants.add(mPostulant);
                                 }
                             }
-                            
+
                             recruiter.setPostulants(postulants);
                             recruiters.add(recruiter);
                         }
                     }
                     mVacant.setRecruiters(recruiters);
-                    
+
                     vacants.add(mVacant);
                 }
             }
             responseGetSpecificJobPosition.setVacants(vacants);
-            
+
             return HttpResponseEntity.getOKStatus(responseGetSpecificJobPosition);
         } else {
             throw new ConflictException("Job position isn't present");
