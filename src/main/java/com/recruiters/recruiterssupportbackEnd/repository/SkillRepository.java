@@ -31,8 +31,8 @@ public interface SkillRepository extends JpaRepository<Skill, Integer> {
     List<Skill> findAllGlobal(String nit);
 
 
-    @Query("from Skill where name = ?1")
-    Optional<Skill> findByid(int name);
+    @Query("from Skill where id = ?1")
+    Optional<Skill> findById(int id);
 
 }
 
