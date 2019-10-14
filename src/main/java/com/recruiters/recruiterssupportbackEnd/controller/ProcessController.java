@@ -38,7 +38,7 @@ public class ProcessController {
 
     @GetMapping("/{nit}")
     public List<Process> getProcessesByJob(@PathVariable int nit) {
-        return processRepository.findByIdJob(nit);
+        return processRepository.findByJobPositionId(nit);
     }
 
     @PostMapping("/register")

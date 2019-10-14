@@ -18,6 +18,6 @@ public interface RecruiterVacantRepository extends JpaRepository<RecruiterVacant
     List<RecruiterVacant> findByRecruiter(String id);
     
     @Query("from RecruiterVacant where id_vacant = ?1")
-    List<RecruiterVacant> findByvacant(int id);
+    List<RecruiterVacant> findByVacantId(int id);
     
 }

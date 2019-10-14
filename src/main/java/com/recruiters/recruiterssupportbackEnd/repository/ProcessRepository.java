@@ -17,7 +17,7 @@ import java.util.Optional;
 public interface ProcessRepository extends JpaRepository<Process, Integer> {
     
     @Query("from Process where id_job_position = ?1")
-    List<Process> findByIdJob(int idJobPosition);
+    List<Process> findByJobPositionId(int idJobPosition);
     
     @Query("from Process where id_job_position = ?1 and name = ?2")
     Optional<Process> findByIdJobAndName(int idJobPosition,String name);

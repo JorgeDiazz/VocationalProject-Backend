@@ -63,7 +63,7 @@ public class SkillController {
 
     @GetMapping("/LocalByJobPosition/{id}")
     public ResponseEntity<List<Skill>> getJobSkillsCompany(@PathVariable int id) throws ExpectationFailedException {
-        List<JobSkill> jobskills = jobSkillRepository.findbyidjob(id);
+        List<JobSkill> jobskills = jobSkillRepository.findbyJobPositionId(id);
         List<Skill> skillsbyjob = new ArrayList<>();
 
         if (!jobskills.isEmpty()) {
