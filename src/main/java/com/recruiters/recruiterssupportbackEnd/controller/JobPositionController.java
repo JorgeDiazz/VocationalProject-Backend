@@ -36,6 +36,7 @@ import com.recruiters.recruiterssupportbackEnd.repository.ProcessRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 /**
@@ -177,7 +178,7 @@ public class JobPositionController {
         return HttpResponseEntity.getOKStatus();
     }
 
-    @PostMapping("job/{id}")
+    @GetMapping("job/{id}")
     public ResponseEntity<ResponseGetSpecificJobPosition> getJobPosition(@PathVariable int id) throws Throwable {
 
         Optional<JobPosition> optJobPosition = jobPositionRepository.findById(id);
