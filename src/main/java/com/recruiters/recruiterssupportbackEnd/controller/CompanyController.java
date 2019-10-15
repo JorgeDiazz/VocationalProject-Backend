@@ -1,5 +1,6 @@
 package com.recruiters.recruiterssupportbackEnd.controller;
 
+import com.recruiters.recruiterssupportbackEnd.controller.exceptions.ConflictException;
 import com.recruiters.recruiterssupportbackEnd.controller.exceptions.ExpectationFailedException;
 import com.recruiters.recruiterssupportbackEnd.controller.exceptions.UnauthorizedException;
 import com.recruiters.recruiterssupportbackEnd.controller.http.HttpResponseEntity;
@@ -34,7 +35,7 @@ public class CompanyController {
     }
 
     @PutMapping("/")
-    public ResponseEntity<UserEntity> updateCompany(@RequestBody CreateCompanyRequest updateCompany) throws UnauthorizedException, ExpectationFailedException {
+    public ResponseEntity<UserEntity> updateCompany(@RequestBody CreateCompanyRequest updateCompany) throws UnauthorizedException, ExpectationFailedException, ConflictException {
 
         String nit = updateCompany.getNit();
 
@@ -46,7 +47,7 @@ public class CompanyController {
             Optional<Company> optCompany2 = companyRepository.findByEmail(email);
 
             if (optCompany2.isPresent()) {
-                throw new UnauthorizedException("email in use");
+                throw new ExpectationFailedException("email in use");
             } else {
 
                 boolean flag=false;
@@ -82,7 +83,7 @@ public class CompanyController {
                 return HttpResponseEntity.getOKStatus(company);
             }
         } else {
-            throw new UnauthorizedException("company doesn't exist");
+            throw new ConflictException("company doesn't exist");
         }
 
     }
@@ -96,13 +97,13 @@ public class CompanyController {
         Optional<Company> optCompany = companyRepository.findByNit(nit);
 
         if (optCompany.isPresent()) { // Si existe envia mensaje de Error
-            throw new UnauthorizedException("company already exist");
+            throw new ConflictException("company already exist");
         } else {
 
             Optional<Company> optCompany2 = companyRepository.findByEmail(email); //Busqueda por correo - No pueden existir 2 personas con el mismo correo
 
             if (optCompany2.isPresent()) { // Si existe envia mensaje de Error
-                throw new UnauthorizedException("email in use");
+                throw new ConflictException("email in use");
             } else {
                 Company company = new Company();
                 company.setNit(newCompany.getNit());

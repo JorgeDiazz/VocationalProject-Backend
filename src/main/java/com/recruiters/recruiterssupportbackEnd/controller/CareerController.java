@@ -1,6 +1,6 @@
 package com.recruiters.recruiterssupportbackEnd.controller;
 
-import com.recruiters.recruiterssupportbackEnd.controller.exceptions.UnauthorizedException;
+import com.recruiters.recruiterssupportbackEnd.controller.exceptions.ConflictException;
 import com.recruiters.recruiterssupportbackEnd.controller.http.HttpResponseEntity;
 import com.recruiters.recruiterssupportbackEnd.controller.request_entities.CreateRequestCareer;
 import com.recruiters.recruiterssupportbackEnd.model.entities.Career;
@@ -43,7 +43,7 @@ public class CareerController {
         Optional<Career> optCareer = careerRepository.findByName(name); //Busqueda por ID
 
         if (optCareer.isPresent()) { // Si existe envia mensaje de Error
-            throw new UnauthorizedException("area already exist");
+            throw new ConflictException("area already exist");
         } else {
 
             Career career = new Career();

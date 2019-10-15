@@ -1,5 +1,6 @@
 package com.recruiters.recruiterssupportbackEnd.controller;
 
+import com.recruiters.recruiterssupportbackEnd.controller.exceptions.ConflictException;
 import com.recruiters.recruiterssupportbackEnd.controller.exceptions.ExpectationFailedException;
 import com.recruiters.recruiterssupportbackEnd.controller.http.HttpResponseEntity;
 import com.recruiters.recruiterssupportbackEnd.controller.request_entities.CreateVacantRequest;
@@ -74,7 +75,7 @@ public class VacantController {
                     recruiterVacantRepository.save(recruiterVacant);
                 }
             } catch (Exception e) {
-                throw new ExpectationFailedException("Any recruiter doesn't exist");
+                throw new ConflictException("Any recruiter doesn't exist");
             }
 
             return HttpResponseEntity.getOKStatus(vacant);
@@ -111,7 +112,7 @@ public class VacantController {
             }
             return HttpResponseEntity.getOKStatus(vacantForPostulantWithoutRelationList);
         } else {
-            throw new ExpectationFailedException("Career doesn't exist on career_job_position data");
+            throw new ConflictException("Career doesn't exist on career_job_position data");
         }
     }
 }

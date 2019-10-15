@@ -1,4 +1,6 @@
 package com.recruiters.recruiterssupportbackEnd.controller.http;
+import com.recruiters.recruiterssupportbackEnd.controller.exceptions.ConflictException;
+import com.recruiters.recruiterssupportbackEnd.controller.exceptions.UnauthorizedException;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -41,8 +43,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 			}
 			chain.doFilter(request, response);
 		} catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException e) {
-			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-			((HttpServletResponse) response).sendError(HttpServletResponse.SC_FORBIDDEN, e.getMessage());
+			new UnauthorizedException("Any recruiter doesn't exist");
 			return;
 		}
 	}	

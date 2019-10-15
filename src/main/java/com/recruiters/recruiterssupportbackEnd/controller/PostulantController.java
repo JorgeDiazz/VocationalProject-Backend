@@ -1,7 +1,7 @@
 package com.recruiters.recruiterssupportbackEnd.controller;
 
+import com.recruiters.recruiterssupportbackEnd.controller.exceptions.ConflictException;
 import com.recruiters.recruiterssupportbackEnd.controller.exceptions.ExpectationFailedException;
-import com.recruiters.recruiterssupportbackEnd.controller.exceptions.UnauthorizedException;
 import com.recruiters.recruiterssupportbackEnd.controller.http.HttpResponseEntity;
 import org.springframework.util.StringUtils;
 import com.recruiters.recruiterssupportbackEnd.controller.request_entities.CreatePostulantRequest;
@@ -45,13 +45,13 @@ public class PostulantController {
         Optional<Person> optPerson = personRepository.findById(id);
 
         if (optPerson.isPresent()) { // Si existe envia mensaje de Error
-            throw new UnauthorizedException("user already exist");
+            throw new ConflictException("user already exist");
         } else {
 
             Optional<Person> optPerson2 = personRepository.findByEmail(email); //Busqueda por correo - No pueden existir 2 personas con el mismo correo
 
             if (optPerson2.isPresent()) { // Si existe envia mensaje de Error
-                throw new UnauthorizedException("email in use");
+                throw new ExpectationFailedException("email in use");
             } else {
                 Postulant postulant = new Postulant();
                 postulant.setType(UserEntity.TYPE.POSTULANT.name());
@@ -84,7 +84,7 @@ public class PostulantController {
         Optional<Person> optPerson = personRepository.findById(id);
 
         if (!optPerson.isPresent()) { // Si existe envia mensaje de Error
-            throw new UnauthorizedException("user doesn't exist");
+            throw new ConflictException("user doesn't exist");
         } else {
 
             Person person = optPerson.get();
@@ -105,7 +105,6 @@ public class PostulantController {
             } catch (Exception e) {
                 throw new ExpectationFailedException("person/postulant data is incorrect");
             }
-
             return HttpResponseEntity.getOKStatus(person);
         }
 

@@ -1,7 +1,7 @@
 package com.recruiters.recruiterssupportbackEnd.controller;
 
-import com.recruiters.recruiterssupportbackEnd.controller.exceptions.UnauthorizedException;
-import static com.recruiters.recruiterssupportbackEnd.controller.http.Constants.INCORRECT_CREDENTIALS;
+import com.recruiters.recruiterssupportbackEnd.controller.exceptions.ConflictException;
+import com.recruiters.recruiterssupportbackEnd.controller.exceptions.ExpectationFailedException;
 import com.recruiters.recruiterssupportbackEnd.controller.http.HttpResponseEntity;
 import com.recruiters.recruiterssupportbackEnd.controller.http.ResponseUtils;
 import com.recruiters.recruiterssupportbackEnd.controller.request_entities.LoginRequest;
@@ -51,8 +51,8 @@ public class LoginController {
                 Person person = optPerson.get();
                 if (person.getPassword().equals(password)) {
                     if (person.getType().equals("RECRUITER")) {
-                        Optional<Company> optCompany = companyRepository.findByNit(person.getNitCompany());                  
-                        CreateResponseRecruiterLogin sendreruiter = new CreateResponseRecruiterLogin(person.getId(), person.getName(), person.getEmail(),"http:cualquierurl.com", person.getNitCompany(), optCompany.get().getName(),person.getType());
+                        Optional<Company> optCompany = companyRepository.findByNit(person.getNitCompany());
+                        CreateResponseRecruiterLogin sendreruiter = new CreateResponseRecruiterLogin(person.getId(), person.getName(), person.getEmail(), "http:cualquierurl.com", person.getNitCompany(), optCompany.get().getName(), person.getType());
                         return HttpResponseEntity.getOKStatus(sendreruiter, ResponseUtils.getJWTToken(person));
                     } else {
                         if (person.getType().equals("POSTULANT")) {
@@ -61,15 +61,18 @@ public class LoginController {
                             for (CareerP carrerp : listcarreerp) {
                                 ids.add(carrerp.getIdCareer());
                             }
-                            CreateResponsePostulantLogin sendpostulant = new CreateResponsePostulantLogin(person.getId(), person.getName(), person.getEmail(),"http:cualquierurl.com", ids,person.getType());
+                            CreateResponsePostulantLogin sendpostulant = new CreateResponsePostulantLogin(person.getId(), person.getName(), person.getEmail(), "http:cualquierurl.com", ids, person.getType());
                             return HttpResponseEntity.getOKStatus(sendpostulant, ResponseUtils.getJWTToken(person));
                         } else {
-                            throw new UnauthorizedException("algo raro paso");
+                            throw new ConflictException("The person has no defined role.");
                         }
                     }
+                } else {
+                    throw new ExpectationFailedException("Password is incorrect.");
                 }
+
             } else {
-                throw new UnauthorizedException(INCORRECT_CREDENTIALS);
+                throw new ConflictException("Username does not exist");
             }
         } catch (Exception e) {
         }
@@ -86,6 +89,6 @@ public class LoginController {
             }
         } catch (Exception e) {
         }
-        throw new UnauthorizedException("error imprevisto");
+        throw new ConflictException("wrong data objects.");
     }
 }
