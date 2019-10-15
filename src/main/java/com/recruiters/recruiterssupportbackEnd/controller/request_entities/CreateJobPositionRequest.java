@@ -11,7 +11,7 @@ public class CreateJobPositionRequest {
     private double salaryMin;
     private double salaryMax;
     private String description;
-    private String idArea;
+    private int idArea;
     private int[] careersId;
     private String[] newCareersName;
     private int[] hardSkillsId;
@@ -60,11 +60,11 @@ public class CreateJobPositionRequest {
         this.description = description;
     }
 
-    public String getIdArea() {
+    public int getIdArea() {
         return idArea;
     }
 
-    public void setIdArea(String idArea) {
+    public void setIdArea(int idArea) {
         this.idArea = idArea;
     }
 

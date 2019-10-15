@@ -6,6 +6,7 @@ import com.recruiters.recruiterssupportbackEnd.controller.http.HttpResponseEntit
 import com.recruiters.recruiterssupportbackEnd.controller.request_entities.CreateJobPositionRequest;
 import com.recruiters.recruiterssupportbackEnd.controller.response_entities.ResponseGetJobPositionByNit;
 import com.recruiters.recruiterssupportbackEnd.controller.response_entities.ResponseGetSpecificJobPosition;
+import com.recruiters.recruiterssupportbackEnd.model.entities.Area;
 import com.recruiters.recruiterssupportbackEnd.model.entities.Career;
 import com.recruiters.recruiterssupportbackEnd.model.entities.CareerJobPosition;
 import com.recruiters.recruiterssupportbackEnd.model.entities.JobPosition;
@@ -30,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.recruiters.recruiterssupportbackEnd.model.entities.Process;
+import com.recruiters.recruiterssupportbackEnd.repository.AreaRepository;
 import com.recruiters.recruiterssupportbackEnd.repository.PersonRepository;
 import com.recruiters.recruiterssupportbackEnd.repository.PostulantRvRepository;
 import com.recruiters.recruiterssupportbackEnd.repository.ProcessRepository;
@@ -57,9 +59,10 @@ public class JobPositionController {
     private final ProcessRepository processRepository;
     private final PersonRepository personRepository;
     private final PostulantRvRepository postulantRvRepository;
+    private final AreaRepository areaRepository;
 
     @Autowired
-    public JobPositionController(JobPositionRepository jobPositionRepository, CareerJobPositionRepository careerJobPositionRepository, CareerRepository careerRepository, SkillRepository skillRepository, JobSkillRepository jobSkillRepository, VacantRepository vacantRepository, RecruiterVacantRepository recruiterVacantRepository, ProcessRepository processRepository, PersonRepository personRepository, PostulantRvRepository postulantRvRepository) {
+    public JobPositionController(JobPositionRepository jobPositionRepository, CareerJobPositionRepository careerJobPositionRepository, CareerRepository careerRepository, SkillRepository skillRepository, JobSkillRepository jobSkillRepository, VacantRepository vacantRepository, RecruiterVacantRepository recruiterVacantRepository, ProcessRepository processRepository, PersonRepository personRepository, PostulantRvRepository postulantRvRepository, AreaRepository areaRepository) {
         this.jobPositionRepository = jobPositionRepository;
         this.careerJobPositionRepository = careerJobPositionRepository;
         this.careerRepository = careerRepository;
@@ -70,6 +73,7 @@ public class JobPositionController {
         this.processRepository = processRepository;
         this.personRepository = personRepository;
         this.postulantRvRepository = postulantRvRepository;
+        this.areaRepository = areaRepository;
     }
 
     @PostMapping("/")
@@ -223,6 +227,13 @@ public class JobPositionController {
             responseGetSpecificJobPosition.setSalaryMin(jobPosition.getSalaryMin());
             responseGetSpecificJobPosition.setSalaryMax(jobPosition.getSalaryMax());
             responseGetSpecificJobPosition.setDescription(jobPosition.getDescription());
+
+            // set area
+            Optional<Area> optArea = areaRepository.findById(jobPosition.getIdArea());
+            Area area = optArea.get();
+
+            responseGetSpecificJobPosition.setIdArea(area.getId());
+            responseGetSpecificJobPosition.setNameArea(area.getName());
 
             // set careers
             List<ResponseGetSpecificJobPosition.Career> careerList = new ArrayList<>();

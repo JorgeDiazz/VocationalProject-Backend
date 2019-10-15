@@ -24,11 +24,29 @@ public class ResponseGetSpecificJobPosition {
     private Double salaryMax;
     @Column(name = "description")
     private String description;
+    private int idArea;
+    private String nameArea;
     private List<Career> careers;
     private List<Skill> softSkills;
     private List<Skill> hardSkills;
     private List<Process> processes;
     private List<Vacant> vacants;
+
+    public int getIdArea() {
+        return idArea;
+    }
+
+    public void setIdArea(int idArea) {
+        this.idArea = idArea;
+    }
+
+    public String getNameArea() {
+        return nameArea;
+    }
+
+    public void setNameArea(String nameArea) {
+        this.nameArea = nameArea;
+    }
 
     public int getId() {
         return id;
