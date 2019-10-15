@@ -13,4 +13,7 @@ public interface CareerJobPositionRepository extends JpaRepository<CareerJobPosi
 
     @Query("from CareerJobPosition where id_career = ?1")
     List<CareerJobPosition> findByCareerId(int idCareer);
+    
+    @Query("from CareerJobPosition where id_job_position = ?1")
+    List<CareerJobPosition> findByJobPositionId(int idJobPosition);
 }

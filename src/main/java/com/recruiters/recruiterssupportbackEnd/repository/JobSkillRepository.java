@@ -20,6 +20,6 @@ public interface JobSkillRepository extends JpaRepository<JobSkill, String>{
     List<JobSkill> findbyidskill(int id);
     
     @Query("from JobSkill where id_job_position = ?1")
-    List<JobSkill> findbyidjob(int id);
+    List<JobSkill> findbyJobPositionId(int id);
     
 }

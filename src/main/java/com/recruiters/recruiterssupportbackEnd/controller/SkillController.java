@@ -46,9 +46,9 @@ public class SkillController {
         this.jobPositionRepository = jobPositionRepository;
     }
 
-    @GetMapping("/Soft")
-    public ResponseEntity<List<Skill>> getSoftSkills() {
-        return HttpResponseEntity.getOKStatus(skillRepository.findAllSoft());
+    @GetMapping("/Soft/{nit}")
+    public ResponseEntity<List<Skill>> getSoftSkills(@PathVariable String nit) {
+        return HttpResponseEntity.getOKStatus(skillRepository.findAllSoft(nit));
     }
 
     @GetMapping("/Hard")
@@ -58,24 +58,13 @@ public class SkillController {
 
 
     @GetMapping("/GlobalByCompany/{nit}")
-    public ResponseEntity<List<Skill>> getGlobalSkillsCompany(@PathVariable String nit) throws ExpectationFailedException {
-        List<GlobalSkill> companyskills = globalSkillRepository.findGlobalCompany(nit);
-        List<Skill> skillsbycompany = new ArrayList<>();
-
-        if (!companyskills.isEmpty()) {
-            for (GlobalSkill myskill : companyskills) {
-                Optional<Skill> insert = skillRepository.findById(myskill.getIdSkill());
-                skillsbycompany.add(insert.get());
-            }
-        } else {
-            throw new ExpectationFailedException("there are no skills for this company");
-        }
-        return HttpResponseEntity.getOKStatus(skillsbycompany);
+    public ResponseEntity<List<Skill>> getGlobalSkillsCompany(@PathVariable String nit) {
+        return HttpResponseEntity.getOKStatus(skillRepository.findAllGlobal(nit));
     }
 
     @GetMapping("/LocalByJobPosition/{id}")
     public ResponseEntity<List<Skill>> getJobSkillsCompany(@PathVariable int id) throws ExpectationFailedException {
-        List<JobSkill> jobskills = jobSkillRepository.findbyidjob(id);
+        List<JobSkill> jobskills = jobSkillRepository.findbyJobPositionId(id);
         List<Skill> skillsbyjob = new ArrayList<>();
 
         if (!jobskills.isEmpty()) {

@@ -67,7 +67,7 @@ public class VacantController {
             }
             try {
                 RecruiterVacant recruiterVacant;
-                for (String idRecruiter : newVacant.getPostulantsId()) {
+                for (String idRecruiter : newVacant.getRecruitersId()) {
                     recruiterVacant = new RecruiterVacant();
                     recruiterVacant.setIdPerson(idRecruiter);
                     recruiterVacant.setIdVacant(vacant.getId());
