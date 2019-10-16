@@ -102,7 +102,7 @@ public class RecruiterController {
 
         String id = createRequestRecruiter.getId();
         String email = createRequestRecruiter.getEmail();
-        String nit = createRequestRecruiter.getNit();
+        String nit = createRequestRecruiter.getNitCompany();
 
         if (personRepository.existsById(id)) { // Si existe envia mensaje de Error
             throw new ConflictException("user already exist");
