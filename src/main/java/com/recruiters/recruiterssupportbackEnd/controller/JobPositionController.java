@@ -149,6 +149,7 @@ public class JobPositionController {
             JobSkill jobSkill;
             for (int newHardSkillId : newHardSkills) {
                 jobSkill = new JobSkill();
+                jobSkill.setId(jobPosition.getId(), newHardSkillId);
                 jobSkill.setIdJob(jobPosition.getId());
                 jobSkill.setIdSkill(newHardSkillId);
                 jobSkillRepository.save(jobSkill);
