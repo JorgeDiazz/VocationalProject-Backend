@@ -122,7 +122,7 @@ public class SkillController {
     @PostMapping("/CreateLocal")
     public ResponseEntity<JobSkill> createLocalSkill(@RequestBody JobSkill createRequestSkill) throws Throwable {
 
-        createRequestSkill.setId(String.valueOf(createRequestSkill.getIdJob()), String.valueOf(createRequestSkill.getIdSkill()));
+        createRequestSkill.setId(createRequestSkill.getIdJob(), createRequestSkill.getIdSkill());
 
         Optional<Skill> optSkill = skillRepository.findById(createRequestSkill.getIdSkill()); //Busqueda por ID
 

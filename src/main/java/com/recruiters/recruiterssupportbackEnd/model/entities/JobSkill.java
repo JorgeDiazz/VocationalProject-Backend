@@ -9,7 +9,6 @@ import javax.persistence.Table;
  *
  * @author katemorales
  */
-
 @Entity
 @Table(name = "jb_skill")
 public class JobSkill implements UserEntity {
@@ -25,8 +24,8 @@ public class JobSkill implements UserEntity {
         return id;
     }
 
-    public void setId(String idJob, String idSkill) {
-        this.id = idJob + idSkill;
+    public void setId(int idJob, int idSkill) {
+        this.id = idJob + " " + idSkill;
     }
 
     public int getIdJob() {
