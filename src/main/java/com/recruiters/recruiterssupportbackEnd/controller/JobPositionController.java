@@ -192,19 +192,24 @@ public class JobPositionController {
 
         if (jobPositionList != null) {
             for (JobPosition jobPosition : jobPositionList) {
+
+                ResponseGetJobPositionByNit respJobPosition = new ResponseGetJobPositionByNit();
+                respJobPosition.setIdJobPosition(jobPosition.getId());
+                respJobPosition.setName(jobPosition.getName());
+                respJobPosition.setSalaryMax(jobPosition.getSalaryMax());
+                respJobPosition.setSalaryMin(jobPosition.getSalaryMin());
+
                 List<Vacant> vacants = vacantRepository.findByJobPositionId(jobPosition.getId());
                 for (Vacant vacant : vacants) {
                     if (vacant.getPlacesNumber() > 0) {
-                        ResponseGetJobPositionByNit respJobPosition = new ResponseGetJobPositionByNit();
-                        respJobPosition.setIdJobPosition(jobPosition.getId());
-                        respJobPosition.setIdVacant(vacant.getId());
-                        respJobPosition.setName(jobPosition.getName());
-                        respJobPosition.setPlacesNumber(vacant.getPlacesNumber());
-                        respJobPosition.setSalaryMax(jobPosition.getSalaryMax());
-                        respJobPosition.setSalaryMin(jobPosition.getSalaryMin());
-                        response.add(respJobPosition);
+                        ResponseGetJobPositionByNit.Vacant newVacant = new ResponseGetJobPositionByNit.Vacant();
+                        newVacant.setId(vacant.getId());
+                        newVacant.setPlacesNumber(vacant.getPlacesNumber());
+                        respJobPosition.getVacants().add(newVacant);
                     }
                 }
+
+                response.add(respJobPosition);
             }
         } else {
             throw new ConflictException("Job position isn't present");
