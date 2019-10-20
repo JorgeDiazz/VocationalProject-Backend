@@ -55,7 +55,7 @@ public class LoginController {
                         CreateResponseRecruiterLogin sendreruiter = new CreateResponseRecruiterLogin(person.getId(), person.getName(), person.getEmail(), "http:cualquierurl.com", person.getNitCompany(), optCompany.get().getName(), person.getType());
                         return HttpResponseEntity.getOKStatus(sendreruiter, ResponseUtils.getJWTToken(person));
                     } else {
-                        if (person.getType().equals("POSTULANT")) {
+                        if (person.getType().equals("POSTULANT")){
                             List<CareerP> listcarreerp = careerPersonRepository.findByIdPersonforlist(person.getId());
                             List ids = new ArrayList();
                             for (CareerP carrerp : listcarreerp) {
