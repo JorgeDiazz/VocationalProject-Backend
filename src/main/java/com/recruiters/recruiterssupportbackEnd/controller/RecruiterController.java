@@ -1,5 +1,6 @@
 package com.recruiters.recruiterssupportbackEnd.controller;
 
+import com.recruiters.recruiterssupportbackEnd.controller.exceptions.ConflictException;
 import com.recruiters.recruiterssupportbackEnd.controller.exceptions.ExpectationFailedException;
 import com.recruiters.recruiterssupportbackEnd.controller.exceptions.UnauthorizedException;
 import com.recruiters.recruiterssupportbackEnd.controller.http.HttpResponseEntity;
@@ -52,7 +53,7 @@ public class RecruiterController {
     }
 
     @PutMapping("/")
-    public ResponseEntity<Person> updateRecruiter(@RequestBody UpdateRequestRecruiter updateRequestRecruiter) throws UnauthorizedException, ExpectationFailedException {
+    public ResponseEntity<Person> updateRecruiter(@RequestBody UpdateRequestRecruiter updateRequestRecruiter) throws UnauthorizedException, ExpectationFailedException, ConflictException {
 
         String id = updateRequestRecruiter.getId();
         String name = updateRequestRecruiter.getName();
@@ -72,7 +73,7 @@ public class RecruiterController {
             if (email != null && !email.isEmpty()) {
 
                 if (personRepository.findByEmail(email).isPresent()) {
-                    throw new UnauthorizedException("email in use");
+                    throw new ExpectationFailedException("email in use");
                 } else {
                     newPerson.setEmail(email);
                 }
@@ -91,7 +92,7 @@ public class RecruiterController {
             return HttpResponseEntity.getOKStatus(newPerson);
 
         } else {
-            throw new UnauthorizedException("recruiter doesn't exist");
+            throw new ExpectationFailedException("recruiter doesn't exist");
         }
 
     }
@@ -101,14 +102,14 @@ public class RecruiterController {
 
         String id = createRequestRecruiter.getId();
         String email = createRequestRecruiter.getEmail();
-        String nit = createRequestRecruiter.getNit();
+        String nit = createRequestRecruiter.getNitCompany();
 
         if (personRepository.existsById(id)) { // Si existe envia mensaje de Error
-            throw new UnauthorizedException("user already exist");
+            throw new ConflictException("user already exist");
         } else {
 
             if (personRepository.findByEmail(email).isPresent()) {
-                throw new UnauthorizedException("email in use");
+                throw new ExpectationFailedException("email in use");
             } else {
                 Person recruiter = new Person();
                 recruiter.setNitCompany(nit);
@@ -130,7 +131,7 @@ public class RecruiterController {
     }
 
     @GetMapping("/recruiter/{nit}")
-    public ResponseEntity<List<CreateResponseRecruitersByCompany>> getAllRecruiterByComany(@PathVariable String nit) throws ExpectationFailedException, UnauthorizedException {
+    public ResponseEntity<List<CreateResponseRecruitersByCompany>> getAllRecruiterByComanpy(@PathVariable String nit) throws ExpectationFailedException, UnauthorizedException, ConflictException {
 
         List<Person> reclutadores = personRepository.findByNit(nit);
         if (!reclutadores.isEmpty()) {
@@ -153,6 +154,7 @@ public class RecruiterController {
                         }
                     }
                 } catch (Exception e) {
+                     throw new ConflictException("company dosen't have recluiters");
                 }
 
                 CreateResponseRecruitersByCompany newrecru = new CreateResponseRecruitersByCompany(recluiter.getId(), recluiter.getName(), vacantcount, postulantcount);
@@ -161,7 +163,7 @@ public class RecruiterController {
             }
             return HttpResponseEntity.getOKStatus(recluiterBycompanylist);
         } else {
-            throw new ExpectationFailedException("there are no recruiters in the database");
+            throw new ConflictException("there are no recruiters in the database");
         }
 
     }

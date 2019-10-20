@@ -5,7 +5,7 @@
  */
 package com.recruiters.recruiterssupportbackEnd.controller;
 
-import com.recruiters.recruiterssupportbackEnd.controller.exceptions.UnauthorizedException;
+import com.recruiters.recruiterssupportbackEnd.controller.exceptions.ConflictException;
 import com.recruiters.recruiterssupportbackEnd.controller.http.HttpResponseEntity;
 import com.recruiters.recruiterssupportbackEnd.controller.request_entities.CreateRequestProcess;
 import java.util.List;
@@ -50,7 +50,7 @@ public class ProcessController {
         Optional<Process> optArea = processRepository.findByIdJobAndName(idJob, name); //Busqueda por ID
 
         if (optArea.isPresent()) { // Si existe envia mensaje de Error
-            throw new UnauthorizedException("process already exist");
+            throw new ConflictException("process already exist");
         } else {
 
             Process process = new Process();

@@ -11,16 +11,16 @@ package com.recruiters.recruiterssupportbackEnd.controller.request_entities;
  */
 public class CreateRequestRecruiter {
     
-    private String nit;
+    private String nitCompany;
     private String email;
     private String id;
 
-    public String getNit() {
-        return nit;
+    public String getNitCompany() {
+        return nitCompany;
     }
 
-    public void setNit(String nit) {
-        this.nit = nit;
+    public void setNitCompany(String nit) {
+        this.nitCompany = nit;
     }
 
     public String getEmail() {

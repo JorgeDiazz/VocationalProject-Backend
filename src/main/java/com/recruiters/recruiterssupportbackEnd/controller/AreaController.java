@@ -5,7 +5,7 @@
  */
 package com.recruiters.recruiterssupportbackEnd.controller;
 
-import com.recruiters.recruiterssupportbackEnd.controller.exceptions.UnauthorizedException;
+import com.recruiters.recruiterssupportbackEnd.controller.exceptions.ConflictException;
 import com.recruiters.recruiterssupportbackEnd.controller.http.HttpResponseEntity;
 import com.recruiters.recruiterssupportbackEnd.controller.request_entities.CreateRequestArea;
 import com.recruiters.recruiterssupportbackEnd.model.entities.Area;
@@ -50,7 +50,7 @@ public class AreaController {
         Optional<Area> optArea = areaRepository.findByNitAndName(nitCompany, name); //Busqueda por ID
 
         if (optArea.isPresent()) { // Si existe envia mensaje de Error
-            throw new UnauthorizedException("area already exist");
+            throw new ConflictException("area already exist");
         } else {
 
             Area area = new Area();

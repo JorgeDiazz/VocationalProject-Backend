@@ -1,7 +1,7 @@
 package com.recruiters.recruiterssupportbackEnd.controller;
 
+import com.recruiters.recruiterssupportbackEnd.controller.exceptions.ConflictException;
 import com.recruiters.recruiterssupportbackEnd.controller.exceptions.ExpectationFailedException;
-import com.recruiters.recruiterssupportbackEnd.controller.exceptions.UnauthorizedException;
 import com.recruiters.recruiterssupportbackEnd.controller.http.HttpResponseEntity;
 import com.recruiters.recruiterssupportbackEnd.controller.request_entities.CreateRequestChangeTypeSkill;
 import com.recruiters.recruiterssupportbackEnd.model.entities.Company;
@@ -56,13 +56,14 @@ public class SkillController {
         return HttpResponseEntity.getOKStatus(skillRepository.findAllHard());
     }
 
+
     @GetMapping("/GlobalByCompany/{nit}")
     public ResponseEntity<List<Skill>> getGlobalSkillsCompany(@PathVariable String nit) {
         return HttpResponseEntity.getOKStatus(skillRepository.findAllGlobal(nit));
     }
 
     @GetMapping("/LocalByJobPosition/{id}")
-    public ResponseEntity<List<Skill>> getJobSkillsCompany(@PathVariable int id) throws ExpectationFailedException {
+    public ResponseEntity<List<Skill>> getJobSkillsCompany(@PathVariable int id) throws ExpectationFailedException, ConflictException {
         List<JobSkill> jobskills = jobSkillRepository.findbyJobPositionId(id);
         List<Skill> skillsbyjob = new ArrayList<>();
 
@@ -72,19 +73,19 @@ public class SkillController {
                 skillsbyjob.add(insert.get());
             }
         } else {
-            throw new ExpectationFailedException("there are no skills for this job");
+            throw new ConflictException("there are no skills for this job");
         }
         return HttpResponseEntity.getOKStatus(skillsbyjob);
     }
 
-    @PostMapping("/register")
+    @PostMapping("/")
     public ResponseEntity<Skill> createSkill(@RequestBody Skill createRequestSkill) throws Throwable {
         String name = createRequestSkill.getName();
 
         Optional<Skill> optSkill = skillRepository.findByName(name); //Busqueda por name
 
         if (optSkill.isPresent()) { // Si existe envia mensaje de Error
-            throw new UnauthorizedException("skill already exist");
+            throw new ExpectationFailedException("skill already exist");
         } else {
             skillRepository.save(createRequestSkill);
             return HttpResponseEntity.getOKStatus(createRequestSkill);
@@ -100,17 +101,17 @@ public class SkillController {
         Optional<Skill> optSkill = skillRepository.findById(createRequestSkill.getIdSkill()); //Busqueda por ID
 
         if (optSkill.isPresent()) { // Si existe envia mensaje de Error
-            throw new UnauthorizedException("skill doesn't exist");
+            throw new ConflictException("skill doesn't exist");
         } else {
 
             Optional<Company> optCompany = companyRepository.findById(createRequestSkill.getNit()); //Busqueda por ID
             if (optCompany.isPresent()) { // Si existe envia mensaje de Error
-                throw new UnauthorizedException("Company doesn't exist");
+                throw new ConflictException("Company doesn't exist");
             } else {
 
                 Optional<GlobalSkill> optGlobalSkill = globalSkillRepository.findById(createRequestSkill.getId()); //Busqueda por ID
                 if (optGlobalSkill.isPresent()) { // Si existe envia mensaje de Error
-                    throw new UnauthorizedException("skill already exist");
+                    throw new ConflictException("skill already exist");
                 } else {
                     globalSkillRepository.save(createRequestSkill);
                     return HttpResponseEntity.getOKStatus(createRequestSkill);
@@ -127,17 +128,17 @@ public class SkillController {
         Optional<Skill> optSkill = skillRepository.findById(createRequestSkill.getIdSkill()); //Busqueda por ID
 
         if (optSkill.isPresent()) { // Si existe envia mensaje de Error
-            throw new UnauthorizedException("skill doesn't exist");
+            throw new ConflictException("skill doesn't exist");
         } else {
 
             Optional<JobPosition> optJob = jobPositionRepository.findById(createRequestSkill.getIdJob()); //Busqueda por ID
             if (optJob.isPresent()) { // Si existe envia mensaje de Error
-                throw new UnauthorizedException("Job doesn't exist");
+                throw new ConflictException("Job doesn't exist");
             } else {
 
                 Optional<JobSkill> optLocalSkill = jobSkillRepository.findById(createRequestSkill.getId()); //Busqueda por ID
                 if (optLocalSkill.isPresent()) { // Si existe envia mensaje de Error
-                    throw new UnauthorizedException("skill already exist");
+                    throw new ConflictException("skill already exist");
                 } else {
                     jobSkillRepository.save(createRequestSkill);
                     return HttpResponseEntity.getOKStatus(createRequestSkill);
@@ -147,7 +148,7 @@ public class SkillController {
     }
 
     @PutMapping("/")
-    public ResponseEntity<Object> changeTypeSkill(@RequestBody CreateRequestChangeTypeSkill createRequestChangeTypeSkill) throws ExpectationFailedException {
+    public ResponseEntity<Object> changeTypeSkill(@RequestBody CreateRequestChangeTypeSkill createRequestChangeTypeSkill) throws ExpectationFailedException, ConflictException {
 
         String nitCompany = createRequestChangeTypeSkill.getNitCompany();
         Optional<Company> company = companyRepository.findById(nitCompany);
@@ -182,7 +183,7 @@ public class SkillController {
                         try {
                             globalSkillRepository.deleteById(nitCompany + String.valueOf(id));
                         } catch (Exception e) {
-                            throw new ExpectationFailedException("GlobalSkill doesn't exist");
+                            throw new ConflictException("GlobalSkill doesn't exist");
                         }
 
                         return HttpResponseEntity.getOKStatus();
@@ -193,11 +194,11 @@ public class SkillController {
                 }
 
             } else {
-                throw new ExpectationFailedException("Skill doesn't exist");
+                throw new ConflictException("Skill doesn't exist");
             }
 
         } else {
-            throw new ExpectationFailedException("Company doesn't exist");
+            throw new ConflictException("Company doesn't exist");
         }
     }
 }
