@@ -9,6 +9,7 @@ import com.recruiters.recruiterssupportbackEnd.model.entities.JobPosition;
 import com.recruiters.recruiterssupportbackEnd.model.entities.RecruiterVacant;
 import com.recruiters.recruiterssupportbackEnd.model.entities.Vacant;
 import com.recruiters.recruiterssupportbackEnd.controller.response_entities.VacantForPostulantWithoutRelation;
+import com.recruiters.recruiterssupportbackEnd.controller.response_entities.VacantPending;
 import com.recruiters.recruiterssupportbackEnd.repository.CareerJobPositionRepository;
 import com.recruiters.recruiterssupportbackEnd.repository.JobPositionRepository;
 import com.recruiters.recruiterssupportbackEnd.repository.RecruiterVacantRepository;
@@ -16,6 +17,7 @@ import com.recruiters.recruiterssupportbackEnd.repository.VacantRepository;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,40 +48,80 @@ public class VacantController {
         this.jobPositionRepository = jobPositionRepository;
     }
 
-    @GetMapping("/")
-    public ResponseEntity<List<Vacant>> getAllVacantByJobPosition(@PathVariable int id){
+    @GetMapping("/{id}")
+    public ResponseEntity<List<Vacant>> getAllVacantByJobPosition(@PathVariable int id) {
         return HttpResponseEntity.getOKStatus(vacantRepository.findByJobPositionId(id));
     }
-    
+
+    @GetMapping("/pending/{id}")
+    public ResponseEntity<List<VacantPending>> getAllVacantPending(@PathVariable String id) throws ConflictException, ExpectationFailedException {
+
+        List<RecruiterVacant> opt = recruiterVacantRepository.findByRecruiter(id);
+
+        if (!opt.isEmpty()) {
+
+            List<VacantPending> listVacantPending = new ArrayList<>();
+
+            for (int i = 0; i < opt.size(); i++) {
+
+                int idVacant = opt.get(i).getIdVacant();
+
+                Vacant vacant = vacantRepository.findById(idVacant).get();
+                int idJob = vacant.getNitJobPosition();
+
+                JobPosition jobPosition = jobPositionRepository.findById(idJob).get();
+                String nameJobPosition = jobPosition.getName();
+
+                try {
+                    VacantPending vacantPending = new VacantPending();
+                    vacantPending.setId(idVacant);
+                    vacantPending.setJobPositionName(nameJobPosition);
+                    vacantPending.setRecruitersNumber(recruiterVacantRepository.numRecuitersVacant(idVacant));
+                    vacantPending.setStartDate(vacant.getStartDate().getTime());
+                    vacantPending.setPlacesNumber(vacant.getPlacesNumber());
+                    listVacantPending.add(vacantPending);
+                } catch (Exception e) {
+                    throw new ExpectationFailedException("Vacant Pending data is incorrect");
+                }
+
+            }
+            
+            return HttpResponseEntity.getOKStatus(listVacantPending);
+            
+        }else{
+            throw new ConflictException("Any Vacant Pending doesn't exist");
+        }       
+    }
+
     @PostMapping("/")
     public ResponseEntity<Vacant> createVacant(@RequestBody CreateVacantRequest newVacant) throws Throwable {
 
-            Vacant vacant = new Vacant();
-            vacant.setPlacesNumber(newVacant.getPlacesNumber());
-            vacant.setIdJobPosition(newVacant.getIdJobPosition());
+        Vacant vacant = new Vacant();
+        vacant.setPlacesNumber(newVacant.getPlacesNumber());
+        vacant.setIdJobPosition(newVacant.getIdJobPosition());
 
-            Date date = new Date(System.currentTimeMillis());
-            vacant.setStartDate(date);
+        Date date = new Date(System.currentTimeMillis());
+        vacant.setStartDate(date);
 
-            try {
-                vacantRepository.save(vacant);
-            } catch (Exception e) {
-                throw new ExpectationFailedException("Vacant data is incorrect");
+        try {
+            vacantRepository.save(vacant);
+        } catch (Exception e) {
+            throw new ExpectationFailedException("Vacant data is incorrect");
+        }
+        try {
+            RecruiterVacant recruiterVacant;
+            for (String idRecruiter : newVacant.getRecruitersId()) {
+                recruiterVacant = new RecruiterVacant();
+                recruiterVacant.setIdPerson(idRecruiter);
+                recruiterVacant.setIdVacant(vacant.getId());
+                recruiterVacantRepository.save(recruiterVacant);
             }
-            try {
-                RecruiterVacant recruiterVacant;
-                for (String idRecruiter : newVacant.getRecruitersId()) {
-                    recruiterVacant = new RecruiterVacant();
-                    recruiterVacant.setIdPerson(idRecruiter);
-                    recruiterVacant.setIdVacant(vacant.getId());
-                    recruiterVacantRepository.save(recruiterVacant);
-                }
-            } catch (Exception e) {
-                throw new ConflictException("Any recruiter doesn't exist");
-            }
+        } catch (Exception e) {
+            throw new ConflictException("Any recruiter doesn't exist");
+        }
 
-            return HttpResponseEntity.getOKStatus(vacant);
-        
+        return HttpResponseEntity.getOKStatus(vacant);
+
     }
 
     @GetMapping("/withoutRelation/{id_career}")

@@ -20,4 +20,7 @@ public interface RecruiterVacantRepository extends JpaRepository<RecruiterVacant
     @Query("from RecruiterVacant where id_vacant = ?1")
     List<RecruiterVacant> findByVacantId(int id);
     
+    @Query(nativeQuery = true,value="select COUNT(*) AS numRecruiters FROM recruiter_vacant where id_vacant = ?1")
+    int numRecuitersVacant(int id);
+    
 }
