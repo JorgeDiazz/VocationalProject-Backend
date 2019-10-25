@@ -48,7 +48,7 @@ public class SkillController {
 
     @GetMapping("/Soft/{nit}")
     public ResponseEntity<List<Skill>> getSoftSkills(@PathVariable String nit) {
-        return HttpResponseEntity.getOKStatus(skillRepository.findAllSoft(nit));
+        return HttpResponseEntity.getOKStatus(skillRepository.findAllSoftByNit(nit));
     }
 
     @GetMapping("/Hard")

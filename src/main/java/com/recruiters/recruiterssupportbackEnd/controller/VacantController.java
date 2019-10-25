@@ -4,6 +4,7 @@ import com.recruiters.recruiterssupportbackEnd.controller.exceptions.ConflictExc
 import com.recruiters.recruiterssupportbackEnd.controller.exceptions.ExpectationFailedException;
 import com.recruiters.recruiterssupportbackEnd.controller.http.HttpResponseEntity;
 import com.recruiters.recruiterssupportbackEnd.controller.request_entities.CreateVacantRequest;
+import com.recruiters.recruiterssupportbackEnd.controller.response_entities.VacantByCareer;
 import com.recruiters.recruiterssupportbackEnd.model.entities.CareerJobPosition;
 import com.recruiters.recruiterssupportbackEnd.model.entities.JobPosition;
 import com.recruiters.recruiterssupportbackEnd.model.entities.RecruiterVacant;
@@ -17,7 +18,7 @@ import com.recruiters.recruiterssupportbackEnd.repository.VacantRepository;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,12 +26,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import com.recruiters.recruiterssupportbackEnd.ResponseEntitiesRepository.VacantPendingRepository;
 
 /**
  *
  * @author JorgeDíaz
  */
+
 @RestController
 @RequestMapping("/vacant")
 public class VacantController {
@@ -39,18 +43,41 @@ public class VacantController {
     private final RecruiterVacantRepository recruiterVacantRepository;
     private final CareerJobPositionRepository careerJobPositionRepository;
     private final JobPositionRepository jobPositionRepository;
+    private final VacantPendingRepository vacantPendingRepository;
 
     @Autowired
-    public VacantController(VacantRepository vacantRepository, RecruiterVacantRepository recruiterVacantRepository, CareerJobPositionRepository careerJobPositionRepository, JobPositionRepository jobPositionRepository) {
+    public VacantController(VacantRepository vacantRepository, RecruiterVacantRepository recruiterVacantRepository, CareerJobPositionRepository careerJobPositionRepository, JobPositionRepository jobPositionRepository, VacantPendingRepository vacantPendingRepository) {
         this.vacantRepository = vacantRepository;
         this.recruiterVacantRepository = recruiterVacantRepository;
         this.careerJobPositionRepository = careerJobPositionRepository;
         this.jobPositionRepository = jobPositionRepository;
+        this.vacantPendingRepository = vacantPendingRepository;
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<List<Vacant>> getAllVacantByJobPosition(@PathVariable int id) {
         return HttpResponseEntity.getOKStatus(vacantRepository.findByJobPositionId(id));
+    }
+
+    @GetMapping("/forPostulant/")
+    public ResponseEntity<List<VacantByCareer>> getAllVacantsCareers(@RequestParam List<String> careers) {
+
+        List<Integer> listCareers = careers.stream().map(Integer::valueOf).collect(Collectors.toList());
+        List<VacantByCareer> listVacants = new ArrayList<>();
+
+        for (int i = 0; i < listCareers.size(); i++) {
+
+            List<VacantByCareer> vacantsByCareers = vacantPendingRepository.findAllVacantsByCareer(listCareers.get(i));
+       
+            if (!vacantsByCareers.isEmpty()) {
+                
+                for (int j = 0; j < vacantsByCareers.size(); j++) {
+                    listVacants.add(vacantsByCareers.get(j));
+                }
+            }
+        }
+
+        return HttpResponseEntity.getOKStatus(listVacants);
     }
 
     @GetMapping("/pending/{id}")
@@ -77,7 +104,7 @@ public class VacantController {
                     vacantPending.setId(idVacant);
                     vacantPending.setJobPositionName(nameJobPosition);
                     vacantPending.setRecruitersNumber(recruiterVacantRepository.numRecuitersVacant(idVacant));
-                    vacantPending.setStartDate(vacant.getStartDate().getTime());
+                    vacantPending.setStartDate(vacant.getStartDate());
                     vacantPending.setPlacesNumber(vacant.getPlacesNumber());
                     listVacantPending.add(vacantPending);
                 } catch (Exception e) {
@@ -85,43 +112,12 @@ public class VacantController {
                 }
 
             }
-            
+
             return HttpResponseEntity.getOKStatus(listVacantPending);
-            
-        }else{
+
+        } else {
             throw new ConflictException("Any Vacant Pending doesn't exist");
-        }       
-    }
-
-    @PostMapping("/")
-    public ResponseEntity<Vacant> createVacant(@RequestBody CreateVacantRequest newVacant) throws Throwable {
-
-        Vacant vacant = new Vacant();
-        vacant.setPlacesNumber(newVacant.getPlacesNumber());
-        vacant.setIdJobPosition(newVacant.getIdJobPosition());
-
-        Date date = new Date(System.currentTimeMillis());
-        vacant.setStartDate(date);
-
-        try {
-            vacantRepository.save(vacant);
-        } catch (Exception e) {
-            throw new ExpectationFailedException("Vacant data is incorrect");
         }
-        try {
-            RecruiterVacant recruiterVacant;
-            for (String idRecruiter : newVacant.getRecruitersId()) {
-                recruiterVacant = new RecruiterVacant();
-                recruiterVacant.setIdPerson(idRecruiter);
-                recruiterVacant.setIdVacant(vacant.getId());
-                recruiterVacantRepository.save(recruiterVacant);
-            }
-        } catch (Exception e) {
-            throw new ConflictException("Any recruiter doesn't exist");
-        }
-
-        return HttpResponseEntity.getOKStatus(vacant);
-
     }
 
     @GetMapping("/withoutRelation/{id_career}")
@@ -157,4 +153,36 @@ public class VacantController {
             throw new ConflictException("Career doesn't exist on career_job_position data");
         }
     }
+
+    @PostMapping("/")
+    public ResponseEntity<Vacant> createVacant(@RequestBody CreateVacantRequest newVacant) throws Throwable {
+
+        Vacant vacant = new Vacant();
+        vacant.setPlacesNumber(newVacant.getPlacesNumber());
+        vacant.setIdJobPosition(newVacant.getIdJobPosition());
+
+        Date date = new Date(System.currentTimeMillis());
+        vacant.setStartDate(date);
+
+        try {
+            vacantRepository.save(vacant);
+        } catch (Exception e) {
+            throw new ExpectationFailedException("Vacant data is incorrect");
+        }
+        try {
+            RecruiterVacant recruiterVacant;
+            for (String idRecruiter : newVacant.getRecruitersId()) {
+                recruiterVacant = new RecruiterVacant();
+                recruiterVacant.setIdPerson(idRecruiter);
+                recruiterVacant.setIdVacant(vacant.getId());
+                recruiterVacantRepository.save(recruiterVacant);
+            }
+        } catch (Exception e) {
+            throw new ConflictException("Any recruiter doesn't exist");
+        }
+
+        return HttpResponseEntity.getOKStatus(vacant);
+
+    }
+
 }

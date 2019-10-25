@@ -20,20 +20,19 @@ public interface SkillRepository extends JpaRepository<Skill, Integer> {
     @Query("from Skill where name = ?1")
     Optional<Skill> findByName(String name);
 
-    
-   @Query(nativeQuery = true,value="SELECT s1.* FROM skill s1 LEFT OUTER JOIN global_skill s2 ON CONCAT(?1,s1.id)=s2.id WHERE s2.id IS NULL AND s1.class='Soft';")
-   List<Skill> findAllSoft(String nit);
+    @Query(nativeQuery = true, value = "SELECT s1.* FROM skill s1 LEFT OUTER JOIN global_skill s2 ON CONCAT(?1,s1.id)=s2.id WHERE s2.id IS NULL AND s1.class='Soft';")
+    List<Skill> findAllSoftByNit(String nit);
 
+    @Query("from Skill where type='Soft'")
+    List<Skill> findAllSoft();
+    
     @Query("from Skill where type='Hard'")
     List<Skill> findAllHard();
 
-    @Query(nativeQuery = true,value="SELECT skill.* from skill JOIN global_skill ON skill.id=global_skill.id_skill WHERE global_skill.nit_company=?1")
+    @Query(nativeQuery = true, value = "SELECT skill.* from skill JOIN global_skill ON skill.id=global_skill.id_skill WHERE global_skill.nit_company=?1")
     List<Skill> findAllGlobal(String nit);
-
 
     @Query("from Skill where id = ?1")
     Optional<Skill> findById(int id);
 
 }
-
-  

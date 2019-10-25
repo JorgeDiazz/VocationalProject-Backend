@@ -1,11 +1,13 @@
 package com.recruiters.recruiterssupportbackEnd.controller.response_entities;
 
+import java.util.Date;
+
 public class VacantPending {
    
     private int id;
     private String jobPositionName;
     private int recruitersNumber;
-    private Long startDate;
+    private Date startDate;
     private int placesNumber;
 
     public int getId() {
@@ -32,11 +34,11 @@ public class VacantPending {
         this.recruitersNumber = recruitersNumber;
     }
 
-    public Long getStartDate() {
+    public Date getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Long startDate) {
+    public void setStartDate(Date startDate) {
         this.startDate = startDate;
     }
 

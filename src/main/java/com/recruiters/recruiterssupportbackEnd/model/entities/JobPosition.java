@@ -13,12 +13,12 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "job_position")
-public class JobPosition implements UserEntity {
+public class JobPosition {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Column(name = "nameJ")
+    @Column(name = "name")
     private String name;
     @Column(name = "salary_min")
     private Double salaryMin;
