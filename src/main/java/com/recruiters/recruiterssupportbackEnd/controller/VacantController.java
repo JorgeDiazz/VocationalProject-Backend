@@ -29,12 +29,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.recruiters.recruiterssupportbackEnd.ResponseEntitiesRepository.VacantPendingRepository;
+import com.recruiters.recruiterssupportbackEnd.controller.response_entities.ApplyVacant;
+import com.recruiters.recruiterssupportbackEnd.model.entities.PostulantRv;
+import com.recruiters.recruiterssupportbackEnd.repository.PostulantRvRepository;
+import java.util.Optional;
 
 /**
  *
  * @author JorgeDíaz
  */
-
 @RestController
 @RequestMapping("/vacant")
 public class VacantController {
@@ -44,14 +47,16 @@ public class VacantController {
     private final CareerJobPositionRepository careerJobPositionRepository;
     private final JobPositionRepository jobPositionRepository;
     private final VacantPendingRepository vacantPendingRepository;
+    private final PostulantRvRepository postulantRvRepository;
 
     @Autowired
-    public VacantController(VacantRepository vacantRepository, RecruiterVacantRepository recruiterVacantRepository, CareerJobPositionRepository careerJobPositionRepository, JobPositionRepository jobPositionRepository, VacantPendingRepository vacantPendingRepository) {
+    public VacantController(VacantRepository vacantRepository, RecruiterVacantRepository recruiterVacantRepository, CareerJobPositionRepository careerJobPositionRepository, JobPositionRepository jobPositionRepository, VacantPendingRepository vacantPendingRepository, PostulantRvRepository postulantRvRepository) {
         this.vacantRepository = vacantRepository;
         this.recruiterVacantRepository = recruiterVacantRepository;
         this.careerJobPositionRepository = careerJobPositionRepository;
         this.jobPositionRepository = jobPositionRepository;
         this.vacantPendingRepository = vacantPendingRepository;
+        this.postulantRvRepository = postulantRvRepository;
     }
 
     @GetMapping("/{id}")
@@ -68,9 +73,9 @@ public class VacantController {
         for (int i = 0; i < listCareers.size(); i++) {
 
             List<VacantByCareer> vacantsByCareers = vacantPendingRepository.findAllVacantsByCareer(listCareers.get(i));
-       
+
             if (!vacantsByCareers.isEmpty()) {
-                
+
                 for (int j = 0; j < vacantsByCareers.size(); j++) {
                     listVacants.add(vacantsByCareers.get(j));
                 }
@@ -185,4 +190,36 @@ public class VacantController {
 
     }
 
+    @PostMapping("/Apply")
+    public ResponseEntity ApplyVacant(@RequestBody ApplyVacant applyVacant) throws ExpectationFailedException, ConflictException {
+
+        int idVacant = applyVacant.getIdVacant();
+        String idPostulant = applyVacant.getIdPostulant();
+
+        List<RecruiterVacant> listRecruiterVacant = recruiterVacantRepository.findByVacantId(idVacant);
+
+        if (!listRecruiterVacant.isEmpty()) {
+
+            for (int i = 0; i < listRecruiterVacant.size(); i++) {
+
+                PostulantRv postulantRv = new PostulantRv();
+
+                try {
+                    int idRV = listRecruiterVacant.get(i).getId();
+                    postulantRv.setState(0);
+                    postulantRv.setIdPostulant(idPostulant);
+                    postulantRv.setIdRv(idRV);
+                    postulantRv.setIdVacant(idVacant);
+                    postulantRvRepository.save(postulantRv);
+                } catch (Exception e) {
+                    throw new ExpectationFailedException("PostulantRv data is incorrect");
+                }
+            }
+
+        } else {
+            throw new ConflictException("Any recruiterVacant doesn't exist");
+        }
+
+        return HttpResponseEntity.getOKStatus();
+    }
 }

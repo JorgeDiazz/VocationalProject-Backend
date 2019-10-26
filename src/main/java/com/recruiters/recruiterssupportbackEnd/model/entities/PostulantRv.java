@@ -24,6 +24,8 @@ public class PostulantRv {
     private String idPostulant;
     @Column(name = "id_rv")
     private int idRv;
+    @Column(name = "id_vacant")
+    private int idVacant;
 
     public int getId() {
         return id;
@@ -57,5 +59,11 @@ public class PostulantRv {
         this.idRv = idRv;
     }
 
- 
+    public int getIdVacant() {
+        return idVacant;
+    }
+
+    public void setIdVacant(int idVacant) {
+        this.idVacant = idVacant;
+    }
 }
