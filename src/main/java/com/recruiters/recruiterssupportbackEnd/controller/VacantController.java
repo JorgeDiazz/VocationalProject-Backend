@@ -224,25 +224,23 @@ public class VacantController {
         return HttpResponseEntity.getOKStatus();
     }
 
-    @GetMapping("/applied/{idpostulant}")
-    public ResponseEntity<List<CreateResponseVacantApplied>> getApplyVacants(@PathVariable String idpostulant) throws ExpectationFailedException, ConflictException {
+    @GetMapping("/applied/{idPostulant}")
+    public ResponseEntity<List<CreateResponseVacantApplied>> getApplyVacants(@PathVariable String idPostulant) throws ExpectationFailedException, ConflictException {
 
-        List<PostulantRv> Listpostulant = postulantRvRepository.findByPostulant(idpostulant);
-        System.out.println("paso1");
+        List<PostulantRv> Listpostulant = postulantRvRepository.findByPostulant(idPostulant);
         if (!Listpostulant.isEmpty()) {
 
             List<CreateResponseVacantApplied> applyvacants = new ArrayList<>();
-            System.out.println("paso2");
             for (PostulantRv postulantrv : Listpostulant) {
 
                 int idVacant = postulantrv.getIdVacant();
                 
                 Vacant vacant = vacantRepository.findById(idVacant).get();
                 int idJob = vacant.getNitJobPosition();
-                System.out.println("paso3");
+
                 JobPosition jobPosition = jobPositionRepository.findById(idJob).get();
                 String nameJobPosition = jobPosition.getName();
-                System.out.println("paso4");
+
                 try {
                     CreateResponseVacantApplied vacantApply = new CreateResponseVacantApplied();
                     vacantApply.setId(idVacant);
@@ -265,7 +263,6 @@ public class VacantController {
                         default: vacantApply.setState(postulantrv.getState());
                     }*/
                     applyvacants.add(vacantApply);
-                    System.out.println("paso5");
                 } catch (Exception e) {
                     throw new ExpectationFailedException("Vacant Apply data is incorrect");
                 }
