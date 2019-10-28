@@ -2,6 +2,7 @@ package com.recruiters.recruiterssupportbackEnd.repository;
 
 import com.recruiters.recruiterssupportbackEnd.model.entities.PostulantRv;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -20,6 +21,9 @@ public interface PostulantRvRepository extends JpaRepository<PostulantRv, Intege
     @Query("from PostulantRv where id_postulant = ?1")
     List<PostulantRv> findByPostulant(String id);
 
+    @Query("from PostulantRv where id_postulant = ?1")
+    Optional<PostulantRv> findByPostulant1(String id);
+    
     @Query("from PostulantRv where id_rv = ?1")
     List<PostulantRv> findByRV(int id);
 

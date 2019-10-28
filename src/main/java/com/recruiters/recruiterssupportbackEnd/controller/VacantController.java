@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.recruiters.recruiterssupportbackEnd.ResponseEntitiesRepository.VacantPendingRepository;
 import com.recruiters.recruiterssupportbackEnd.controller.response_entities.ApplyVacant;
+import com.recruiters.recruiterssupportbackEnd.controller.response_entities.CreateResponseVacantApplied;
 import com.recruiters.recruiterssupportbackEnd.model.entities.PostulantRv;
 import com.recruiters.recruiterssupportbackEnd.repository.PostulantRvRepository;
 import java.util.Optional;
@@ -221,5 +222,57 @@ public class VacantController {
         }
 
         return HttpResponseEntity.getOKStatus();
+    }
+
+    @GetMapping("/applied/{idpostulant}")
+    public ResponseEntity<List<CreateResponseVacantApplied>> getApplyVacants(@PathVariable String idpostulant) throws ExpectationFailedException, ConflictException {
+
+        List<PostulantRv> Listpostulant = postulantRvRepository.findByPostulant(idpostulant);
+        System.out.println("paso1");
+        if (!Listpostulant.isEmpty()) {
+
+            List<CreateResponseVacantApplied> applyvacants = new ArrayList<>();
+            System.out.println("paso2");
+            for (PostulantRv postulantrv : Listpostulant) {
+
+                int idVacant = postulantrv.getIdVacant();
+                
+                Vacant vacant = vacantRepository.findById(idVacant).get();
+                int idJob = vacant.getNitJobPosition();
+                System.out.println("paso3");
+                JobPosition jobPosition = jobPositionRepository.findById(idJob).get();
+                String nameJobPosition = jobPosition.getName();
+                System.out.println("paso4");
+                try {
+                    CreateResponseVacantApplied vacantApply = new CreateResponseVacantApplied();
+                    vacantApply.setId(idVacant);
+                    vacantApply.setNameJob(nameJobPosition);
+                    vacantApply.setSalaryMax(jobPosition.getSalaryMax());
+                    vacantApply.setSalaryMin(jobPosition.getSalaryMin());
+                    vacantApply.setStartDate(vacant.getStartDate());
+                    vacantApply.setPlacesNumber(vacant.getPlacesNumber());
+                    vacantApply.setState(postulantrv.getState());
+                    /*switch (postulantrv.getState()) {
+                        case 0: //revisar que en la db id_rv pueda ser null
+                            vacantApply.setState(postulantrv.getState());
+                            break;
+                        case 1:
+                            vacantApply.setState(postulantrv.getState());
+                            break;
+                        case 2:
+                            vacantApply.setState(postulantrv.getState());
+                            break;
+                        default: vacantApply.setState(postulantrv.getState());
+                    }*/
+                    applyvacants.add(vacantApply);
+                    System.out.println("paso5");
+                } catch (Exception e) {
+                    throw new ExpectationFailedException("Vacant Apply data is incorrect");
+                }
+            }
+            return HttpResponseEntity.getOKStatus(applyvacants);
+        } else {
+            throw new ConflictException("postulant dosen't have any vacanats");
+        }
     }
 }
