@@ -154,7 +154,7 @@ public class RecruiterController {
                         }
                     }
                 } catch (Exception e) {
-                     throw new ConflictException("company dosen't have recluiters");
+                    throw new ConflictException("company dosen't have recluiters");
                 }
 
                 CreateResponseRecruitersByCompany newrecru = new CreateResponseRecruitersByCompany(recluiter.getId(), recluiter.getName(), vacantcount, postulantcount);

@@ -18,6 +18,16 @@ public class CreateJobPositionRequest {
     private String[] newHardSkillsName;
     private String[] processesName;
     private String[] recruitersId;
+    
+    private int[] softSkillsId; //By Jhoan 20/10/2019
+    
+    public int[] getSoftSkillsId() {
+        return softSkillsId;
+    }
+
+    public void setSoftSkillsId(int[] softSkillsId) {
+        this.softSkillsId = softSkillsId;
+    }
     private int placesNumber;
 
     public String getNitCompany() {

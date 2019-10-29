@@ -27,6 +27,19 @@ public class VacantByCareer {
     private Date startDate;
     @Column(name = "places_number")
     private int placesNumber;
+    @Column(name = "id_job")
+    private int idJobPosition;
+
+    public int getIdJobPosition() {
+        return idJobPosition;
+    }
+
+    public void setIdJobPosition(int idJobPosition) {
+        this.idJobPosition = idJobPosition;
+    }
+
+    
+   
 
     public int getId() {
         return id;

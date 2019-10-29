@@ -108,6 +108,7 @@ public class VacantController {
                 try {
                     VacantPending vacantPending = new VacantPending();
                     vacantPending.setId(idVacant);
+                    vacantPending.setIdJobPosition(jobPosition.getId()); // Jhoan 29/10/2019
                     vacantPending.setJobPositionName(nameJobPosition);
                     vacantPending.setRecruitersNumber(recruiterVacantRepository.numRecuitersVacant(idVacant));
                     vacantPending.setStartDate(vacant.getStartDate());

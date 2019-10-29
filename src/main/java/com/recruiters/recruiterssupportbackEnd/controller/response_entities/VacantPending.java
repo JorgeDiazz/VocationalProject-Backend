@@ -9,6 +9,15 @@ public class VacantPending {
     private int recruitersNumber;
     private Date startDate;
     private int placesNumber;
+    private int idJobPosition; // Jhoan 20/10/2019
+
+    public int getIdJobPosition() {
+        return idJobPosition;
+    }
+
+    public void setIdJobPosition(int idJobPosition) {
+        this.idJobPosition = idJobPosition;
+    }
 
     public int getId() {
         return id;

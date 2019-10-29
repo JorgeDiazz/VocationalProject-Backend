@@ -42,6 +42,7 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 
 /**
  *
@@ -456,4 +457,24 @@ public class JobPositionController {
             throw new ConflictException("Job position isn't present");
         }
     }
+    
+    @PostMapping("/job/{idJob}/soft")
+   public ResponseEntity<JobPosition> createSoftJobPosition(@PathVariable int idJob,@RequestBody CreateJobPositionRequest newJobPosition) throws Throwable {
+        try {             
+            int[] softSkills=newJobPosition.getSoftSkillsId();
+            JobSkill jobSkill;
+            for (int idSoftSkill : softSkills) {
+                jobSkill = new JobSkill();
+                jobSkill.setId(idJob, idSoftSkill);
+                jobSkill.setIdJob(idJob);
+                jobSkill.setIdSkill(idSoftSkill);
+                jobSkillRepository.save(jobSkill);
+            } 
+        } catch (Exception e) {
+            throw new ExpectationFailedException(e.getMessage());
+        }
+
+        return HttpResponseEntity.getOKStatus();
+    }
+
 }
