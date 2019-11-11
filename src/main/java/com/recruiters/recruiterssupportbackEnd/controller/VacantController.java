@@ -194,35 +194,16 @@ public class VacantController {
 
     @PostMapping("/Apply")
     public ResponseEntity ApplyVacant(@RequestBody ApplyVacant applyVacant) throws ExpectationFailedException, ConflictException {
-
         int idVacant = applyVacant.getIdVacant();
-        String idPostulant = applyVacant.getIdPostulant();
+        String idPostulant = applyVacant.getIdPostulant();     
 
-        List<RecruiterVacant> listRecruiterVacant = recruiterVacantRepository.findByVacantId(idVacant);
-
-        if (!listRecruiterVacant.isEmpty()) {
-
-            for (int i = 0; i < listRecruiterVacant.size(); i++) {
-
-                PostulantRv postulantRv = new PostulantRv();
-
-                try {
-                    int idRV = listRecruiterVacant.get(i).getId();
-                    postulantRv.setState(0);
-                    postulantRv.setIdPostulant(idPostulant);
-                    postulantRv.setIdRv(idRV);
-                    postulantRv.setIdVacant(idVacant);
-                    postulantRvRepository.save(postulantRv);
-                } catch (Exception e) {
-                    throw new ExpectationFailedException("PostulantRv data is incorrect");
-                }
-            }
-
-        } else {
-            throw new ConflictException("Any recruiterVacant doesn't exist");
+        try {  
+            postulantRvRepository.insert(0, idPostulant, idVacant); 
+        } catch (Exception e) {
+            throw new ExpectationFailedException("PostulantRv data is incorrect");
         }
-
-        return HttpResponseEntity.getOKStatus();
+        System.out.println("Correcto");
+        return HttpResponseEntity.getOKStatus(applyVacant);
     }
 
     @GetMapping("/applied/{idPostulant}")
@@ -235,7 +216,7 @@ public class VacantController {
             for (PostulantRv postulantrv : Listpostulant) {
 
                 int idVacant = postulantrv.getIdVacant();
-                
+
                 Vacant vacant = vacantRepository.findById(idVacant).get();
                 int idJob = vacant.getNitJobPosition();
 
