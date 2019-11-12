@@ -26,5 +26,6 @@ public interface PostulantRvRepository extends JpaRepository<PostulantRv, Intege
     
     @Query("from PostulantRv where id_rv = ?1")
     List<PostulantRv> findByRV(int id);
+    
 
 }
