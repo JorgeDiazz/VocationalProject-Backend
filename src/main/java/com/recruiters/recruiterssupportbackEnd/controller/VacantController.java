@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.recruiters.recruiterssupportbackEnd.ResponseEntitiesRepository.VacantPendingRepository;
+import com.recruiters.recruiterssupportbackEnd.controller.exceptions.ServerException;
 import com.recruiters.recruiterssupportbackEnd.controller.response_entities.ApplyVacant;
 import com.recruiters.recruiterssupportbackEnd.controller.response_entities.CreateResponseVacantApplied;
 import com.recruiters.recruiterssupportbackEnd.model.entities.PostulantRv;
@@ -88,19 +89,21 @@ public class VacantController {
         return HttpResponseEntity.getOKStatus(listVacants);
     }
 
+    /**
+     * Obtiene las vacantes pendientes para el reclutador,
+     * Aquellas que no tienen asignada ninguna habilidad blanda.
+     * @param id
+     * @return 
+     */
     @GetMapping("/pending/{id}")
-    public ResponseEntity<List<VacantPending>> getAllVacantPending(@PathVariable String id) throws ConflictException, ExpectationFailedException {
+    public ResponseEntity<List<VacantPending>> getAllVacantPending(@PathVariable String id) throws ServerException {
 
         List<RecruiterVacant> opt = recruiterVacantRepository.findByRecruiter(id);
-
+        List<VacantPending> listVacantPending = new ArrayList<>();
         if (!opt.isEmpty()) {
-
-            List<VacantPending> listVacantPending = new ArrayList<>();
-
             for (int i = 0; i < opt.size(); i++) {
-
                 int idVacant = opt.get(i).getIdVacant();
-
+                
                 Vacant vacant = vacantRepository.findById(idVacant).get();
                 int idJob = vacant.getNitJobPosition();
 
@@ -119,7 +122,53 @@ public class VacantController {
                     vacantPending.setPlacesNumber(vacant.getPlacesNumber());
                     listVacantPending.add(vacantPending);
                 } catch (Exception e) {
-                    throw new ExpectationFailedException("Vacant Pending data is incorrect");
+                    throw new ServerException();
+                }
+
+            }
+            return HttpResponseEntity.getOKStatus(listVacantPending);
+
+        } else {
+            return HttpResponseEntity.getOKStatus(listVacantPending);
+        }
+    }
+
+     /**
+     * Obtiene las vacantes en proceso para el reclutador,
+     * Aquellas que tienen asignadas habilidades blandas.
+     * @param id
+     * @return 
+     */
+    @GetMapping("/process/{idRecruiter}")
+    public ResponseEntity<List<VacantPending>> getAllVacantInProcess(@PathVariable String idRecruiter) throws ServerException{
+
+        List<RecruiterVacant> opt = recruiterVacantRepository.findByRecruiter(idRecruiter);
+        List<VacantPending> listVacantPending = new ArrayList<>();
+        if (!opt.isEmpty()) {            
+
+            for (int i = 0; i < opt.size(); i++) {
+
+                int idVacant = opt.get(i).getIdVacant();
+
+                Vacant vacant = vacantRepository.findById(idVacant).get();
+                int idJob = vacant.getNitJobPosition();
+
+                JobPosition jobPosition = jobPositionRepository.findById(idJob).get();
+                String nameJobPosition = jobPosition.getName();
+                if(skillRepository.CountSoftJobPosition(jobPosition.getId())==0)
+                    continue;
+
+                try {
+                    VacantPending vacantPending = new VacantPending();
+                    vacantPending.setId(idVacant);
+                    vacantPending.setIdJobPosition(jobPosition.getId()); // Jhoan 29/10/2019
+                    vacantPending.setJobPositionName(nameJobPosition);
+                    vacantPending.setRecruitersNumber(recruiterVacantRepository.numRecuitersVacant(idVacant));
+                    vacantPending.setStartDate(vacant.getStartDate());
+                    vacantPending.setPlacesNumber(vacant.getPlacesNumber());
+                    listVacantPending.add(vacantPending);
+                } catch (Exception e) {
+                      throw new ServerException();
                 }
 
             }
@@ -127,10 +176,11 @@ public class VacantController {
             return HttpResponseEntity.getOKStatus(listVacantPending);
 
         } else {
-            throw new ConflictException("Any Vacant Pending doesn't exist");
+           return HttpResponseEntity.getOKStatus(listVacantPending);
         }
     }
 
+    
     @GetMapping("/withoutRelation/{id_career}")
     public ResponseEntity<List<VacantForPostulantWithoutRelation>> getVacantsByCareer(@PathVariable int id_career) throws Throwable {
 
