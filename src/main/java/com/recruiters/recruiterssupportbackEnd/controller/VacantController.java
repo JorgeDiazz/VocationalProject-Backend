@@ -33,6 +33,7 @@ import com.recruiters.recruiterssupportbackEnd.controller.response_entities.Appl
 import com.recruiters.recruiterssupportbackEnd.controller.response_entities.CreateResponseVacantApplied;
 import com.recruiters.recruiterssupportbackEnd.model.entities.PostulantRv;
 import com.recruiters.recruiterssupportbackEnd.repository.PostulantRvRepository;
+import com.recruiters.recruiterssupportbackEnd.repository.SkillRepository;
 import java.util.Optional;
 
 /**
@@ -49,15 +50,16 @@ public class VacantController {
     private final JobPositionRepository jobPositionRepository;
     private final VacantPendingRepository vacantPendingRepository;
     private final PostulantRvRepository postulantRvRepository;
-
+    private final SkillRepository skillRepository;
     @Autowired
-    public VacantController(VacantRepository vacantRepository, RecruiterVacantRepository recruiterVacantRepository, CareerJobPositionRepository careerJobPositionRepository, JobPositionRepository jobPositionRepository, VacantPendingRepository vacantPendingRepository, PostulantRvRepository postulantRvRepository) {
+    public VacantController(SkillRepository skillRepository,VacantRepository vacantRepository, RecruiterVacantRepository recruiterVacantRepository, CareerJobPositionRepository careerJobPositionRepository, JobPositionRepository jobPositionRepository, VacantPendingRepository vacantPendingRepository, PostulantRvRepository postulantRvRepository) {
         this.vacantRepository = vacantRepository;
         this.recruiterVacantRepository = recruiterVacantRepository;
         this.careerJobPositionRepository = careerJobPositionRepository;
         this.jobPositionRepository = jobPositionRepository;
         this.vacantPendingRepository = vacantPendingRepository;
         this.postulantRvRepository = postulantRvRepository;
+        this.skillRepository=skillRepository;
     }
 
     @GetMapping("/{id}")
@@ -104,6 +106,8 @@ public class VacantController {
 
                 JobPosition jobPosition = jobPositionRepository.findById(idJob).get();
                 String nameJobPosition = jobPosition.getName();
+                if(skillRepository.CountSoftJobPosition(jobPosition.getId())>0)
+                    continue;
 
                 try {
                     VacantPending vacantPending = new VacantPending();
