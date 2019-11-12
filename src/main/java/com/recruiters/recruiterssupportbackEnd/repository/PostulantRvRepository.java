@@ -3,7 +3,9 @@ package com.recruiters.recruiterssupportbackEnd.repository;
 import com.recruiters.recruiterssupportbackEnd.model.entities.PostulantRv;
 import java.util.List;
 import java.util.Optional;
+import javax.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 /**
@@ -27,5 +29,11 @@ public interface PostulantRvRepository extends JpaRepository<PostulantRv, Intege
     @Query("from PostulantRv where id_rv = ?1")
     List<PostulantRv> findByRV(int id);
     
+
+    @Modifying
+    @Transactional
+    @Query(nativeQuery = true,value = "insert into postulant_rv (state,id_postulant,id_vacant) VALUES (?1,?2,?3) ")
+    void insert(int state,String idPostualnt,int idVacant);
+
 
 }

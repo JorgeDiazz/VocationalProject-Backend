@@ -34,5 +34,9 @@ public interface SkillRepository extends JpaRepository<Skill, Integer> {
 
     @Query("from Skill where id = ?1")
     Optional<Skill> findById(int id);
+    
+    @Query(value = "select count(*)  FROM jb_skill INNER JOIN skill ON jb_skill.id_skill=skill.id WHERE jb_skill.id_job_position=?1 AND skill.class='Soft'",nativeQuery = true)
+    int CountSoftJobPosition(int idJobPosition);
+    
 
 }

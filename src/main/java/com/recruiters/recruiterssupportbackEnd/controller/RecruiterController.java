@@ -134,8 +134,9 @@ public class RecruiterController {
     public ResponseEntity<List<CreateResponseRecruitersByCompany>> getAllRecruiterByComanpy(@PathVariable String nit) throws ExpectationFailedException, UnauthorizedException, ConflictException {
 
         List<Person> reclutadores = personRepository.findByNit(nit);
+        List<CreateResponseRecruitersByCompany> recluiterBycompanylist = new ArrayList<>();
         if (!reclutadores.isEmpty()) {
-            List<CreateResponseRecruitersByCompany> recluiterBycompanylist = new ArrayList<>();
+            
 
             for (Person recluiter : reclutadores) {
                 int vacantcount = 0;
@@ -154,7 +155,8 @@ public class RecruiterController {
                         }
                     }
                 } catch (Exception e) {
-                     throw new ConflictException("company dosen't have recluiters");
+                    //throw new ConflictException("company dosen't have recluiters");
+                    return HttpResponseEntity.getOKStatus(recluiterBycompanylist);
                 }
 
                 CreateResponseRecruitersByCompany newrecru = new CreateResponseRecruitersByCompany(recluiter.getId(), recluiter.getName(), vacantcount, postulantcount);
@@ -163,7 +165,8 @@ public class RecruiterController {
             }
             return HttpResponseEntity.getOKStatus(recluiterBycompanylist);
         } else {
-            throw new ConflictException("there are no recruiters in the database");
+           // throw new ConflictException("there are no recruiters in the database");
+           return HttpResponseEntity.getOKStatus(recluiterBycompanylist);
         }
 
     }
