@@ -10,20 +10,20 @@ package com.recruiters.recruiterssupportbackEnd.controller.request_entities;
  * @author jhanu
  */
 public class CreateRequestJobRec {
-    private int idJob;
+    private int idVacant;
     private String idRecruiter;        
 
-    public CreateRequestJobRec(int idJob, String idRecruiter) {
-        this.idJob = idJob;
+    public CreateRequestJobRec(int idVacant, String idRecruiter) {
+        this.idVacant = idVacant;
         this.idRecruiter = idRecruiter;
     }
 
-    public int getIdJob() {
-        return idJob;
+    public int getIdVacant() {
+        return idVacant;
     }
 
-    public void setIdJob(int idJob) {
-        this.idJob = idJob;
+    public void setIdVacant(int idVacant) {
+        this.idVacant = idVacant;
     }
 
     public String getIdRecruiter() {
@@ -33,6 +33,11 @@ public class CreateRequestJobRec {
     public void setIdRecruiter(String idRecruiter) {
         this.idRecruiter = idRecruiter;
     }
-            
+
+    @Override
+    public String toString() {
+        return "CreateRequestJobRec{" + "idVacant=" + idVacant + ", idRecruiter=" + idRecruiter + '}';
+    }
+         
 
 }

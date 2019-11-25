@@ -22,8 +22,8 @@ public class PostulantRv {
     private int state;
     @Column(name = "id_postulant")
     private String idPostulant;
-    @Column(name = "id_rv")
-    private int idRv;
+    @Column(name = "id_rv",nullable=true)
+    private Integer idRv;
     @Column(name = "id_vacant")
     private int idVacant;
 
@@ -39,7 +39,7 @@ public class PostulantRv {
         return state;
     }
 
-    public void setState(int state) {
+    public void setState(Integer state) {
         this.state = state;
     }
 
