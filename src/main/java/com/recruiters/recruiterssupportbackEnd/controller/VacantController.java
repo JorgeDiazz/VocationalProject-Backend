@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.recruiters.recruiterssupportbackEnd.ResponseEntitiesRepository.VacantPendingRepository;
 import com.recruiters.recruiterssupportbackEnd.controller.exceptions.ServerException;
+import com.recruiters.recruiterssupportbackEnd.controller.request_entities.SelectPostulantsObject;
 import com.recruiters.recruiterssupportbackEnd.controller.response_entities.ApplyVacant;
 import com.recruiters.recruiterssupportbackEnd.controller.response_entities.CreateResponseVacantApplied;
 import com.recruiters.recruiterssupportbackEnd.controller.response_entities.GetPostulantsWithoutRecruiter;
@@ -44,6 +45,7 @@ import com.recruiters.recruiterssupportbackEnd.repository.PostulantRepository;
 import com.recruiters.recruiterssupportbackEnd.repository.PostulantRvRepository;
 import com.recruiters.recruiterssupportbackEnd.repository.SkillRepository;
 import java.util.Optional;
+import org.springframework.web.bind.annotation.PutMapping;
 
 /**
  *
@@ -365,4 +367,21 @@ public class VacantController {
 
         return HttpResponseEntity.getOKStatus(postulantsWithoutRecruiterList);
     }
+
+    @PutMapping("/selectPostulants")
+    public ResponseEntity selectPostulants(@RequestBody SelectPostulantsObject selectPostulantsObject) {
+
+        for (String postulantId : selectPostulantsObject.getPostulants()) {
+            List<PostulantRv> postulantRvList = postulantRvRepository.findByPostulant(postulantId);
+            for (PostulantRv postulantRv : postulantRvList) {
+                if (selectPostulantsObject.getIdVacant() == postulantRv.getIdVacant() && selectPostulantsObject.getIdRv() == postulantRv.getIdRv()) {
+                    postulantRv.setState(1);
+                    postulantRvRepository.save(postulantRv);
+                }
+            }
+
+        }
+        return HttpResponseEntity.getOKStatus();
+    }
+
 }
