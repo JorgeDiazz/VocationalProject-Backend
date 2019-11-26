@@ -374,6 +374,7 @@ public class JobPositionController {
             myinprocess.setSalaryMin(jobPosition.getSalaryMin());
             myinprocess.setNameArea( ( (Area) ((Optional<Area>) areaRepository.findById(jobPosition.getIdArea())).get()).getName()  );
             myinprocess.setId(jobPosition.getId()); 
+            myinprocess.setName(jobPosition.getName());
             // set careers
             List<String> careerList = new ArrayList<>();
             List<CareerJobPosition> careerJobPositionList = careerJobPositionRepository.findByJobPositionId(jobPosition.getId());

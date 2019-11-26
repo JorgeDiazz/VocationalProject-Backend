@@ -23,6 +23,7 @@ private Double salaryMin;
 private Double salaryMax;
 private String description;
 private String nameArea;
+private String name;
 private List<String> careers;
 private List<String> hardSkills;
 private List<String> softSkill;
@@ -48,6 +49,14 @@ private List<CreateResponsePostulant> postulants;
 
     public Double getSalaryMin() {
         return salaryMin;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setSalaryMin(Double salaryMin) {
