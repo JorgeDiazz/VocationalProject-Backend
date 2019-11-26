@@ -68,8 +68,8 @@ public class VacantController {
         return HttpResponseEntity.getOKStatus(vacantRepository.findByJobPositionId(id));
     }
 
-    @GetMapping("/forPostulant/")
-    public ResponseEntity<List<VacantByCareer>> getAllVacantsCareers(@RequestParam List<String> careers) {
+    @GetMapping("/forPostulant/{idPostulant}/")
+    public ResponseEntity<List<VacantByCareer>> getAllVacantsCareers(@PathVariable String idPostulant,@RequestParam List<String> careers) {
 
         List<Integer> listCareers = careers.stream().map(Integer::valueOf).collect(Collectors.toList());
         List<VacantByCareer> listVacants = new ArrayList<>();
@@ -80,8 +80,9 @@ public class VacantController {
 
             if (!vacantsByCareers.isEmpty()) {
 
-                for (int j = 0; j < vacantsByCareers.size(); j++) {
-                    listVacants.add(vacantsByCareers.get(j));
+                for (VacantByCareer va:vacantsByCareers) {
+                    if(vacantPendingRepository.findPostulantInVacantRv(idPostulant,va.getId())==0)
+                    listVacants.add(va);
                 }
             }
         }
