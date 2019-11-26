@@ -32,7 +32,15 @@ import com.recruiters.recruiterssupportbackEnd.ResponseEntitiesRepository.Vacant
 import com.recruiters.recruiterssupportbackEnd.controller.exceptions.ServerException;
 import com.recruiters.recruiterssupportbackEnd.controller.response_entities.ApplyVacant;
 import com.recruiters.recruiterssupportbackEnd.controller.response_entities.CreateResponseVacantApplied;
+import com.recruiters.recruiterssupportbackEnd.controller.response_entities.GetPostulantsWithoutRecruiter;
+import com.recruiters.recruiterssupportbackEnd.model.entities.Career;
+import com.recruiters.recruiterssupportbackEnd.model.entities.CareerP;
+import com.recruiters.recruiterssupportbackEnd.model.entities.Postulant;
 import com.recruiters.recruiterssupportbackEnd.model.entities.PostulantRv;
+import com.recruiters.recruiterssupportbackEnd.repository.CareerPersonRepository;
+import com.recruiters.recruiterssupportbackEnd.repository.CareerRepository;
+import com.recruiters.recruiterssupportbackEnd.repository.PersonRepository;
+import com.recruiters.recruiterssupportbackEnd.repository.PostulantRepository;
 import com.recruiters.recruiterssupportbackEnd.repository.PostulantRvRepository;
 import com.recruiters.recruiterssupportbackEnd.repository.SkillRepository;
 import java.util.Optional;
@@ -52,15 +60,24 @@ public class VacantController {
     private final VacantPendingRepository vacantPendingRepository;
     private final PostulantRvRepository postulantRvRepository;
     private final SkillRepository skillRepository;
+    private final PostulantRepository postulantRepository;
+    private final PersonRepository personRepository;
+    private final CareerPersonRepository careerPersonRepository;
+    private final CareerRepository careerRepository;
+
     @Autowired
-    public VacantController(SkillRepository skillRepository,VacantRepository vacantRepository, RecruiterVacantRepository recruiterVacantRepository, CareerJobPositionRepository careerJobPositionRepository, JobPositionRepository jobPositionRepository, VacantPendingRepository vacantPendingRepository, PostulantRvRepository postulantRvRepository) {
+    public VacantController(SkillRepository skillRepository, VacantRepository vacantRepository, RecruiterVacantRepository recruiterVacantRepository, CareerJobPositionRepository careerJobPositionRepository, JobPositionRepository jobPositionRepository, VacantPendingRepository vacantPendingRepository, PostulantRvRepository postulantRvRepository, PostulantRepository postulantRepository, PersonRepository personRepository, CareerPersonRepository careerPersonRepository, CareerRepository careerRepository) {
         this.vacantRepository = vacantRepository;
         this.recruiterVacantRepository = recruiterVacantRepository;
         this.careerJobPositionRepository = careerJobPositionRepository;
         this.jobPositionRepository = jobPositionRepository;
         this.vacantPendingRepository = vacantPendingRepository;
         this.postulantRvRepository = postulantRvRepository;
-        this.skillRepository=skillRepository;
+        this.skillRepository = skillRepository;
+        this.postulantRepository = postulantRepository;
+        this.personRepository = personRepository;
+        this.careerPersonRepository = careerPersonRepository;
+        this.careerRepository = careerRepository;
     }
 
     @GetMapping("/{id}")
@@ -90,10 +107,11 @@ public class VacantController {
     }
 
     /**
-     * Obtiene las vacantes pendientes para el reclutador,
-     * Aquellas que no tienen asignada ninguna habilidad blanda.
+     * Obtiene las vacantes pendientes para el reclutador, Aquellas que no
+     * tienen asignada ninguna habilidad blanda.
+     *
      * @param id
-     * @return 
+     * @return
      */
     @GetMapping("/pending/{id}")
     public ResponseEntity<List<VacantPending>> getAllVacantPending(@PathVariable String id) throws ServerException {
@@ -103,14 +121,15 @@ public class VacantController {
         if (!opt.isEmpty()) {
             for (int i = 0; i < opt.size(); i++) {
                 int idVacant = opt.get(i).getIdVacant();
-                
+
                 Vacant vacant = vacantRepository.findById(idVacant).get();
                 int idJob = vacant.getNitJobPosition();
 
                 JobPosition jobPosition = jobPositionRepository.findById(idJob).get();
                 String nameJobPosition = jobPosition.getName();
-                if(skillRepository.CountSoftJobPosition(jobPosition.getId())>0)
+                if (skillRepository.CountSoftJobPosition(jobPosition.getId()) > 0) {
                     continue;
+                }
 
                 try {
                     VacantPending vacantPending = new VacantPending();
@@ -133,18 +152,19 @@ public class VacantController {
         }
     }
 
-     /**
-     * Obtiene las vacantes en proceso para el reclutador,
-     * Aquellas que tienen asignadas habilidades blandas.
+    /**
+     * Obtiene las vacantes en proceso para el reclutador, Aquellas que tienen
+     * asignadas habilidades blandas.
+     *
      * @param id
-     * @return 
+     * @return
      */
     @GetMapping("/process/{idRecruiter}")
-    public ResponseEntity<List<VacantPending>> getAllVacantInProcess(@PathVariable String idRecruiter) throws ServerException{
+    public ResponseEntity<List<VacantPending>> getAllVacantInProcess(@PathVariable String idRecruiter) throws ServerException {
 
         List<RecruiterVacant> opt = recruiterVacantRepository.findByRecruiter(idRecruiter);
         List<VacantPending> listVacantPending = new ArrayList<>();
-        if (!opt.isEmpty()) {            
+        if (!opt.isEmpty()) {
 
             for (int i = 0; i < opt.size(); i++) {
 
@@ -155,8 +175,9 @@ public class VacantController {
 
                 JobPosition jobPosition = jobPositionRepository.findById(idJob).get();
                 String nameJobPosition = jobPosition.getName();
-                if(skillRepository.CountSoftJobPosition(jobPosition.getId())==0)
+                if (skillRepository.CountSoftJobPosition(jobPosition.getId()) == 0) {
                     continue;
+                }
 
                 try {
                     VacantPending vacantPending = new VacantPending();
@@ -168,7 +189,7 @@ public class VacantController {
                     vacantPending.setPlacesNumber(vacant.getPlacesNumber());
                     listVacantPending.add(vacantPending);
                 } catch (Exception e) {
-                      throw new ServerException();
+                    throw new ServerException();
                 }
 
             }
@@ -176,11 +197,10 @@ public class VacantController {
             return HttpResponseEntity.getOKStatus(listVacantPending);
 
         } else {
-           return HttpResponseEntity.getOKStatus(listVacantPending);
+            return HttpResponseEntity.getOKStatus(listVacantPending);
         }
     }
 
-    
     @GetMapping("/withoutRelation/{id_career}")
     public ResponseEntity<List<VacantForPostulantWithoutRelation>> getVacantsByCareer(@PathVariable int id_career) throws Throwable {
 
@@ -249,10 +269,10 @@ public class VacantController {
     @PostMapping("/Apply")
     public ResponseEntity ApplyVacant(@RequestBody ApplyVacant applyVacant) throws ExpectationFailedException, ConflictException {
         int idVacant = applyVacant.getIdVacant();
-        String idPostulant = applyVacant.getIdPostulant();     
+        String idPostulant = applyVacant.getIdPostulant();
 
-        try {  
-            postulantRvRepository.insert(0, idPostulant, idVacant); 
+        try {
+            postulantRvRepository.insert(0, idPostulant, idVacant);
         } catch (Exception e) {
             throw new ExpectationFailedException("PostulantRv data is incorrect");
         }
@@ -307,5 +327,42 @@ public class VacantController {
         } else {
             throw new ConflictException("postulant dosen't have any vacanats");
         }
+    }
+
+    @GetMapping("/getPostulants/{idVacant}")
+    public ResponseEntity<List<GetPostulantsWithoutRecruiter>> getPostulantsWithoutRecruiters(@PathVariable int idVacant) throws Throwable {
+
+        List<PostulantRv> postulantsRv = postulantRvRepository.findByVacant(idVacant);
+        List<GetPostulantsWithoutRecruiter> postulantsWithoutRecruiterList = new ArrayList();
+
+        for (PostulantRv postulantRv : postulantsRv) {
+            if (postulantRv.getState() == 0) {
+                String idPostulant = postulantRv.getIdPostulant();
+                Optional<Postulant> optPostulant = postulantRepository.findById(idPostulant);
+                if (optPostulant.isPresent()) {
+                    Postulant currentPostulant = optPostulant.get();
+
+                    GetPostulantsWithoutRecruiter postulantWithoutRecruiter = new GetPostulantsWithoutRecruiter();
+
+                    String idPerson = currentPostulant.getIdPerson();
+                    postulantWithoutRecruiter.setId(idPerson);
+                    postulantWithoutRecruiter.setName(personRepository.findById(idPerson).get().getName());
+
+                    List<CareerP> careerPList = careerPersonRepository.findByIdPersonforlist(idPerson);
+                    for (CareerP careerP : careerPList) {
+                        int idCareer = careerP.getIdCareer();
+                        Optional<Career> career = careerRepository.findById(idCareer);
+                        if (career.isPresent()) {
+                            postulantWithoutRecruiter.getCareers().add(career.get().getName());
+                        }
+                    }
+
+                    postulantsWithoutRecruiterList.add(postulantWithoutRecruiter);
+                }
+            }
+
+        }
+
+        return HttpResponseEntity.getOKStatus(postulantsWithoutRecruiterList);
     }
 }
