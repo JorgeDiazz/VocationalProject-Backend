@@ -6,6 +6,7 @@ import com.recruiters.recruiterssupportbackEnd.controller.http.HttpResponseEntit
 import com.recruiters.recruiterssupportbackEnd.controller.request_entities.CreateJobPositionRequest;
 import com.recruiters.recruiterssupportbackEnd.controller.request_entities.CreateRequestJobRec;
 import com.recruiters.recruiterssupportbackEnd.controller.response_entities.CreateResponseInProcess;
+import com.recruiters.recruiterssupportbackEnd.controller.response_entities.CreateResponsePostulant;
 import com.recruiters.recruiterssupportbackEnd.controller.response_entities.ResponseGetJobPositionByNit;
 import com.recruiters.recruiterssupportbackEnd.controller.response_entities.ResponseGetSpecificJobPosition;
 import com.recruiters.recruiterssupportbackEnd.model.entities.Area;
@@ -357,47 +358,85 @@ public class JobPositionController {
         }
     }
 
-    @PostMapping("/inprocess/")
-    public ResponseEntity<CreateResponseInProcess> getJobPositionInProcess(@RequestBody CreateRequestJobRec jobrec) throws Throwable {
-        Optional<Vacant> optvacant = vacantRepository.findById(jobrec.getIdVacant());
-        if (optvacant.isPresent()) {
-            CreateResponseInProcess myinprocess = new CreateResponseInProcess();
-            Vacant vacant = optvacant.get();
+ 
+    @GetMapping("/inprocess/{idVacant}/{idRecruiter}")
+    public ResponseEntity<CreateResponseInProcess> getJobPositionInProcess(@PathVariable int idVacant,@PathVariable String idRecruiter) throws Throwable {
+       CreateResponseInProcess myinprocess = new CreateResponseInProcess();
+       
+        Optional<Vacant> vacant=vacantRepository.findById(idVacant);
+        if(vacant.isPresent()){   
+         Optional<JobPosition> optJobPosition = jobPositionRepository.findById(((Vacant)vacant.get()).getNitJobPosition());
+         
+        if (optJobPosition.isPresent()) {
+            
+            JobPosition jobPosition = optJobPosition.get();
+            myinprocess.setDescription(jobPosition.getDescription());
+            myinprocess.setSalaryMax(jobPosition.getSalaryMax());
+            myinprocess.setSalaryMin(jobPosition.getSalaryMin());
+            myinprocess.setNameArea( ( (Area) ((Optional<Area>) areaRepository.findById(jobPosition.getIdArea())).get()).getName()  );
+            myinprocess.setId(jobPosition.getId()); 
+            myinprocess.setName(jobPosition.getName());
+            // set careers
+            List<String> careerList = new ArrayList<>();
+            List<CareerJobPosition> careerJobPositionList = careerJobPositionRepository.findByJobPositionId(jobPosition.getId());
 
-            ResponseGetSpecificJobPosition myjob = getJobPositionById(vacant.getNitJobPosition()).getBody();
-
-            myinprocess.setId(myjob.getId());
-            myinprocess.setName(myjob.getName());
-            myinprocess.setSalaryMin(myjob.getSalaryMin());
-            myinprocess.setSalaryMax(myjob.getSalaryMax());
-            myinprocess.setDescription(myjob.getDescription());
-            myinprocess.setIdArea(myjob.getIdArea());
-            myinprocess.setNameArea(myjob.getNameArea());
-            myinprocess.setSoftSkills(myjob.getSoftSkills());
-            myinprocess.setHardSkills(myjob.getHardSkills());
-            myinprocess.setProcesses(myjob.getProcesses());
-
-            CreateResponseInProcess.Vacant trans = new CreateResponseInProcess.Vacant();
-            trans.setPlacesNumber(vacant.getPlacesNumber());
-            trans.setStartDate(vacant.getStartDate());
-            myinprocess.setVacant(trans);
-
-            RecruiterVacant rv = recruiterVacantRepository.findByidrecruvacant(jobrec.getIdRecruiter(), jobrec.getIdVacant()).get();
-
-            List<PostulantRv> prv = postulantRvRepository.findByRV(rv.getId());
-            List<CreateResponseInProcess.Postulant> translist = new ArrayList<>();
-
-            for (PostulantRv prv1 : prv) {
-                Person post = personRepository.findById(prv1.getIdPostulant()).get();
-                translist.add(new CreateResponseInProcess.Postulant(post.getId(), post.getName()));
-
+            if (careerJobPositionList != null) {
+                for (CareerJobPosition careerJobPosition : careerJobPositionList) {
+                    Optional<Career> optCareer = careerRepository.findById(careerJobPosition.getCareerId());
+                    Career career = optCareer.get();
+                    careerList.add(career.getName());
+                }
             }
-            myinprocess.setPostulants(translist);
-            return HttpResponseEntity.getOKStatus(myinprocess);
-        } else {
+            myinprocess.setCareers(careerList);
+
+            // set processes
+            List<String> processes = new ArrayList<>();
+            List<Process> processList = processRepository.findByJobPositionId(jobPosition.getId());
+            if (processList != null) {
+                for (Process process : processList) {
+                    processes.add(process.getName());
+                }
+            }
+            myinprocess.setProcesses(processes);
+
+            // set skills
+            List<String> hardSkillList = new ArrayList<>();
+            List<String> softSkillList = new ArrayList<>();
+
+            List<JobSkill> jobSkillList = jobSkillRepository.findbyJobPositionId(jobPosition.getId());
+            if (jobSkillList != null) {
+                for (JobSkill jobSkill : jobSkillList) {
+                    Optional<Skill> optSkill = skillRepository.findById(jobSkill.getIdSkill());
+                    Skill skill = optSkill.get();
+
+                    if (skill.getType().equalsIgnoreCase(Skill.TYPE.HARD.name())) {
+                        hardSkillList.add(skill.getName());
+                    } else {
+                        softSkillList.add(skill.getName());
+                    }
+                }
+            }
+
+            myinprocess.setHardSkills(hardSkillList);
+            myinprocess.setSoftSkill(softSkillList);
+            myinprocess.setVacant(vacant.get());
+            RecruiterVacant recV=recruiterVacantRepository.findByVacantidAndIdPerson(idVacant, idRecruiter);
+            myinprocess.setId_rv(recV.getId());
+            //set postulants and placenumbers by vacant
+            List<String> postulants = new ArrayList<>();
+            List<Person> persons=personRepository.findPostulantsRv(myinprocess.getId_rv());
+            
+            for(Person person:persons){
+                myinprocess.getPostulants().add(new CreateResponsePostulant(person.getId(), person.getName(), person.getImage()));
+            }         
+   
+           }else{
+             throw new ConflictException("Job position isn't present");
+        }} else {
             throw new ConflictException("Job position isn't present");
         }
-
+     return HttpResponseEntity.getOKStatus(myinprocess);
+ 
     }
 
     

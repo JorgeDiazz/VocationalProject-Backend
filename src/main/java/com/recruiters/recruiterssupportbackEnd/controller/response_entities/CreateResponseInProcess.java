@@ -1,21 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+ 
 package com.recruiters.recruiterssupportbackEnd.controller.response_entities;
-
-import com.recruiters.recruiterssupportbackEnd.controller.response_entities.ResponseGetSpecificJobPosition.Skill;
-import com.recruiters.recruiterssupportbackEnd.controller.response_entities.ResponseGetSpecificJobPosition.Vacant;
-import com.recruiters.recruiterssupportbackEnd.model.entities.Career;
-import com.recruiters.recruiterssupportbackEnd.model.entities.JobPosition;
-import com.recruiters.recruiterssupportbackEnd.model.entities.Person;
-import java.util.Date;
+ 
+import com.recruiters.recruiterssupportbackEnd.model.entities.Vacant;
+import java.util.ArrayList; 
 import java.util.List;
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 
 /**
  *
@@ -23,21 +11,26 @@ import javax.persistence.Id;
  */
 public class CreateResponseInProcess {
 
-    private int id;
-    private String name;
-    private Double salaryMin;
-    private Double salaryMax;
-    private String description;
-    private int idArea;
-    private String nameArea;
-    private List<Career> careers;
-    private List<Skill> softSkills;
-    private List<Skill> hardSkills;
-    private List<ResponseGetSpecificJobPosition.Process> processes;
-    private Vacant vacant;
-    private List<Postulant> Postulants;
+private int id;    
+
+private Double salaryMin;
+private Double salaryMax;
+private String description;
+private String nameArea;
+private String name;
+private List<String> careers;
+private List<String> hardSkills;
+private List<String> softSkill;
+private List<String> processes;
+int id_rv;
+private Vacant vacant;
+private List<CreateResponsePostulant> postulants;
 
     public CreateResponseInProcess() {
+        this.postulants=new ArrayList<>();
+        this.hardSkills=new ArrayList<>();
+        this.softSkill=new ArrayList<>();
+        this.processes=new ArrayList<>();
     }
 
     public int getId() {
@@ -48,16 +41,16 @@ public class CreateResponseInProcess {
         this.id = id;
     }
 
+    public Double getSalaryMin() {
+        return salaryMin;
+    }
+
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Double getSalaryMin() {
-        return salaryMin;
     }
 
     public void setSalaryMin(Double salaryMin) {
@@ -80,14 +73,6 @@ public class CreateResponseInProcess {
         this.description = description;
     }
 
-    public int getIdArea() {
-        return idArea;
-    }
-
-    public void setIdArea(int idArea) {
-        this.idArea = idArea;
-    }
-
     public String getNameArea() {
         return nameArea;
     }
@@ -96,36 +81,45 @@ public class CreateResponseInProcess {
         this.nameArea = nameArea;
     }
 
-    public List<Career> getCareers() {
+    public List<String> getCareers() {
         return careers;
     }
 
-    public void setCareers(List<Career> careers) {
+    public void setCareers(List<String> careers) {
         this.careers = careers;
     }
 
-    public List<Skill> getSoftSkills() {
-        return softSkills;
-    }
-
-    public void setSoftSkills(List<Skill> softSkills) {
-        this.softSkills = softSkills;
-    }
-
-    public List<Skill> getHardSkills() {
+    public List<String> getHardSkills() {
         return hardSkills;
     }
 
-    public void setHardSkills(List<Skill> hardSkills) {
+    public void setHardSkills(List<String> hardSkills) {
         this.hardSkills = hardSkills;
     }
 
-    public List<ResponseGetSpecificJobPosition.Process> getProcesses() {
+    public List<String> getProcesses() {
         return processes;
     }
 
-    public void setProcesses(List<ResponseGetSpecificJobPosition.Process> processes) {
+    public void setProcesses(List<String> processes) {
         this.processes = processes;
+    }
+
+    public List<String> getSoftSkill() {
+        return softSkill;
+    }
+
+    public void setSoftSkill(List<String> softSkill) {
+        this.softSkill = softSkill;
+    }
+ 
+
+    public int getId_rv() {
+        return id_rv;
+    }
+
+    public void setId_rv(int id_rv) {
+        this.id_rv = id_rv;
     }
 
     public Vacant getVacant() {
@@ -136,70 +130,13 @@ public class CreateResponseInProcess {
         this.vacant = vacant;
     }
 
-    public List<Postulant> getPostulants() {
-        return Postulants;
+    public List<CreateResponsePostulant> getPostulants() {
+        return postulants;
     }
 
-    public void setPostulants(List<Postulant> Postulants) {
-        this.Postulants = Postulants;
+    public void setPostulants(List<CreateResponsePostulant> postulants) {
+        this.postulants = postulants;
     }
 
-    
-
-   
-
-    static public class Postulant {
-
-        private String id;
-        private String name;
-
-        public Postulant(String id, String name) {
-            this.id = id;
-            this.name = name;
-        }
-
-        public Postulant() {
-        }
-        
-
-        public String getId() {
-            return id;
-        }
-
-        public void setId(String id) {
-            this.id = id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-    }
-    
-     static public class Vacant {
-
-        private int placesNumber;
-        private Date startDate;
-
-
-        public int getPlacesNumber() {
-            return placesNumber;
-        }
-
-        public void setPlacesNumber(int placesNumber) {
-            this.placesNumber = placesNumber;
-        }
-
-        public Date getStartDate() {
-            return startDate;
-        }
-
-        public void setStartDate(Date startDate) {
-            this.startDate = startDate;
-        }
-    }
+  
 }
