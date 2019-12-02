@@ -23,6 +23,9 @@ public interface PostulantRvRepository extends JpaRepository<PostulantRv, Intege
     @Query("from PostulantRv where id_postulant = ?1")
     List<PostulantRv> findByPostulant(String id);
 
+    @Query(nativeQuery = true, value = "select * from postulant_rv where id_postulant = ?1 and id_vacant = ?2")
+    Optional<PostulantRv> findByPostulantVacant(String idPostulant,int idVacant);
+
     @Query("from PostulantRv where id_postulant = ?1")
     Optional<PostulantRv> findByPostulant1(String id);
 

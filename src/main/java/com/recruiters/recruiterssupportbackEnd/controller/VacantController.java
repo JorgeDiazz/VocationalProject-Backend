@@ -68,7 +68,12 @@ public class VacantController {
     private final CareerRepository careerRepository;
 
     @Autowired
-    public VacantController(SkillRepository skillRepository, VacantRepository vacantRepository, RecruiterVacantRepository recruiterVacantRepository, CareerJobPositionRepository careerJobPositionRepository, JobPositionRepository jobPositionRepository, VacantPendingRepository vacantPendingRepository, PostulantRvRepository postulantRvRepository, PostulantRepository postulantRepository, PersonRepository personRepository, CareerPersonRepository careerPersonRepository, CareerRepository careerRepository) {
+    public VacantController(SkillRepository skillRepository, VacantRepository vacantRepository,
+            RecruiterVacantRepository recruiterVacantRepository,
+            CareerJobPositionRepository careerJobPositionRepository, JobPositionRepository jobPositionRepository,
+            VacantPendingRepository vacantPendingRepository, PostulantRvRepository postulantRvRepository,
+            PostulantRepository postulantRepository, PersonRepository personRepository,
+            CareerPersonRepository careerPersonRepository, CareerRepository careerRepository) {
         this.vacantRepository = vacantRepository;
         this.recruiterVacantRepository = recruiterVacantRepository;
         this.careerJobPositionRepository = careerJobPositionRepository;
@@ -88,7 +93,8 @@ public class VacantController {
     }
 
     @GetMapping("/forPostulant/{idPostulant}/")
-    public ResponseEntity<List<VacantByCareer>> getAllVacantsCareers(@PathVariable String idPostulant,@RequestParam List<String> careers) {
+    public ResponseEntity<List<VacantByCareer>> getAllVacantsCareers(@PathVariable String idPostulant,
+            @RequestParam List<String> careers) {
 
         List<Integer> listCareers = careers.stream().map(Integer::valueOf).collect(Collectors.toList());
         List<VacantByCareer> listVacants = new ArrayList<>();
@@ -99,9 +105,9 @@ public class VacantController {
 
             if (!vacantsByCareers.isEmpty()) {
 
-                for (VacantByCareer va:vacantsByCareers) {
-                    if(vacantPendingRepository.findPostulantInVacantRv(idPostulant,va.getId())==0)
-                    listVacants.add(va);
+                for (VacantByCareer va : vacantsByCareers) {
+                    if (vacantPendingRepository.findPostulantInVacantRv(idPostulant, va.getId()) == 0)
+                        listVacants.add(va);
                 }
             }
         }
@@ -110,8 +116,8 @@ public class VacantController {
     }
 
     /**
-     * Obtiene las vacantes pendientes para el reclutador, Aquellas que no
-     * tienen asignada ninguna habilidad blanda.
+     * Obtiene las vacantes pendientes para el reclutador, Aquellas que no tienen
+     * asignada ninguna habilidad blanda.
      *
      * @param id
      * @return
@@ -163,7 +169,8 @@ public class VacantController {
      * @return
      */
     @GetMapping("/process/{idRecruiter}")
-    public ResponseEntity<List<VacantPending>> getAllVacantInProcess(@PathVariable String idRecruiter) throws ServerException {
+    public ResponseEntity<List<VacantPending>> getAllVacantInProcess(@PathVariable String idRecruiter)
+            throws ServerException {
 
         List<RecruiterVacant> opt = recruiterVacantRepository.findByRecruiter(idRecruiter);
         List<VacantPending> listVacantPending = new ArrayList<>();
@@ -205,7 +212,8 @@ public class VacantController {
     }
 
     @GetMapping("/withoutRelation/{id_career}")
-    public ResponseEntity<List<VacantForPostulantWithoutRelation>> getVacantsByCareer(@PathVariable int id_career) throws Throwable {
+    public ResponseEntity<List<VacantForPostulantWithoutRelation>> getVacantsByCareer(@PathVariable int id_career)
+            throws Throwable {
 
         List<CareerJobPosition> careerJobPositionList = careerJobPositionRepository.findByCareerId(id_career);
 
@@ -270,7 +278,8 @@ public class VacantController {
     }
 
     @PostMapping("/Apply")
-    public ResponseEntity ApplyVacant(@RequestBody ApplyVacant applyVacant) throws ExpectationFailedException, ConflictException {
+    public ResponseEntity ApplyVacant(@RequestBody ApplyVacant applyVacant)
+            throws ExpectationFailedException, ConflictException {
         int idVacant = applyVacant.getIdVacant();
         String idPostulant = applyVacant.getIdPostulant();
 
@@ -284,7 +293,8 @@ public class VacantController {
     }
 
     @GetMapping("/applied/{idPostulant}")
-    public ResponseEntity<List<CreateResponseVacantApplied>> getApplyVacants(@PathVariable String idPostulant) throws ExpectationFailedException, ConflictException {
+    public ResponseEntity<List<CreateResponseVacantApplied>> getApplyVacants(@PathVariable String idPostulant)
+            throws ExpectationFailedException, ConflictException {
 
         List<PostulantRv> Listpostulant = postulantRvRepository.findByPostulant(idPostulant);
         if (!Listpostulant.isEmpty()) {
@@ -309,18 +319,13 @@ public class VacantController {
                     vacantApply.setStartDate(vacant.getStartDate());
                     vacantApply.setPlacesNumber(vacant.getPlacesNumber());
                     vacantApply.setState(postulantrv.getState());
-                    /*switch (postulantrv.getState()) {
-                        case 0: //revisar que en la db id_rv pueda ser null
-                            vacantApply.setState(postulantrv.getState());
-                            break;
-                        case 1:
-                            vacantApply.setState(postulantrv.getState());
-                            break;
-                        case 2:
-                            vacantApply.setState(postulantrv.getState());
-                            break;
-                        default: vacantApply.setState(postulantrv.getState());
-                    }*/
+                    /*
+                     * switch (postulantrv.getState()) { case 0: //revisar que en la db id_rv pueda
+                     * ser null vacantApply.setState(postulantrv.getState()); break; case 1:
+                     * vacantApply.setState(postulantrv.getState()); break; case 2:
+                     * vacantApply.setState(postulantrv.getState()); break; default:
+                     * vacantApply.setState(postulantrv.getState()); }
+                     */
                     applyvacants.add(vacantApply);
                 } catch (Exception e) {
                     throw new ExpectationFailedException("Vacant Apply data is incorrect");
@@ -333,7 +338,8 @@ public class VacantController {
     }
 
     @GetMapping("/getPostulants/{idVacant}")
-    public ResponseEntity<List<GetPostulantsWithoutRecruiter>> getPostulantsWithoutRecruiters(@PathVariable int idVacant) throws Throwable {
+    public ResponseEntity<List<GetPostulantsWithoutRecruiter>> getPostulantsWithoutRecruiters(
+            @PathVariable int idVacant) throws Throwable {
 
         List<PostulantRv> postulantsRv = postulantRvRepository.findByVacant(idVacant);
         List<GetPostulantsWithoutRecruiter> postulantsWithoutRecruiterList = new ArrayList();
@@ -370,15 +376,15 @@ public class VacantController {
     }
 
     @PutMapping("/selectPostulants")
-    public ResponseEntity selectPostulants(@RequestBody SelectPostulantsObject selectPostulantsObject) {
+    public ResponseEntity selectPostulants(@RequestBody SelectPostulantsObject dat) {
 
-        for (String postulantId : selectPostulantsObject.getPostulants()) {
-            List<PostulantRv> postulantRvList = postulantRvRepository.findByPostulant(postulantId);
-            for (PostulantRv postulantRv : postulantRvList) {
-                if (selectPostulantsObject.getIdVacant() == postulantRv.getIdVacant() && selectPostulantsObject.getIdRv() == postulantRv.getIdRv()) {
-                    postulantRv.setState(1);
-                    postulantRvRepository.save(postulantRv);
-                }
+        for (String postulantId : dat.getPostulants()) {
+            PostulantRv postulantRv = ((Optional<PostulantRv>) postulantRvRepository.findByPostulantVacant(postulantId,
+                    dat.getIdVacant())).get();
+            if (postulantRv.getState() == 0) {
+                postulantRv.setState(1);
+                postulantRv.setIdRv(dat.getIdRv());
+                postulantRvRepository.save(postulantRv);
             }
 
         }
