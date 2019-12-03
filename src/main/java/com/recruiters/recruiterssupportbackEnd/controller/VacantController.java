@@ -333,7 +333,8 @@ public class VacantController {
             }
             return HttpResponseEntity.getOKStatus(applyvacants);
         } else {
-            throw new ConflictException("postulant dosen't have any vacanats");
+            
+            return HttpResponseEntity.getOKStatus(new ArrayList<CreateResponseVacantApplied>()); 
         }
     }
 
