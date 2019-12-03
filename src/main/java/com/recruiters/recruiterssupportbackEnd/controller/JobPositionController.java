@@ -427,7 +427,7 @@ public class JobPositionController {
             List<Person> persons=personRepository.findPostulantsRv(myinprocess.getId_rv());
             
             for(Person person:persons){
-                myinprocess.getPostulants().add(new CreateResponsePostulant(person.getId(), person.getName(), person.getImage()));
+                myinprocess.getPostulants().add(new CreateResponsePostulant(person.getId(), person.getName(), person.getImage(),person.getEmail()));
             }         
    
            }else{
